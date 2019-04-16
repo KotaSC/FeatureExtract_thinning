@@ -2,8 +2,6 @@
 #define _calculateFeature_H__
 
 #include <kvs/PolygonObject>
-#include <pcl/point_cloud.h>
-#include <pcl/kdtree/kdtree_flann.h>
 #include <vector>
 
 class calculateFeature
@@ -42,10 +40,10 @@ class calculateFeature
   double m_maxFeature;
 
  private:
-  void calcPointPCA( std::vector<pcl::PointXYZ> &point );
-  void calcNormalPCA( std::vector<pcl::PointXYZ> &point,
+  void calcPointPCA( kvs::PolygonObject* ply , std::vector<float> &coord );
+  void calcNormalPCA( kvs::PolygonObject* ply,
 		      std::vector<float> &normal );
-  void calcNormalDispersion( std::vector<pcl::PointXYZ> &point,
+  void calcNormalDispersion( kvs::PolygonObject* ply ,
 		       std::vector<float> &normal );
 
 };
