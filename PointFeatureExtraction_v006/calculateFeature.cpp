@@ -2,8 +2,6 @@
 #include "octree.h"
 
 #include <vector>
-#include <pcl/point_cloud.h>
-#include <pcl/kdtree/kdtree_flann.h>
 #include <Accelerate/Accelerate.h>
 #include <kvs/BoxMuller>
 
