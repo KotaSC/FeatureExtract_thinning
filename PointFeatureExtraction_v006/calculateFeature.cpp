@@ -148,30 +148,26 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply, std::vector<float> 
   std::cout << "Start OCtree Search..... " << std::endl;
   for (int i = 0; i < numVert; i++)
   {
-    size_t index = (size_t)((double)numVert * uniRand());
-    if (index == numVert)
-      --index;
-    double point[3] = {coords[3 * index],
-                       coords[3 * index + 1],
-                       coords[3 * index + 2]};
+    if (i == numVert)
+      --i;
+    double point[3] = {coords[3 * i],
+                       coords[3 * i + 1],
+                       coords[3 * i + 2]};
 
     vector<size_t> nearInd;
     vector<double> dist;
     search_points(point, m_searchRadius, pdata, myTree->octreeRoot, &nearInd, &dist);
     int n0 = (int)nearInd.size();
 
-    // std::cout << n0 << std::endl;
-
     //--- Standardization for x, y, z
     double xb = 0.0, yb = 0.0, zb = 0.0;
     for (int j = 0; j < n0; j++)
     {
       // 近傍点の(x, y, z)座標を格納
-      double x = pdata[nearInd[j]*3];
-      double y = pdata[nearInd[j]*3+1];
-      double z = pdata[nearInd[j]*3]+2;
-
-
+      double x = coord[3*(int)nearInd[j]];
+      double y = coord[3*(int)nearInd[j]+1];
+      double z = coord[3*(int)nearInd[j]+2];
+  
       xb += x;
       yb += y;
       zb += z;
@@ -187,9 +183,9 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply, std::vector<float> 
     for (int j = 0; j < n0; j++)
     {
       // 近傍点の(x, y, z)座標と，平均値との差を計算
-      double nx = (pdata[nearInd[j]*3] - xb);
-      double ny = (pdata[nearInd[j]*3+1] - yb);
-      double nz = (pdata[nearInd[j]*3+2] - zb);
+      double nx = (coords[3*(int)nearInd[j]] - xb);
+      double ny = (coords[3*(int)nearInd[j]+1] - yb);
+      double nz = (coords[3*(int)nearInd[j]+2] - zb);
       x2 += nx * nx;
       y2 += ny * ny;
       z2 += nz * nz;
