@@ -53,7 +53,6 @@ void calculateFeature::setSearchRadius(double divide,
 
 void calculateFeature::calc(kvs::PolygonObject *ply)
 {
-  std::vector<float> coord;
   std::vector<float> normal;
   kvs::BoxMuller normRand;
 
@@ -96,9 +95,6 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
       y += dt * ny;
       z += dt * nz;
     }
-    coord.push_back(x);
-    coord.push_back(y);
-    coord.push_back(z);
     normal.push_back(nx);
     normal.push_back(ny);
     normal.push_back(nz);
@@ -106,7 +102,7 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
 
   if (m_type == PointPCA)
   {
-    calcPointPCA(ply, coord);
+    calcPointPCA(ply);
   }
   else if (m_type == NormalPCA)
   {
@@ -118,7 +114,7 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   }
 }
 
-void calculateFeature::calcPointPCA(kvs::PolygonObject *ply, std::vector<float> &coord)
+void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
 {
 
   ply->updateMinMaxCoords();
@@ -146,7 +142,7 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply, std::vector<float> 
   double sigMax = 0.0;
 
   std::cout << "Start OCtree Search..... " << std::endl;
-  for (int i = 0; i < numVert; i++)
+  for (size_t i = 0; i < numVert; i++)
   {
     if (i == numVert)
       --i;
@@ -164,10 +160,10 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply, std::vector<float> 
     for (int j = 0; j < n0; j++)
     {
       // 近傍点の(x, y, z)座標を格納
-      double x = coord[3*(int)nearInd[j]];
-      double y = coord[3*(int)nearInd[j]+1];
-      double z = coord[3*(int)nearInd[j]+2];
-  
+      double x = coords[3 * nearInd[j]];
+      double y = coords[3 * nearInd[j] + 1];
+      double z = coords[3 * nearInd[j] + 2];
+
       xb += x;
       yb += y;
       zb += z;
@@ -183,9 +179,9 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply, std::vector<float> 
     for (int j = 0; j < n0; j++)
     {
       // 近傍点の(x, y, z)座標と，平均値との差を計算
-      double nx = (coords[3*(int)nearInd[j]] - xb);
-      double ny = (coords[3*(int)nearInd[j]+1] - yb);
-      double nz = (coords[3*(int)nearInd[j]+2] - zb);
+      double nx = (coords[3 * nearInd[j]] - xb);
+      double ny = (coords[3 * nearInd[j] + 1] - yb);
+      double nz = (coords[3 * nearInd[j] + 2] - zb);
       x2 += nx * nx;
       y2 += ny * ny;
       z2 += nz * nz;
@@ -229,7 +225,7 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply, std::vector<float> 
     // W[0]: 第3固有値, W[1]: 第2固有値, W[2]: 第1固有値
     double sum = W[0] + W[1] + W[2]; // Sum of eigenvalues
     // double var = searchPoint.x;
-    double var = W[0]/sum;                       // Change of curvature
+    double var = W[0] / sum; // Change of curvature
     // double var = (W[2] - W[1]) / W[2]; // Linearity
     // double var = W[1] - W[0] / W[2];             // Planarity
     // double var = 1 - ( ( W[1] - W[0] ) / W[2] ); // Aplanarity
@@ -254,152 +250,173 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply, std::vector<float> 
 void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
                                      std::vector<float> &normal)
 {
-  // pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-  // cloud->width = m_number;
-  // cloud->height = 1;
-  // cloud->points.resize(cloud->width * cloud->height);
-  // std::copy(point.begin(), point.end(), cloud->points.begin());
+  ply->updateMinMaxCoords();
+  kvs::ValueArray<kvs::Real32> coords = ply->coords();
+  float *pdata = coords.data();
+  size_t numVert = ply->numberOfVertices();
+  kvs::Vector3f minBB = ply->minObjectCoord();
+  kvs::Vector3f maxBB = ply->maxObjectCoord();
 
-  // pcl::KdTreeFLANN<pcl::PointXYZ> kdtree; // KD-tree
-  // kdtree.setInputCloud(cloud);
-  // pcl::PointXYZ searchPoint;
-  // std::vector<int> pointIdxRadiusSearch;
-  // std::vector<float> pointRadiusSquaredDistance;
-  // std::vector<double> sigma;
+  double *mrange = new double[6];
+  mrange[0] = (double)minBB.x();
+  mrange[1] = (double)maxBB.x();
+  mrange[2] = (double)minBB.y();
+  mrange[3] = (double)maxBB.y();
+  mrange[4] = (double)minBB.z();
+  mrange[5] = (double)maxBB.z();
 
-  // double sigMax = 0.0;
+  // create octree
+  std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
+  std::cout << minBB << " \n"
+            << maxBB << std::endl;
+  octree *myTree = new octree(pdata, numVert, mrange, MIN_NODE);
 
-  // for (size_t i = 0; i < m_number; i++)
-  // {
-  //   //--- Search Point
-  //   searchPoint.x = point[i].x;
-  //   searchPoint.y = point[i].y;
-  //   searchPoint.z = point[i].z;
+  kvs::MersenneTwister uniRand;
+  double sigMax = 0.0;
 
-  //   //--- n0 : Number of neighborhood
-  //   // search point :              the given query point
-  //   // m_searchRadius:             the radius of the sphere bounding all of searchPoint's neighbors
-  //   // pointIdxRadiusSearch:       the resultant indices of the neighboring points
-  //   // pointRadiusSquaredDistance: the resultant squared distances to the neighboring points
-  //   int n0 = kdtree.radiusSearch(searchPoint, m_searchRadius,
-  //                                pointIdxRadiusSearch, pointRadiusSquaredDistance);
+  std::cout << "Start OCtree Search..... " << std::endl;
+  for (size_t i = 0; i < numVert; i++)
+  {
+    if (i == numVert)
+      --i;
+    double point[3] = {coords[3 * i],
+                       coords[3 * i + 1],
+                       coords[3 * i + 2]};
 
-  //   //--- Calculaton of covariance matrix
-  //   double x2 = 0.0, y2 = 0.0, z2 = 0.0;
-  //   double xa = 0.0, ya = 0.0, za = 0.0;
-  //   double xy = 0.0, yz = 0.0, zx = 0.0;
-  //   for (int j = 0; j < n0; j++)
-  //   {
-  //     double nx = normal[3 * pointIdxRadiusSearch[j]];
-  //     double ny = normal[3 * pointIdxRadiusSearch[j] + 1];
-  //     double nz = normal[3 * pointIdxRadiusSearch[j] + 2];
-  //     x2 += nx * nx;
-  //     y2 += ny * ny;
-  //     z2 += nz * nz;
-  //     xa += nx;
-  //     ya += ny;
-  //     za += nz;
-  //     xy += nx * ny;
-  //     yz += ny * nz;
-  //     zx += nz * nx;
-  //   }
-  //   double s_x2 = (x2 - xa * xa / (double)n0) / (double)n0;
-  //   double s_y2 = (y2 - ya * ya / (double)n0) / (double)n0;
-  //   double s_z2 = (z2 - za * za / (double)n0) / (double)n0;
-  //   double s_xy = (xy - xa * ya / (double)n0) / (double)n0;
-  //   double s_yz = (yz - ya * za / (double)n0) / (double)n0;
-  //   double s_zx = (zx - za * xa / (double)n0) / (double)n0;
+    vector<size_t> nearInd;
+    vector<double> dist;
+    search_points(point, m_searchRadius, pdata, myTree->octreeRoot, &nearInd, &dist);
+    int n0 = (int)nearInd.size();
 
-  //   //--- Preparation for LAPACK
-  //   char jovz = 'V';
-  //   char uplo = 'U';
-  //   int n = 3;
-  //   double A[n * n];
-  //   double W[n];
-  //   int lwork = n * n;
-  //   double WORK[n * n];
-  //   int info;
+    //--- Calculaton of covariance matrix
+    double x2 = 0.0, y2 = 0.0, z2 = 0.0;
+    double xa = 0.0, ya = 0.0, za = 0.0;
+    double xy = 0.0, yz = 0.0, zx = 0.0;
+    for (int j = 0; j < n0; j++)
+    {
+      double nx = normal[3 * nearInd[j]];
+      double ny = normal[3 * nearInd[j] + 1];
+      double nz = normal[3 * nearInd[j] + 2];
+      x2 += nx * nx;
+      y2 += ny * ny;
+      z2 += nz * nz;
+      xa += nx;
+      ya += ny;
+      za += nz;
+      xy += nx * ny;
+      yz += ny * nz;
+      zx += nz * nx;
+    }
+    double s_x2 = (x2 - xa * xa / (double)n0) / (double)n0;
+    double s_y2 = (y2 - ya * ya / (double)n0) / (double)n0;
+    double s_z2 = (z2 - za * za / (double)n0) / (double)n0;
+    double s_xy = (xy - xa * ya / (double)n0) / (double)n0;
+    double s_yz = (yz - ya * za / (double)n0) / (double)n0;
+    double s_zx = (zx - za * xa / (double)n0) / (double)n0;
 
-  //   //---- Covariance matrix
-  //   A[0] = s_x2;
-  //   A[3] = s_xy;
-  //   A[6] = s_zx;
-  //   A[1] = 0.0;
-  //   A[4] = s_y2;
-  //   A[7] = s_yz;
-  //   A[2] = 0.0;
-  //   A[5] = 0.0;
-  //   A[8] = s_z2;
+    //--- Preparation for LAPACK
+    char jovz = 'V';
+    char uplo = 'U';
+    int n = 3;
+    double A[n * n];
+    double W[n];
+    int lwork = n * n;
+    double WORK[n * n];
+    int info;
 
-  //   //---- Calcuation of eigenvalues and egenvectors
-  //   dsyev_(&jovz, &uplo, (__CLPK_integer *)&n, A, (__CLPK_integer *)&n,
-  //          W, WORK, (__CLPK_integer *)&lwork, (__CLPK_integer *)&info);
+    //---- Covariance matrix
+    A[0] = s_x2;
+    A[3] = s_xy;
+    A[6] = s_zx;
+    A[1] = 0.0;
+    A[4] = s_y2;
+    A[7] = s_yz;
+    A[2] = 0.0;
+    A[5] = 0.0;
+    A[8] = s_z2;
 
-  //   double var = W[0] + W[1] + W[2]; // Sum of eigenvalues
-  //   if (info > 0)
-  //     var = 0.0; // If LAPACK doesn't converge
-  //   m_feature.push_back(var);
-  //   if (sigMax < var)
-  //     sigMax = var;
-  //   if (!((i + 1) % INTERVAL))
-  //     std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
-  // }
-  // m_maxFeature = sigMax;
-  // std::cout << "Maximun of Sigma : " << sigMax << std::endl;
+    //---- Calcuation of eigenvalues and egenvectors
+    dsyev_(&jovz, &uplo, (__CLPK_integer *)&n, A, (__CLPK_integer *)&n,
+           W, WORK, (__CLPK_integer *)&lwork, (__CLPK_integer *)&info);
+
+    double var = W[0] + W[1] + W[2]; // Sum of eigenvalues
+    if (info > 0)
+      var = 0.0; // If LAPACK doesn't converge
+    m_feature.push_back(var);
+    if (sigMax < var)
+      sigMax = var;
+    if (!((i + 1) % INTERVAL))
+      std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
+  }
+  m_maxFeature = sigMax;
+  std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 }
 
 void calculateFeature::calcNormalDispersion(kvs::PolygonObject *ply,
                                             std::vector<float> &normal)
 {
-  // pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-  // cloud->width = m_number;
-  // cloud->height = 1;
-  // cloud->points.resize(cloud->width * cloud->height);
-  // std::copy(point.begin(), point.end(), cloud->points.begin());
+  ply->updateMinMaxCoords();
+  kvs::ValueArray<kvs::Real32> coords = ply->coords();
+  float *pdata = coords.data();
+  size_t numVert = ply->numberOfVertices();
+  kvs::Vector3f minBB = ply->minObjectCoord();
+  kvs::Vector3f maxBB = ply->maxObjectCoord();
 
-  // pcl::KdTreeFLANN<pcl::PointXYZ> kdtree; // KD-tree
-  // kdtree.setInputCloud(cloud);
-  // pcl::PointXYZ searchPoint;
-  // std::vector<int> pointIdxRadiusSearch;
-  // std::vector<float> pointRadiusSquaredDistance;
-  // std::vector<double> sigma;
+  double *mrange = new double[6];
+  mrange[0] = (double)minBB.x();
+  mrange[1] = (double)maxBB.x();
+  mrange[2] = (double)minBB.y();
+  mrange[3] = (double)maxBB.y();
+  mrange[4] = (double)minBB.z();
+  mrange[5] = (double)maxBB.z();
 
-  // double sigMax = 0.0;
+  // create octree
+  std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
+  std::cout << minBB << " \n"
+            << maxBB << std::endl;
+  octree *myTree = new octree(pdata, numVert, mrange, MIN_NODE);
 
-  // for (size_t i = 0; i < m_number; i++)
-  // {
-  //   //--- Search Point
-  //   searchPoint.x = point[i].x;
-  //   searchPoint.y = point[i].y;
-  //   searchPoint.z = point[i].z;
+  kvs::MersenneTwister uniRand;
+  double sigMax = 0.0;
 
-  //   //--- n0 : Number of neighborhood
-  //   int n0 = kdtree.radiusSearch(searchPoint, m_searchRadius,
-  //                                pointIdxRadiusSearch, pointRadiusSquaredDistance);
+  std::cout << "Start OCtree Search..... " << std::endl;
 
-  //   int index = pointIdxRadiusSearch[0];
-  //   float ni[3] = {normal[3 * index], normal[3 * index + 1], normal[3 * index + 2]};
+  for (size_t i = 0; i < numVert; i++)
+  {
+    if (i == numVert)
+      --i;
+    double point[3] = {coords[3 * i],
+                       coords[3 * i + 1],
+                       coords[3 * i + 2]};
 
-  //   double sum = 0.0;
-  //   double sum2 = 0.0;
-  //   for (int j = 1; j < n0; j++)
-  //   {
-  //     index = pointIdxRadiusSearch[j];
-  //     float nt[3] = {normal[3 * index], normal[3 * index + 1], normal[3 * index + 2]};
-  //     double dot = ni[0] * nt[0] + ni[1] * nt[1] + ni[2] * nt[2];
-  //     sum += dot;
-  //     sum2 += dot * dot;
-  //   }
+    vector<size_t> nearInd;
+    vector<double> dist;
+    search_points(point, m_searchRadius, pdata, myTree->octreeRoot, &nearInd, &dist);
+    int n0 = (int)nearInd.size();
 
-  //   double mean = sum / (double)(n0 - 1);
-  //   double var = (sum2 - (double)(n0 - 1) * mean * mean) / (double)(n0 - 1);
+    int index = nearInd[0];
+    float ni[3] = {normal[3 * index], normal[3 * index + 1], normal[3 * index + 2]};
 
-  //   m_feature.push_back(var); //
-  //   if (sigMax < var)
-  //     sigMax = var;
-  //   if (!((i + 1) % INTERVAL))
-  //     std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
-  // }
-  // m_maxFeature = sigMax;
-  // std::cout << "Maximun of Sigma : " << sigMax << std::endl;
+    double sum = 0.0;
+    double sum2 = 0.0;
+    for (int j = 1; j < n0; j++)
+    {
+      index = nearInd[j];
+      float nt[3] = {normal[3 * index], normal[3 * index + 1], normal[3 * index + 2]};
+      double dot = ni[0] * nt[0] + ni[1] * nt[1] + ni[2] * nt[2];
+      sum += dot;
+      sum2 += dot * dot;
+    }
+
+    double mean = sum / (double)(n0 - 1);
+    double var = (sum2 - (double)(n0 - 1) * mean * mean) / (double)(n0 - 1);
+
+    m_feature.push_back(var); //
+    if (sigMax < var)
+      sigMax = var;
+    if (!((i + 1) % INTERVAL))
+      std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
+  }
+  m_maxFeature = sigMax;
+  std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 }

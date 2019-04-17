@@ -40,7 +40,7 @@ class calculateFeature
   double m_maxFeature;
 
  private:
-  void calcPointPCA( kvs::PolygonObject* ply , std::vector<float> &coord );
+  void calcPointPCA( kvs::PolygonObject* ply );
   void calcNormalPCA( kvs::PolygonObject* ply,
 		      std::vector<float> &normal );
   void calcNormalDispersion( kvs::PolygonObject* ply ,
