@@ -2,8 +2,12 @@
 #include "octree.h"
 
 #include <vector>
-#include <Accelerate/Accelerate.h>
 #include <kvs/BoxMuller>
+#include <kvs/EigenDecomposer>
+#include <kvs/Vector3>
+#include <kvs/Matrix33>
+#include <kvs/Matrix>
+
 
 const int INTERVAL = 1000000;
 const double EPSILON = 1.0e-16;
@@ -197,44 +201,29 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
     double s_yz = yz / (double)(n0);
     double s_zx = zx / (double)(n0);
 
-    //--- Preparation for LAPACK
-    char jovz = 'V';    // 'V': Compute eigenvalues and eigenvectors, 'N': Compute eigenvalues only
-    char uplo = 'U';    // 'U': Upper triangle of A is stored, 'L': Lower triangle of A is stored
-    int n = 3;          // dimension
-    double A[n * n];    // the symmetric matrix(dimension: n)
-    double W[n];        // eigenvalues
-    int lwork = n * n;  // working area size
-    double WORK[n * n]; // working area
-    int info;           // status(0: success)
-
     //---- Covariance matrix
-    A[0] = s_x2;
-    A[3] = s_xy;
-    A[6] = s_zx;
-    A[1] = 0.0;
-    A[4] = s_y2;
-    A[7] = s_yz;
-    A[2] = 0.0;
-    A[5] = 0.0;
-    A[8] = s_z2;
+    kvs::Matrix<double> M( 3, 3 );
+    M[0][0] = s_x2; M[0][1] = s_xy; M[0][2] = s_zx;
+    M[1][0] = s_xy; M[1][1] = s_y2; M[1][2] = s_yz;
+    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_z2;
 
-    //---- Calcuation of eigenvalues and egenvectors
-    dsyev_(&jovz, &uplo, (__CLPK_integer *)&n, A, (__CLPK_integer *)&n,
-           W, WORK, (__CLPK_integer *)&lwork, (__CLPK_integer *)&info);
+    //---- Calcuation of eigenvalues
+    kvs::EigenDecomposer<double> eigen( M );
 
-    // W[0]: 第3固有値, W[1]: 第2固有値, W[2]: 第1固有値
-    double sum = W[0] + W[1] + W[2]; // Sum of eigenvalues
+    const kvs::Vector<double>& L = eigen.eigenValues();
+
+    // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
+    double sum = L[0] + L[1] + L[2]; // Sum of eigenvalues
     // double var = searchPoint.x;
-    double var = W[0] / sum; // Change of curvature
-    // double var = (W[2] - W[1]) / W[2]; // Linearity
-    // double var = W[1] - W[0] / W[2];             // Planarity
-    // double var = 1 - ( ( W[1] - W[0] ) / W[2] ); // Aplanarity
-    // double var = W[2];
+    // double var = L[2] / sum; // Change of curvature
+    double var = (L[0] - L[1]) / L[0]; // Linearity
+    // double var = L[1] - L[2] / L[0];             // Planarity
+    // double var = 1 - ( ( L[1] - L[2] ) / L[0] ); // Aplanarity
+    // double var = L[0];
 
     if (sum < EPSILON)
       var = 0.0;
-    if (info > 0)
-      var = 0.0; // If LAPACK doesn't converge
+
     //---　Contributing rate of 3rd(minimum) component
     m_feature.push_back(var);
     if (sigMax < var)
@@ -314,34 +303,26 @@ void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
     double s_yz = (yz - ya * za / (double)n0) / (double)n0;
     double s_zx = (zx - za * xa / (double)n0) / (double)n0;
 
-    //--- Preparation for LAPACK
-    char jovz = 'V';
-    char uplo = 'U';
-    int n = 3;
-    double A[n * n];
-    double W[n];
-    int lwork = n * n;
-    double WORK[n * n];
-    int info;
-
     //---- Covariance matrix
-    A[0] = s_x2;
-    A[3] = s_xy;
-    A[6] = s_zx;
-    A[1] = 0.0;
-    A[4] = s_y2;
-    A[7] = s_yz;
-    A[2] = 0.0;
-    A[5] = 0.0;
-    A[8] = s_z2;
+    kvs::Matrix<double> M( 3, 3 );
+    M[0][0] = s_x2; M[0][1] = s_xy; M[0][2] = s_zx;
+    M[1][0] = s_xy; M[1][1] = s_y2; M[1][2] = s_yz;
+    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_z2;
 
-    //---- Calcuation of eigenvalues and egenvectors
-    dsyev_(&jovz, &uplo, (__CLPK_integer *)&n, A, (__CLPK_integer *)&n,
-           W, WORK, (__CLPK_integer *)&lwork, (__CLPK_integer *)&info);
+    //---- Calcuation of eigenvalues
+    kvs::EigenDecomposer<double> eigen( M );
 
-    double var = W[0] + W[1] + W[2]; // Sum of eigenvalues
-    if (info > 0)
-      var = 0.0; // If LAPACK doesn't converge
+    const kvs::Vector<double>& L = eigen.eigenValues();
+
+    // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
+    double sum = L[0] + L[1] + L[2]; // Sum of eigenvalues
+    // double var = searchPoint.x;
+    double var = L[2] / sum; // Change of curvature
+    // double var = (L[0] - L[1]) / L[0]; // Linearity
+    // double var = L[1] - L[2] / L[0];             // Planarity
+    // double var = 1 - ( ( L[1] - L[2] ) / L[0] ); // Aplanarity
+    // double var = L[0];
+
     m_feature.push_back(var);
     if (sigMax < var)
       sigMax = var;
