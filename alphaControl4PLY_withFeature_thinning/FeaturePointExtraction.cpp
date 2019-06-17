@@ -24,6 +24,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 {
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
+  std::vector<double> ftNorm;
 
   // 特徴量の最大値を求める
   double maxFt = *std::max_element( ft.begin(), ft.end() );
@@ -32,21 +33,22 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   int num = 0;
   for( size_t i = 0; i < numVert; i++ ) {
     if( ft[i] > threshold ) {
+      ftNorm.push_back( ft[i]/maxFt );
       ind.push_back( i );
       num++;
     }
   }
 
   // 特徴量の合計値
-  // double sumFt = std::accumulate( ftNorm.begin(), ftNorm.end(), 0.0 );
-  // std::cout << "Sum of feature value    : " << sumFt << std::endl;
+  double sumFt = std::accumulate( ftNorm.begin(), ftNorm.end(), 0.0 );
+  std::cout << "Sum of feature value    : " << sumFt << std::endl;
 
   // 特徴量の平均値
-  // double aveFt = sumFt/ftNorm.size();
-  // std::cout << "Avarage of feature value: " << aveFt << std::endl;
+  double aveFt = sumFt/ftNorm.size();
+  std::cout << "Average of feature value: " << aveFt << std::endl;
 
   double gmax  = 1.0;
-  double gmin  = 0.0;
+  double gmin  = aveFt;
   double dim   = 2.0;
   double gx    = 1.0 - ( threshold/maxFt );
   double denom = std::pow( gx, dim );
@@ -71,7 +73,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   kvs::MersenneTwister uniRand;
 
-
   int i = 0;
 
   while( true ) {
@@ -90,7 +91,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     double x = ( ft[index] - threshold ) / maxFt;
 
     double xdim = std::pow( x, dim );
-    double f = grad*xdim + gmin;
+    double f    = grad*xdim + gmin;
 
     double r = uniRand();
 
