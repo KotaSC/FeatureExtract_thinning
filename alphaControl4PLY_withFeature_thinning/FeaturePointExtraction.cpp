@@ -28,12 +28,12 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   // 特徴量の最大値を求める
   double maxFt = *std::max_element( ft.begin(), ft.end() );
-  std::cout << "Max feature: " << maxFt << std::endl;
+ 
 
   int num = 0;
   for( size_t i = 0; i < numVert; i++ ) {
     if( ft[i] > threshold ) {
-      ftNorm.push_back( ft[i]/maxFt );
+      ftNorm.push_back(ft[i]/maxFt);
       ind.push_back( i );
       num++;
     }
@@ -41,27 +41,33 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   // 特徴量の合計値
   double sumFt = std::accumulate( ftNorm.begin(), ftNorm.end(), 0.0 );
-  std::cout << "Sum of feature value    : " << sumFt << std::endl;
 
   // 特徴量の平均値
   double aveFt = sumFt/ftNorm.size();
-  std::cout << "Average of feature value: " << aveFt << std::endl;
 
+  double th    = threshold/maxFt;
   double gmax  = 1.0;
-  double gmin  = aveFt;
+  double gmin  = 0.2;
   double dim   = 2.0;
-  double gx    = 1.0 - ( threshold/maxFt );
+  double gx    = 1.0 - th;
   double denom = std::pow( gx, dim );
 
   // 関数の傾き
   double grad = ( gmax - gmin )/denom;
 
-  std::cout << "Gradient                : " << grad << std::endl;
-  std::cout << "Number of feature points: " << num << std::endl;
 
   double createNum = ft_ratio*(double)num;
- 
-  std::cout << "createNum: " << createNum << std::endl;
+
+
+  std::cout << "===========================================" << std::endl;
+  std::cout << "Max feature              : " << maxFt << std::endl;
+  std::cout << "Sum of feature value     : " << sumFt << std::endl;
+  std::cout << "Average of feature value : " << aveFt << std::endl;
+  std::cout << "Gradient                 : " << grad << std::endl;
+  std::cout << "Number of feature points : " << num  << std::endl;
+  std::cout << "createNum                : " << createNum << std::endl;
+  std::cout << "===========================================" << std::endl;
+
 
   kvs::ValueArray<kvs::Real32> coords  = ply->coords();
   kvs::ValueArray<kvs::Real32> normals = ply->normals();
@@ -72,6 +78,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::vector<kvs::UInt8>  SetColors;
 
   kvs::MersenneTwister uniRand;
+
 
   int i = 0;
 
@@ -88,14 +95,14 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     size_t index = ind[ id ];
 
     // ここら辺をいじって点の生成数とか変える
-    double x = ( ft[index] - threshold ) / maxFt;
+    double x = ftNorm[index] - th;
 
     double xdim = std::pow( x, dim );
-    double f    = grad*xdim + gmin;
+    double function = grad*xdim + gmin;
 
     double r = uniRand();
 
-    if( f >= r ){
+    if( function >= r ){
 
       i++;
 
@@ -110,12 +117,11 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       // SetColors.push_back ( colors[3*index]   );
       // SetColors.push_back ( colors[3*index+1] );
       // SetColors.push_back ( colors[3*index+2] );
-     
       SetColors.push_back( 255 );
       SetColors.push_back( 0 );
       SetColors.push_back( 0 );
 
-      // SetColors.push_back( 255 * ft[index]/maxFt );
+      // SetColors.push_back( ftNorm[index] * 255 );
       // SetColors.push_back( 0 );
       // SetColors.push_back( 0 );
     }
