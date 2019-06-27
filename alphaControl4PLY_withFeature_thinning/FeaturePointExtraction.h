@@ -12,14 +12,15 @@ class FeaturePointExtraction: public kvs::PointObject {
  public:
   FeaturePointExtraction( void );
   FeaturePointExtraction( kvs::PolygonObject* ply,
-						  std::vector<float> &ft,
-						  double ft_ratio,
-						  double threshold );
+			  			  std::vector<float> &ft,
+			  			  double ft_ratio,
+			  			  double threshold );
  private:
   void alpbaControl4Feature( kvs::PolygonObject* ply,
-						     std::vector<float> &ft,
-						     double ft_ratio,
-						     double threshold );
+			     			 std::vector<float> &ft,
+			     			 double ft_ratio,
+			     			 double threshold );
+
 };
 
 
