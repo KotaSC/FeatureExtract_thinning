@@ -12,7 +12,8 @@ class calculateFeature
   enum FeatureType {
     PointPCA = 0,
     NormalPCA = 1,
-    NormalDispersion = 2
+    NormalDispersion = 2,
+    InnerProductOfNormal = 3
   };
  public:
   calculateFeature( void );
@@ -45,6 +46,8 @@ class calculateFeature
 		      std::vector<float> &normal );
   void calcNormalDispersion( kvs::PolygonObject* ply ,
 		       std::vector<float> &normal );
+
+  void calcInnerProductOfNormal( kvs::PolygonObject* ply )
 
 };
 
