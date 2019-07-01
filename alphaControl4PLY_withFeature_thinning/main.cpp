@@ -6,8 +6,6 @@
 
 #include <cstring>
 #include <cstdlib>
-#include <string>
-#include <sstream>
 
 #include "AlphaControlforPLY.h"
 #include "ImportPointClouds.h"
@@ -19,7 +17,6 @@
 #include "alp_option.h"
 #include "event_control.h"
 #include "FeaturePointExtraction.h"
-#include "FeaturePointExtractionThinning.h"
 
 const double DEFAULT_CAMERA_DISTANCE = 12.0;
 
@@ -29,23 +26,21 @@ int main(int argc, char **argv)
   {
     std::cout << "USAGE: " << argv[0] << "lst-file or data-file (and options)." << std::endl;
     std::cout << "lst-file cannot require options \n";
-    std::cout << "[Option] -a   : Set the opacity ( default is " << OPACITY << " ) \n"
-              << "         -l   : Set the repeat level ( default is " << REPEAT_LEVEL << " ) \n"
-              << "         -i   : Set the image resolution ( default is " << IMAGE_RESOLUTION << " ) \n"
-              << "        -fa   : Set the opacity for feature extraction ( default is " << FEATURE_OPACITY << " ) \n"
-              << "        -ft   : Set the threshold for feature extraction ( default is " << THRESHOLD << " ) \n"
-              << "        -thin : Set the thinning mode for feature extraction ( default is " << THINNING << " ) \n"
+    std::cout << "[Option] -a : Set the opacity ( default is " << OPACITY << " ) \n"
+              << "         -l : Set the repeat level ( default is " << REPEAT_LEVEL << " ) \n"
+              << "         -i : Set the image resolution ( default is " << IMAGE_RESOLUTION << " ) \n"
+              << "        -fa : Set the opacity for feature extraction ( default is " << FEATURE_OPACITY << " ) \n"
+              << "        -ft : Set the threshold for feature extraction ( default is " << THRESHOLD << " ) \n"
               << "[For example] " << argv[0] << " -a 0.1 -l 700 -fa 0.5 -ft 0.03 xxx.xyz"
               << std::endl;
     exit(1);
   }
- 
+
   int repeatLevel     = REPEAT_LEVEL;
   int imageResolution = IMAGE_RESOLUTION;
   double alpha        = OPACITY;
   double ftAlpha      = FEATURE_OPACITY;
   double ftThresh     = THRESHOLD;
-  bool thinning       = THINNING;
 
   fileList *files = new fileList(argv[1]);
 
@@ -92,11 +87,6 @@ int main(int argc, char **argv)
         ftThresh = atof(argv[i + 1]);
         i++;
       }
-      else if (!strncmp(THINNING_MODE, argv[i], strlen(THINNING_MODE)))
-      {
-        thinning = true;
-        i++;
-      }
     }
     for (int i = 1; i < argc; i++)
     {
@@ -106,39 +96,8 @@ int main(int argc, char **argv)
         {
           numFiles++;
           std::string output_tmp(OUT_PBR_FILE);
-          std::string tmp;
-          std::stringstream ssLR;
-          std::stringstream ssAlpha;
-          std::stringstream ssFtAlpha;
-          std::stringstream ssTh;
-
-          output_tmp += "LR";
-          ssLR << repeatLevel;
-          ssLR >> tmp;
-          output_tmp += tmp;
-
-          output_tmp += "_alpha";
-          ssAlpha << alpha;
-          ssAlpha >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
-
-          output_tmp += "_ftAlpha";
-          ssFtAlpha << ftAlpha;
-          ssFtAlpha >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
-
-          output_tmp += "_Th";
-          ssTh << ftThresh;
-          ssTh >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
-
-          output_tmp += "_";
           output_tmp += getFileName(argv[i]);
           output_tmp += ".spbr";
-
           inputFiles.push_back(argv[i]);
           outptFiles.push_back(output_tmp);
           opacities.push_back(alpha);
@@ -232,30 +191,15 @@ int main(int argc, char **argv)
     std::cout << "Opacity for the Feature: " << opacities_ft[i] << ", " << ft_ratio << std::endl;
     std::vector<float> ft = ply->featureData();
 
-    if (thinning){
-
-      FeaturePointExtractionThinning *f_point = 
-        new FeaturePointExtractionThinning(ply, ft, ft_ratio, thresholds[i]);
-
-      std::string ofname(outptFiles[i]);
-      ofname += "_f.spbr";
-
-      writePBRfile(files, repeatLevel, imageResolution, ofname, f_point);
-
-      object->add(*kvs::PointObject::DownCast(f_point));
-    }
-    else {
-
-      FeaturePointExtraction *f_point = 
+    FeaturePointExtraction *f_point =
         new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i]);
 
-      std::string ofname(outptFiles[i]);
-      ofname += "_f.spbr";
+    std::string ofname(outptFiles[i]);
+    ofname += "_f.spbr";
 
-      writePBRfile(files, repeatLevel, imageResolution, ofname, f_point);
+    writePBRfile(files, repeatLevel, imageResolution, ofname, f_point);
 
-      object->add(*kvs::PointObject::DownCast(f_point));
-    }
+    object->add(*kvs::PointObject::DownCast(f_point));
   }
 
   std::cout << "Number of Particles (Total): " << object->numberOfVertices() << std::endl;
