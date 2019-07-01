@@ -57,7 +57,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   double createNum = ft_ratio*(double)num;
  
   std::cout << "===========================================" << std::endl;
-  std::cout << "Max feature              : " << maxFt << std::endl;
+  std::cout << "Max feature value        : " << maxFt << std::endl;
   std::cout << "Gradient                 : " << grad << std::endl;
   std::cout << "Number of feature points : " << num  << std::endl;
   std::cout << "createNum                : " << createNum << std::endl;
