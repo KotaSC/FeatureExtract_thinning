@@ -6,6 +6,8 @@
 
 #include <cstring>
 #include <cstdlib>
+#include <string>
+#include <sstream>
 
 #include "AlphaControlforPLY.h"
 #include "ImportPointClouds.h"
@@ -96,8 +98,39 @@ int main(int argc, char **argv)
         {
           numFiles++;
           std::string output_tmp(OUT_PBR_FILE);
+          std::string tmp;
+          std::stringstream ssLR;
+          std::stringstream ssAlpha;
+          std::stringstream ssFtAlpha;
+          std::stringstream ssTh;
+
+          output_tmp += "LR";
+          ssLR << repeatLevel;
+          ssLR >> tmp;
+          output_tmp += tmp;
+
+          output_tmp += "_alpha";
+          ssAlpha << alpha;
+          ssAlpha >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_ftAlpha";
+          ssFtAlpha << ftAlpha;
+          ssFtAlpha >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_Th";
+          ssTh << ftThresh;
+          ssTh >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_";
           output_tmp += getFileName(argv[i]);
           output_tmp += ".spbr";
+
           inputFiles.push_back(argv[i]);
           outptFiles.push_back(output_tmp);
           opacities.push_back(alpha);
