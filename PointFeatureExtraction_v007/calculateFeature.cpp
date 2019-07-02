@@ -442,6 +442,7 @@ void calculateFeature::calcDepthDisplacement(kvs::PolygonObject *ply)
 
   kvs::MersenneTwister uniRand;
   double sigMax = 0.0;
+  double sigMin = 0.0;
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for (size_t i = 0; i < numVert; i++)
@@ -517,19 +518,23 @@ void calculateFeature::calcDepthDisplacement(kvs::PolygonObject *ply)
     // double var = (L[0] - L[1]) / L[0];           // Linearity
     // double var = L[1] - L[2] / L[0];             // Planarity
     // double var = 1 - ( ( L[1] - L[2] ) / L[0] ); // Aplanarity
-    // double var = L[0];
+    // double var = L[2];
 
-    if (sum < EPSILON)
-      var = 0.0;
+    // if (sum < EPSILON)
+    //   var = 0.0;
 
     //---　Contributing rate of 3rd(minimum) component
     m_feature.push_back(var);
     if (sigMax < var)
       sigMax = var;
+    if (sigMin > var )
+      sigMin = var;
     if (!((i + 1) % INTERVAL))
       std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
   }
 
   m_maxFeature = sigMax;
+  m_minFeature = sigMin;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
+  std::cout << "Minimum of Sigma : " << sigMin << std::endl;
 }

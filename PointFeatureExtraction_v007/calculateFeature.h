@@ -31,6 +31,7 @@ class calculateFeature
 			kvs::Vector3f bbmax  );
   void calc( kvs::PolygonObject* ply );
   double maxFeature( void ) { return m_maxFeature; }
+  double minFeature( void ) { return m_minFeature; }
 
  private:
   size_t m_number;
@@ -40,6 +41,7 @@ class calculateFeature
   double m_noise;
   double m_searchRadius;
   double m_maxFeature;
+  double m_minFeature;
 
  private:
   void calcPointPCA( kvs::PolygonObject* ply );
