@@ -70,16 +70,18 @@ int main( int argc, char** argv )
   kvs::PointObject* object = new kvs::PointObject( *ply );
 
   float ftMax = (float)ft->maxFeature();
-  kvs::ColorMap cmap( 256.0, 0.0, ftMax );
+  float ftMin = (float)ft->minFeature();
+  // kvs::ColorMap cmap( 256.0, 0.0, ftMax );
   //  kvs::ColorMap cmap( 256, 0.0175976, 0.021997 );
+  kvs::ColorMap cmap( 256, ftMin, ftMax );
   cmap.create();
 
   std::vector<unsigned char> cl;
   for( size_t i=0; i<ply->numberOfVertices(); i++ ) {
-    kvs::RGBColor color( cmap.at( ftvec[i]  ) );
+    kvs::RGBColor color( cmap.at( ftvec[i] ) );
     cl.push_back( color.r() );
     cl.push_back( color.g() );
-    cl.push_back( color.b() );
+    cl.push_back( color.b()] );
     // cl.push_back( color.r() );
     // cl.push_back( color.g() );
     // cl.push_back( 0 );
