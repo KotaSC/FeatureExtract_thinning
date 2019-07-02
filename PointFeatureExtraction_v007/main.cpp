@@ -36,8 +36,9 @@ int main( int argc, char** argv )
   calculateFeature *ft = new calculateFeature( );
 
   //--- Select type of Feature
-  ft->setFeatureType( calculateFeature::PointPCA );
+  // ft->setFeatureType( calculateFeature::PointPCA );
   // ft->setFeatureType( calculateFeature::InnerProductOfNormal );
+  ft->setFeatureType( calculateFeature::DepthDisplacement );
   // ft->addNoise( 0.1 );
   // ft->setFeatureType( calculateFeature::NormalPCA );
   // ft->setFeatureType( calculateFeature::NormalDispersion );
@@ -47,8 +48,8 @@ int main( int argc, char** argv )
   // double div = 150.0;
   // double div = 200.0;
   // double div = 300.0;
-  // double div = 500.0;
-  double div = 2000;
+  double div = 500.0;
+  // double div = 1000.0;
   // std::cout << "Input Division : ";
   // std::cin >> div;
 
