@@ -54,6 +54,8 @@ class calculateFeature
   void calcDepthDisplacement( kvs::PolygonObject* ply );
   void calcCurvatureDifference( kvs::PolygonObject* ply );
 
+  std::vector<float> calcCurvature( kvs::PolygonObject* ply, double bbDiv );
+
 };
 
 #endif

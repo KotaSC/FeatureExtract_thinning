@@ -545,6 +545,37 @@ void calculateFeature::calcDepthDisplacement(kvs::PolygonObject *ply)
 
 void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
 {
+  std::vector<float> firstIteretionFeature;
+  std::vector<float> secondIteretionFeature;
+
+  float diffFeature;
+  double sigMax = 0.0;
+  double firstIterationDiv  = m_searchRadius;
+  double secondIteretionDiv = m_searchRadius*0.5;
+
+  size_t numVert = ply->numberOfVertices();
+
+  firstIteretionFeature  = calcCurvature(ply, firstIterationDiv);
+  secondIteretionFeature = calcCurvature(ply, secondIteretionDiv);
+
+  for( int i = 0; i < numVert; i++ ) {
+
+    diffFeature = std::abs(firstIterationDiv[i] - secondIteretionDiv[i]);
+
+    m_feature.push_back(diffFeature);
+
+    if (sigMax < var)
+      sigMax = var;
+    if (!((i + 1) % INTERVAL))
+      std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
+  }
+
+  m_maxFeature = sigMax;
+  std::cout << "Maximun of Sigma : " << sigMax << std::endl;
+}
+
+std::vector<float> calculateFeature::calcCurvature(kvs::PolygonObject* ply, double bbDiv)
+{
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
   float *pdata = coords.data();
@@ -580,7 +611,7 @@ void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
 
     vector<size_t> nearInd;
     vector<double> dist;
-    search_points(point, m_searchRadius, pdata, myTree->octreeRoot, &nearInd, &dist);
+    search_points(point, bbDiv, pdata, myTree->octreeRoot, &nearInd, &dist);
     int n0 = (int)nearInd.size();
 
     //--- Standardization for x, y, z
@@ -658,4 +689,6 @@ void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
 
   m_maxFeature = sigMax;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
+
+  return m_feature;
 }
