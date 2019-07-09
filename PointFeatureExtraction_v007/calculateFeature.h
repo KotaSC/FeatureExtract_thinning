@@ -14,7 +14,8 @@ class calculateFeature
     NormalPCA            = 1,
     NormalDispersion     = 2,
     InnerProductOfNormal = 3,
-    DepthDisplacement    = 4
+    DepthDisplacement    = 4,
+    CurvatureDifference  = 5
   };
  public:
   calculateFeature( void );
@@ -51,6 +52,7 @@ class calculateFeature
 		       std::vector<float> &normal );
   void calcInnerProductOfNormal( kvs::PolygonObject* ply );
   void calcDepthDisplacement( kvs::PolygonObject* ply );
+  void calcCurvatureDifference( kvs::PolygonObject* ply );
 
 };
 
