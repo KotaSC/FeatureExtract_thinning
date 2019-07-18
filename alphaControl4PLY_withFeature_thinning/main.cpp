@@ -18,7 +18,7 @@
 #include "alp_customize.h"
 #include "alp_option.h"
 #include "event_control.h"
-#include "FeaturePointExtraction.h"
+#include "FeaturePointExtractionThinning.h"
 
 const double DEFAULT_CAMERA_DISTANCE = 12.0;
 
@@ -224,8 +224,8 @@ int main(int argc, char **argv)
     std::cout << "Opacity for the Feature: " << opacities_ft[i] << ", " << ft_ratio << std::endl;
     std::vector<float> ft = ply->featureData();
 
-    FeaturePointExtraction *f_point =
-        new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i]);
+    FeaturePointExtractionThinning *f_point =
+        new FeaturePointExtractionThinning(ply, ft, ft_ratio, thresholds[i]);
 
     std::string ofname(outptFiles[i]);
     ofname += "_f.spbr";
