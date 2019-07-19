@@ -47,8 +47,8 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   double gmax  = 1.0;
   double gmin  = 0.0;
-  double dim   = 2.0;
-  double gx    = 1.0 - ( threshold/maxFt );
+  double dim   = 1.0;
+  double gx    = 0.5 - ( threshold/maxFt );
   double denom = std::pow( gx, dim );
 
   // 関数の傾き
@@ -99,7 +99,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
     if( f >= r ){
 
-      i++;
+      // i++;
 
       SetCoords.push_back ( coords[3*index]   );
       SetCoords.push_back ( coords[3*index+1] );
@@ -113,14 +113,15 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       // SetColors.push_back ( colors[3*index+1] );
       // SetColors.push_back ( colors[3*index+2] );
      
-      SetColors.push_back( 0 );
-      SetColors.push_back( 0 );
       SetColors.push_back( 255 );
+      SetColors.push_back( 0 );
+      SetColors.push_back( 0 );
 
       // SetColors.push_back( 255 * ft[index]/maxFt );
       // SetColors.push_back( 0 );
       // SetColors.push_back( 0 );
     }
+    i++;
   }
 
   SuperClass::setCoords ( kvs::ValueArray<kvs::Real32>( SetCoords  ) );
