@@ -217,7 +217,7 @@ int main(int argc, char **argv)
     writePBRfile(files, repeatLevel, imageResolution, outptFiles[i], point);
 
     //--- Feature Visualization
-    // 任意の不透明度を実現するために必要な点数を計算する
+    // 任意の不透明度を実現するために必要な点数・増減率を計算する
     double a_num = point->calculateRequiredPartcleNumber(opacities_ft[i], repeatLevel, BBMin, BBMax);
     double ft_ratio = point->pointRatio(a_num);
 
@@ -225,7 +225,7 @@ int main(int argc, char **argv)
     std::vector<float> ft = ply->featureData();
 
     FeaturePointExtraction *f_point =
-        new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i]);
+        new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i], repeatLevel, BBMin, BBMax);
 
     std::string ofname(outptFiles[i]);
     ofname += "_f.spbr";
