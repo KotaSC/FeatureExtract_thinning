@@ -218,14 +218,14 @@ int main(int argc, char **argv)
 
     //--- Feature Visualization
     // 任意の不透明度を実現するために必要な点数・増減率を計算する
-    double a_num = point->calculateRequiredPartcleNumber(opacities_ft[i], repeatLevel, BBMin, BBMax);
+    double a_num    = point->calculateRequiredPartcleNumber(opacities_ft[i], repeatLevel, BBMin, BBMax);
     double ft_ratio = point->pointRatio(a_num);
 
     std::cout << "Opacity for the Feature: " << opacities_ft[i] << ", " << ft_ratio << std::endl;
     std::vector<float> ft = ply->featureData();
 
     FeaturePointExtraction *f_point =
-        new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i], repeatLevel, BBMin, BBMax);
+        new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i], repeatLevel, BBMin, BBMax, point);
 
     std::string ofname(outptFiles[i]);
     ofname += "_f.spbr";

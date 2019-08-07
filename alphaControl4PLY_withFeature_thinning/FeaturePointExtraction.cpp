@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <kvs/MersenneTwister>
 
-#include "AlphaControlforPLY.h"
 
 FeaturePointExtraction::FeaturePointExtraction( void ) {
 }
@@ -16,9 +15,10 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject* ply,
                                                 double threshold,
                                                 int repeatLevel,
                                                 kvs::Vector3f BBMin,
-                                                kvs::Vector3f BBMax )
+                                                kvs::Vector3f BBMax,
+                                                AlphaControlforPLY *fpoint )
 {
-  alpbaControl4Feature( ply, ft, ft_ratio, threshold, repeatLevel, BBMin, BBMax );
+  alpbaControl4Feature( ply, ft, ft_ratio, threshold, repeatLevel, BBMin, BBMax, fpoint );
 
 }
 
@@ -28,7 +28,8 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
                                                    double threshold,
                                                    int repeatLevel,
                                                    kvs::Vector3f BBMin,
-					                                         kvs::Vector3f BBMax )
+					                                         kvs::Vector3f BBMax,
+                                                   AlphaControlforPLY *fpoint )
 {
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
@@ -52,6 +53,14 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   // double aveFt = sumFt/ftNorm.size();
   // std::cout << "Avarage of feature value: " << aveFt << std::endl;
 
+  kvs::ValueArray<kvs::Real32> coords  = ply->coords();
+  kvs::ValueArray<kvs::Real32> normals = ply->normals();
+  kvs::ValueArray<kvs::UInt8>  colors  = ply->colors();
+
+  std::vector<kvs::Real32> SetCoords;
+  std::vector<kvs::Real32> SetNormals;
+  std::vector<kvs::UInt8>  SetColors;
+
   double alphaMax  = 1.0;
   double alphaMin  = 0.0;
   double dim       = 2.0;
@@ -61,25 +70,12 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   // 関数の傾き
   double grad = ( alphaMax - alphaMin ) / denom;
 
-  double createNum = ft_ratio*(double)num;
-
   std::cout << "===========================================" << std::endl;
   std::cout << "Max feature value        : " << maxFt << std::endl;
   std::cout << "Gradient                 : " << grad << std::endl;
   std::cout << "Number of feature points : " << num  << std::endl;
-  std::cout << "createNum                : " << createNum << std::endl;
   std::cout << "===========================================" << std::endl;
 
-
-  kvs::ValueArray<kvs::Real32> coords  = ply->coords();
-  kvs::ValueArray<kvs::Real32> normals = ply->normals();
-  kvs::ValueArray<kvs::UInt8>  colors  = ply->colors();
-
-  std::vector<kvs::Real32> SetCoords;
-  std::vector<kvs::Real32> SetNormals;
-  std::vector<kvs::UInt8>  SetColors;
-
-  AlphaControlforPLY* point = new AlphaControlforPLY();
 
   kvs::MersenneTwister uniRand;
 
@@ -87,16 +83,19 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
     size_t index = ind[ i ];
 
-    double x = ( ft[index] - threshold ) / maxFt;
-
+    double x     = ( ft[index] - threshold ) / maxFt;
     double xdim  = std::pow( x, dim );
     double alpha = grad*xdim + alphaMin;
 
     // 任意の不透明度を実現するために必要な点数・増減率を計算する
-    double a_num = point->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
-    double ratio = point->pointRatio( a_num );
+    double a_num = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
+    double ratio = fpoint->pointRatio( a_num );
 
-    double createNum = num*ratio;
+    double createNum = 1.0*ratio;
+
+    // std::cout << "a_num = " << a_num << std::endl;
+    // std::cout << "ratio = " << ratio << std::endl;
+    // std::cout << "createNum = " << createNum << std::endl;
 
     for( int j = 0; j < createNum; j++ ) {
 
@@ -108,13 +107,13 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       SetNormals.push_back( normals[3*index+1] );
       SetNormals.push_back( normals[3*index+2] );
 
-      // SetColors.push_back( colors[3*index] );
-      // SetColors.push_back( colors[3*index+1] );
-      // SetColors.push_back( colors[3*index+2] );
+      SetColors.push_back( colors[3*index] );
+      SetColors.push_back( colors[3*index+1] );
+      SetColors.push_back( colors[3*index+2] );
 
-      SetColors.push_back( 255 );
-      SetColors.push_back( 0 );
-      SetColors.push_back( 0 );
+      // SetColors.push_back( 255 );
+      // SetColors.push_back( 0 );
+      // SetColors.push_back( 0 );
 
       // SetColors.push_back( 255 * ft[index]/maxFt );
       // SetColors.push_back( 0 );
