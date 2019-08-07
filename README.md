@@ -1,2 +1,4 @@
 # FeatureExtract_thinning
-研究のプログラム
+特徴抽出プログラム
+
+## 使い方
