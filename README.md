@@ -31,6 +31,6 @@ $ make
 
 2. 入力ファイルを記述してください．
 ```
-$ alphaControl4ply [input_file_name.xyz] -a 全体の不透明度 -fa 特徴領域の不透明度 -ft 特徴領域の閾値
+$ alphaControl4ply [input_file_name.xyz] -a 全体の不透明度 -fa 特徴領域の閾値
 
 ```
