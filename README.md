@@ -29,9 +29,8 @@ $ ./pfe [input_file_name.ply or .xyz or .spbr] [output_file_name.xyz]
 $ make
 ```
 
-2. 入力ファイルを記述してください．基本的な使い方は以下になります．コマンドを実行すると，```.spbr```ファイルと```.spbr_f.spbr```が出力されます．
-- .spbrファイル：点群全体のデータ
-- .spbr_f.spbrファイル：特徴領域のデータ
+2. 以下のコマンドを実行すると，```.spbr```ファイル(点群全体のデータ)と```.spbr_f.spbr```(特徴領域のデータ)が出力されます．
+
 
 ```alphaControl4ply```には以下のオプションがあります．
 
