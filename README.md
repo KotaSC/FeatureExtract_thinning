@@ -14,7 +14,7 @@
 - STEP1
 
 ```
-make
+$ make
 ```
 
 ### ・alphaControl4PLT_withFeature_thinning
