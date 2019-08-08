@@ -33,6 +33,8 @@ $ make
 - .spbrファイル：点群全体のデータ
 - .spbr_f.spbrファイル：特徴領域のデータ
 
+```alphaControl4ply```には以下のオプションがあります．
+
 ```
 $ ./alphaControl4ply [input_file_name.xyz] -a [全体の不透明度] -ft [特徴領域の閾値]
 ```
