@@ -21,7 +21,7 @@ $ pfe [input_file_name.ply or .xyz or .spbr] [output_file_name.xyz]
 ```
 
 ### ・alphaControl4PLT_withFeature_thinning
-特徴量に応じて不透明度を制御するプログラムです．
+点群全体と特徴領域を半透明融合可視化するプログラムです．特徴量に応じて不透明度を制御します．
 
 ```
 make
