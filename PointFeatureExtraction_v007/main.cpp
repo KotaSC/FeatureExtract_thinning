@@ -36,10 +36,10 @@ int main( int argc, char** argv )
   calculateFeature *ft = new calculateFeature( );
 
   //--- Select type of Feature
-  // ft->setFeatureType( calculateFeature::PointPCA );
+  ft->setFeatureType( calculateFeature::PointPCA );
   // ft->setFeatureType( calculateFeature::InnerProductOfNormal );
   // ft->setFeatureType( calculateFeature::DepthDisplacement );
-  ft->setFeatureType( calculateFeature::CurvatureDifference );
+  // ft->setFeatureType( calculateFeature::CurvatureDifference );
   // ft->addNoise( 0.1 );
   // ft->setFeatureType( calculateFeature::NormalPCA );
   // ft->setFeatureType( calculateFeature::NormalDispersion );
