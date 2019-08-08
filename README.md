@@ -29,7 +29,7 @@ $ pfe [input_file_name.ply or .xyz or .spbr] [output_file_name.xyz]
 $ make
 ```
 
-2. 入力ファイルを記述してください．基本的な使い方は以下になります．
+2. 入力ファイルを記述してください．基本的な使い方は以下になります．コマンドを実行すると，```.spbr```ファイルと````.spbr_f.spbr```が出力されます．
 ```
 $ alphaControl4ply [input_file_name.xyz] -a 全体の不透明度 -ft 特徴領域の閾値
 
