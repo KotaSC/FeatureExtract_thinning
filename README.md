@@ -23,6 +23,10 @@ $ pfe [input_file_name.ply or .xyz or .spbr] [output_file_name.xyz]
 ### ・alphaControl4PLT_withFeature_thinning
 点群全体と特徴領域を半透明融合可視化するプログラムです．特徴量に応じて不透明度を制御します．
 
+#### プログラムの使い方
+1. ディレクトリに移動して以下のコマンドを入力してください．コマンドが実行されると，```alphaControl4ply```という名前の実行ファイルが作成されます．
 ```
-make
+$ make
 ```
+
+2. 入力ファイルと出力ファイルを記述してください．3つめの```[output_file_name.xyz]```はオプションです，書かなかった場合には```out.xyz```というファイル名で結果が出力されます．
