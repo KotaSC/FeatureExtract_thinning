@@ -32,6 +32,12 @@ $ make
 2. 以下のコマンドを実行すると，```.spbr```ファイル(点群全体のデータ)と```.spbr_f.spbr```(特徴領域のデータ)が出力されます．
 ```alphaControl4ply```には以下のオプションがあります．
 
+- -l
+- -a
+- -i
+- -fa
+- -ft
+
 ```
 $ ./alphaControl4ply [input_file_name.xyz] -a [全体の不透明度] -ft [特徴領域の閾値]
 ```
