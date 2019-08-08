@@ -38,5 +38,5 @@ $ make
 - -ft：特徴量の閾値
 
 ```
-$ ./alphaControl4ply [input_file_name.xyz] -a [全体の不透明度] -ft [特徴領域の閾値]
+$ ./alphaControl4ply [input_file_name.xyz] -l [リピートレベル] -a [点群全体の不透明度] -i [画像解像度] -ft [特徴領域の閾値]
 ```
