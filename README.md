@@ -34,3 +34,7 @@ $ make
 $ alphaControl4ply [input_file_name.xyz] -a 全体の不透明度 -ft 特徴領域の閾値
 
 ```
+
+```
+$ alphaControl4ply [input_file_name.xyz] -a 0.2 -ft 0.02
+```
