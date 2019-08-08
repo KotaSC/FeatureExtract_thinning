@@ -17,7 +17,7 @@ $ make
 ```
 2. 入力ファイルと出力ファイルを記述してください．
 ```
-$ pfe 
+$ pfe [input_file_name] [output_file_name]
 ```
 
 ### ・alphaControl4PLT_withFeature_thinning
