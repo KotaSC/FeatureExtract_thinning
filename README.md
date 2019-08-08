@@ -17,7 +17,7 @@ $ make
 ```
 2. 入力ファイルと出力ファイルを記述してください．3つめの```[output_file_name.xyz]```はオプションです，書かなかった場合には```out.xyz```というファイル名で結果が出力されます．
 ```
-$ pfe [input_file_name.ply or xyz or spbr] [output_file_name.xyz]
+$ pfe [input_file_name.ply or .xyz or .spbr] [output_file_name.xyz]
 ```
 
 ### ・alphaControl4PLT_withFeature_thinning
