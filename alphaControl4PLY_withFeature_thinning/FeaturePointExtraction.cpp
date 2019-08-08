@@ -1,9 +1,11 @@
 #include "FeaturePointExtraction.h"
+#include "feature_customize.h"
 #include <vector>
 #include <numeric>
 #include <cmath>
 #include <algorithm>
 #include <kvs/MersenneTwister>
+
 
 
 FeaturePointExtraction::FeaturePointExtraction( void ) {
@@ -61,19 +63,21 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::vector<kvs::Real32> SetNormals;
   std::vector<kvs::UInt8>  SetColors;
 
-  double alphaMax  = 1.0;
-  double alphaMin  = 0.0;
-  double dim       = 2.0;
-  double alphax    = 1.0 - ( threshold/maxFt );
-  double denom     = std::pow( alphax, dim );
-
-  // 関数の傾き
-  double grad = ( alphaMax - alphaMin ) / denom;
+  double alphaMax = ALPHA_MAX;
+  double alphaMin = ALPHA_MIN;
+  double dim      = DIMENSION;
+  double xMax     = X_MAX;
+  
+  double initialPoint = xMax - ( threshold/maxFt );
+  double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
 
   std::cout << "===========================================" << std::endl;
-  std::cout << "Max feature value        : " << maxFt << std::endl;
-  std::cout << "Gradient                 : " << grad << std::endl;
-  std::cout << "Number of feature points : " << num  << std::endl;
+  std::cout << "Max opacity              : " << alphaMax     << std::endl;
+  std::cout << "Min opacity              : " << alphaMin     << std::endl;
+  std::cout << "Dimension                : " << dim          << std::endl;
+  std::cout << "Gradient                 : " << grad         << std::endl;
+  std::cout << "Max feature value        : " << maxFt        << std::endl;
+  std::cout << "Number of feature points : " << num          << std::endl;
   std::cout << "===========================================" << std::endl;
 
 
@@ -84,18 +88,13 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     size_t index = ind[ i ];
 
     double x     = ( ft[index] - threshold ) / maxFt;
-    double xdim  = std::pow( x, dim );
-    double alpha = grad*xdim + alphaMin;
+    double alpha = grad*std::pow( x, dim ) + alphaMin;
 
     // 任意の不透明度を実現するために必要な点数・増減率を計算する
-    double a_num = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
-    double ratio = fpoint->pointRatio( a_num );
-
+    double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
+    double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0*ratio;
 
-    // std::cout << "a_num = " << a_num << std::endl;
-    // std::cout << "ratio = " << ratio << std::endl;
-    // std::cout << "createNum = " << createNum << std::endl;
 
     for( int j = 0; j < createNum; j++ ) {
 
