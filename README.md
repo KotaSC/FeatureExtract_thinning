@@ -15,6 +15,10 @@
 ```
 $ make
 ```
+1. 入力ファイルと出力ファイルを記述してください．
+```
+$ pfe 
+```
 
 ### ・alphaControl4PLT_withFeature_thinning
 特徴量に応じて不透明度を制御するプログラムです．
