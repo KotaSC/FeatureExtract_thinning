@@ -29,8 +29,8 @@ $ ./pfe [input_file_name.ply or .xyz or .spbr] [output_file_name.xyz]
 $ make
 ```
 
-2. 以下のコマンドを実行すると，```.spbr```ファイル(点群全体のデータ)と```.spbr_f.spbr```(特徴領域のデータ)が出力されます．また，
-```alphaControl4ply```には以下のオプションがあります．
+2. 以下のコマンドを実行すると，```.spbr```ファイル(点群全体のデータ)と```.spbr_f.spbr```(特徴領域のデータ)が出力されます．
+また，```alphaControl4ply```には以下のオプションがあります．
 
 - -l：リピートレベル
 - -a：点群全体の不透明度
