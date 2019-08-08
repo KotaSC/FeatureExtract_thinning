@@ -17,7 +17,7 @@ $ make
 ```
 2. 入力ファイルと出力ファイルを記述してください．3つめの```[output_file_name.xyz]```はオプションです，書かなかった場合には```out.xyz```というファイル名で結果が出力されます．
 ```
-$ pfe [input_file_name.ply or .xyz or .spbr] [output_file_name.xyz]
+$ ./pfe [input_file_name.ply or .xyz or .spbr] [output_file_name.xyz]
 ```
 
 ### ・alphaControl4PLY_withFeature_thinning
@@ -34,5 +34,5 @@ $ make
 - .spbr_f.spbrファイル：特徴領域のデータ
 
 ```
-$ alphaControl4ply [input_file_name.xyz] -a [全体の不透明度] -ft [特徴領域の閾値]
+$ ./alphaControl4ply [input_file_name.xyz] -a [全体の不透明度] -ft [特徴領域の閾値]
 ```
