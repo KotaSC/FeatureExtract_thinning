@@ -545,29 +545,29 @@ void calculateFeature::calcDepthDisplacement(kvs::PolygonObject *ply)
 
 void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
 {
-  std::vector<float> firstIteretionFeature;
-  std::vector<float> secondIteretionFeature;
+  std::vector<float> firstIterationFeature;
+  std::vector<float> secondIterationFeature;
 
   float diffFeature;
   double sigMax = 0.0;
   double firstIterationDiv  = m_searchRadius;
-  double secondIteretionDiv = m_searchRadius*0.5;
+  double secondIterationDiv = m_searchRadius*0.5;
 
   size_t numVert = ply->numberOfVertices();
 
-  firstIteretionFeature  = calcCurvature(ply, firstIterationDiv);
-  secondIteretionFeature = calcCurvature(ply, secondIteretionDiv);
+  firstIterationFeature  = calcCurvature(ply, firstIterationDiv);
+  secondIterationFeature = calcCurvature(ply, secondIterationDiv);
 
   for( int i = 0; i < numVert; i++ ) {
 
-    diffFeature = std::abs(firstIterationDiv[i] - secondIteretionDiv[i]);
+    diffFeature = std::fabs(firstIterationDiv - secondIterationDiv);
 
     m_feature.push_back(diffFeature);
 
-    if (sigMax < var)
-      sigMax = var;
-    if (!((i + 1) % INTERVAL))
-      std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
+    // if (sigMax < var)
+    //   sigMax = var;
+    // if (!((i + 1) % INTERVAL))
+    //   std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
   }
 
   m_maxFeature = sigMax;
