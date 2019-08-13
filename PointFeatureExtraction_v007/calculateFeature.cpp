@@ -1,5 +1,6 @@
 #include "calculateFeature.h"
 #include "octree.h"
+#include "RitsCLAPACK3D.h"
 
 #include <vector>
 #include <cmath>
@@ -193,7 +194,7 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
     zb /= (double)n0;
 
     //--- Calculaton of covariance matrix
-    double x2 = 0.0, y2 = 0.0, z2 = 0.0;
+    double xx = 0.0, yy = 0.0, zz = 0.0;
     double xy = 0.0, yz = 0.0, zx = 0.0;
     for (int j = 0; j < n0; j++)
     {
@@ -201,31 +202,51 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
       double nx = (coords[3 * nearInd[j]] - xb);
       double ny = (coords[3 * nearInd[j] + 1] - yb);
       double nz = (coords[3 * nearInd[j] + 2] - zb);
-      x2 += nx * nx;
-      y2 += ny * ny;
-      z2 += nz * nz;
+      xx += nx * nx;
+      yy += ny * ny;
+      zz += nz * nz;
       xy += nx * ny;
       yz += ny * nz;
       zx += nz * nx;
     }
     // 分散・共分散の計算
-    double s_x2 = x2 / (double)(n0);
-    double s_y2 = y2 / (double)(n0);
-    double s_z2 = z2 / (double)(n0);
+    double s_xx = xx / (double)(n0);
+    double s_yy = yy / (double)(n0);
+    double s_zz = zz / (double)(n0);
     double s_xy = xy / (double)(n0);
     double s_yz = yz / (double)(n0);
     double s_zx = zx / (double)(n0);
 
+    double s_yx = s_xy;
+    double s_zy = s_yz;
+    double s_xz = s_zx;
+
+    /***
+    // Caluculate Covariance matrix and EigenValues using KVS
     //---- Covariance matrix
     kvs::Matrix<double> M( 3, 3 );
-    M[0][0] = s_x2; M[0][1] = s_xy; M[0][2] = s_zx;
-    M[1][0] = s_xy; M[1][1] = s_y2; M[1][2] = s_yz;
-    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_z2;
+    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_xz;
+    M[1][0] = s_yx; M[1][1] = s_yy; M[1][2] = s_yz;
+    M[2][0] = s_zx; M[2][1] = s_zy; M[2][2] = s_zz;
 
     //---- Calcuation of eigenvalues
     kvs::EigenDecomposer<double> eigen( M );
-
     const kvs::Vector<double>& L = eigen.eigenValues();
+    ***/
+
+    // Caluculate Covariance matrix and EigenValues using CLAPACK
+    //---- Covariance matrix
+    double S_cov[3][3];
+    S_cov[0][0] = s_xx; S_cov[0][1] = s_xy; S_cov[0][2] = s_xz;
+    S_cov[1][0] = s_yx; S_cov[1][1] = s_yy; S_cov[1][2] = s_yz;
+    S_cov[2][0] = s_zx; S_cov[2][1] = s_zy; S_cov[2][2] = s_zz;
+
+    // Calcuation of covariance-matrix eigen values
+    double L[3];                                         // eigen values; L[0]>= L[1] >= L[2]
+    double normal_vec[3];                                // normalized eigen vector belonging to L[2]
+    RitsCLAPACK3D::EigenValues ( S_cov, L, normal_vec ); // Calc L and normal_vec
+
+    // std::cout << L[0] << " " << L[1] << " " << L[2] << std::endl;
 
     // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
     double sum = L[0] + L[1] + L[2];                // Sum of eigenvalues
@@ -293,7 +314,7 @@ void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
     int n0 = (int)nearInd.size();
 
     //--- Calculaton of covariance matrix
-    double x2 = 0.0, y2 = 0.0, z2 = 0.0;
+    double xx = 0.0, yy = 0.0, zz = 0.0;
     double xa = 0.0, ya = 0.0, za = 0.0;
     double xy = 0.0, yz = 0.0, zx = 0.0;
     for (int j = 0; j < n0; j++)
@@ -301,9 +322,9 @@ void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
       double nx = normal[3 * nearInd[j]];
       double ny = normal[3 * nearInd[j] + 1];
       double nz = normal[3 * nearInd[j] + 2];
-      x2 += nx * nx;
-      y2 += ny * ny;
-      z2 += nz * nz;
+      xx += nx * nx;
+      yy += ny * ny;
+      zz += nz * nz;
       xa += nx;
       ya += ny;
       za += nz;
@@ -311,18 +332,18 @@ void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
       yz += ny * nz;
       zx += nz * nx;
     }
-    double s_x2 = (x2 - xa * xa / (double)n0) / (double)n0;
-    double s_y2 = (y2 - ya * ya / (double)n0) / (double)n0;
-    double s_z2 = (z2 - za * za / (double)n0) / (double)n0;
+    double s_xx = (xx - xa * xa / (double)n0) / (double)n0;
+    double s_yy = (yy - ya * ya / (double)n0) / (double)n0;
+    double s_zz = (zz - za * za / (double)n0) / (double)n0;
     double s_xy = (xy - xa * ya / (double)n0) / (double)n0;
     double s_yz = (yz - ya * za / (double)n0) / (double)n0;
     double s_zx = (zx - za * xa / (double)n0) / (double)n0;
 
     //---- Covariance matrix
     kvs::Matrix<double> M( 3, 3 );
-    M[0][0] = s_x2; M[0][1] = s_xy; M[0][2] = s_zx;
-    M[1][0] = s_xy; M[1][1] = s_y2; M[1][2] = s_yz;
-    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_z2;
+    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_zx;
+    M[1][0] = s_xy; M[1][1] = s_yy; M[1][2] = s_yz;
+    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_zz;
 
     //---- Calcuation of eigenvalues
     kvs::EigenDecomposer<double> eigen( M );
@@ -481,7 +502,7 @@ void calculateFeature::calcDepthDisplacement(kvs::PolygonObject *ply)
     zb /= (double)n0;
 
     //--- Calculaton of covariance matrix
-    double x2 = 0.0, y2 = 0.0, z2 = 0.0;
+    double xx = 0.0, yy = 0.0, zz = 0.0;
     double xy = 0.0, yz = 0.0, zx = 0.0;
     for (int j = 0; j < n0; j++)
     {
@@ -489,26 +510,26 @@ void calculateFeature::calcDepthDisplacement(kvs::PolygonObject *ply)
       double nx = (coords[3 * nearInd[j]] - xb);
       double ny = (coords[3 * nearInd[j] + 1] - yb);
       double nz = (coords[3 * nearInd[j] + 2] - zb);
-      x2 += nx * nx;
-      y2 += ny * ny;
-      z2 += nz * nz;
+      xx += nx * nx;
+      yy += ny * ny;
+      zz += nz * nz;
       xy += nx * ny;
       yz += ny * nz;
       zx += nz * nx;
     }
     // 分散・共分散の計算
-    double s_x2 = x2 / (double)(n0);
-    double s_y2 = y2 / (double)(n0);
-    double s_z2 = z2 / (double)(n0);
+    double s_xx = xx / (double)(n0);
+    double s_yy = yy / (double)(n0);
+    double s_zz = zz / (double)(n0);
     double s_xy = xy / (double)(n0);
     double s_yz = yz / (double)(n0);
     double s_zx = zx / (double)(n0);
 
     //---- Covariance matrix
     kvs::Matrix<double> M( 3, 3 );
-    M[0][0] = s_x2; M[0][1] = s_xy; M[0][2] = s_zx;
-    M[1][0] = s_xy; M[1][1] = s_y2; M[1][2] = s_yz;
-    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_z2;
+    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_zx;
+    M[1][0] = s_xy; M[1][1] = s_yy; M[1][2] = s_yz;
+    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_zz;
 
     //---- Calcuation of eigenvalues
     kvs::EigenDecomposer<double> eigen( M );
@@ -633,7 +654,7 @@ std::vector<float> calculateFeature::calcCurvature(kvs::PolygonObject* ply, doub
     zb /= (double)n0;
 
     //--- Calculaton of covariance matrix
-    double x2 = 0.0, y2 = 0.0, z2 = 0.0;
+    double xx = 0.0, yy = 0.0, zz = 0.0;
     double xy = 0.0, yz = 0.0, zx = 0.0;
     for (int j = 0; j < n0; j++)
     {
@@ -641,26 +662,26 @@ std::vector<float> calculateFeature::calcCurvature(kvs::PolygonObject* ply, doub
       double nx = (coords[3 * nearInd[j]] - xb);
       double ny = (coords[3 * nearInd[j] + 1] - yb);
       double nz = (coords[3 * nearInd[j] + 2] - zb);
-      x2 += nx * nx;
-      y2 += ny * ny;
-      z2 += nz * nz;
+      xx += nx * nx;
+      yy += ny * ny;
+      zz += nz * nz;
       xy += nx * ny;
       yz += ny * nz;
       zx += nz * nx;
     }
     // 分散・共分散の計算
-    double s_x2 = x2 / (double)(n0);
-    double s_y2 = y2 / (double)(n0);
-    double s_z2 = z2 / (double)(n0);
+    double s_xx = xx / (double)(n0);
+    double s_yy = yy / (double)(n0);
+    double s_zz = zz / (double)(n0);
     double s_xy = xy / (double)(n0);
     double s_yz = yz / (double)(n0);
     double s_zx = zx / (double)(n0);
 
     //---- Covariance matrix
     kvs::Matrix<double> M( 3, 3 );
-    M[0][0] = s_x2; M[0][1] = s_xy; M[0][2] = s_zx;
-    M[1][0] = s_xy; M[1][1] = s_y2; M[1][2] = s_yz;
-    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_z2;
+    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_zx;
+    M[1][0] = s_xy; M[1][1] = s_yy; M[1][2] = s_yz;
+    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_zz;
 
     //---- Calcuation of eigenvalues
     kvs::EigenDecomposer<double> eigen( M );
