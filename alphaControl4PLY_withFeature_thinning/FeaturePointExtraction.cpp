@@ -13,20 +13,18 @@ FeaturePointExtraction::FeaturePointExtraction( void ) {
 
 FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject* ply,
                                                 std::vector<float> &ft,
-                                                double ft_ratio,
                                                 double threshold,
                                                 int repeatLevel,
                                                 kvs::Vector3f BBMin,
                                                 kvs::Vector3f BBMax,
                                                 AlphaControlforPLY *fpoint )
 {
-  alpbaControl4Feature( ply, ft, ft_ratio, threshold, repeatLevel, BBMin, BBMax, fpoint );
+  alpbaControl4Feature( ply, ft, threshold, repeatLevel, BBMin, BBMax, fpoint );
 
 }
 
 void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
                                                    std::vector<float> &ft,
-                                                   double ft_ratio,
                                                    double threshold,
                                                    int repeatLevel,
                                                    kvs::Vector3f BBMin,

@@ -15,7 +15,6 @@ class FeaturePointExtraction: public kvs::PointObject {
   FeaturePointExtraction( void );
   FeaturePointExtraction( kvs::PolygonObject* ply,
 						  std::vector<float> &ft,
-						  double ft_ratio,
 						  double threshold,
 						  int repeatLevel,
 						  kvs::Vector3f BBMin,
@@ -24,7 +23,6 @@ class FeaturePointExtraction: public kvs::PointObject {
  private:
   void alpbaControl4Feature( kvs::PolygonObject* ply,
 						     std::vector<float> &ft,
-						     double ft_ratio,
 						     double threshold,
 							 int repeatLevel,
 							 kvs::Vector3f BBMin,

@@ -31,9 +31,8 @@ int main(int argc, char **argv)
     std::cout << "[Option] -a : Set the opacity ( default is " << OPACITY << " ) \n"
               << "         -l : Set the repeat level ( default is " << REPEAT_LEVEL << " ) \n"
               << "         -i : Set the image resolution ( default is " << IMAGE_RESOLUTION << " ) \n"
-              << "        -fa : Set the opacity for feature extraction ( default is " << FEATURE_OPACITY << " ) \n"
               << "        -ft : Set the threshold for feature extraction ( default is " << THRESHOLD << " ) \n"
-              << "[For example] " << argv[0] << " -a 0.1 -l 700 -fa 0.5 -ft 0.03 xxx.xyz"
+              << "[For example] " << argv[0] << " -a 0.1 -l 700 -ft 0.03 xxx.xyz"
               << std::endl;
     exit(1);
   }
@@ -41,7 +40,6 @@ int main(int argc, char **argv)
   int repeatLevel     = REPEAT_LEVEL;
   int imageResolution = IMAGE_RESOLUTION;
   double alpha        = OPACITY;
-  double ftAlpha      = FEATURE_OPACITY;
   double ftThresh     = THRESHOLD;
 
   fileList *files = new fileList(argv[1]);
@@ -50,7 +48,6 @@ int main(int argc, char **argv)
   std::vector<std::string> inputFiles = files->plyFiles();
   std::vector<std::string> outptFiles = files->pbrFiles();
   std::vector<float> opacities = files->alphas();
-  std::vector<float> opacities_ft = files->alphas_ft();
   std::vector<float> thresholds = files->thresholds();
 
   if (numFiles == 0)
@@ -79,11 +76,6 @@ int main(int argc, char **argv)
         imageResolution = atoi(argv[i + 1]);
         i++;
       }
-      else if (!strncmp(FEATURE_ALPHA, argv[i], strlen(FEATURE_ALPHA)))
-      {
-        ftAlpha = atof(argv[i + 1]);
-        i++;
-      }
       else if (!strncmp(FEATURE_THRESHOLD, argv[i], strlen(FEATURE_THRESHOLD)))
       {
         ftThresh = atof(argv[i + 1]);
@@ -101,7 +93,6 @@ int main(int argc, char **argv)
           std::string tmp;
           std::stringstream ssLR;
           std::stringstream ssAlpha;
-          std::stringstream ssFtAlpha;
           std::stringstream ssTh;
 
           output_tmp += "LR";
@@ -128,7 +119,6 @@ int main(int argc, char **argv)
           inputFiles.push_back(argv[i]);
           outptFiles.push_back(output_tmp);
           opacities.push_back(alpha);
-          opacities_ft.push_back(ftAlpha);
           thresholds.push_back(ftThresh);
         }
       }
@@ -211,15 +201,10 @@ int main(int argc, char **argv)
     writePBRfile(files, repeatLevel, imageResolution, outptFiles[i], point);
 
     //--- Feature Visualization
-    // 任意の不透明度を実現するために必要な点数・増減率を計算する
-    double a_num    = point->calculateRequiredPartcleNumber(opacities_ft[i], repeatLevel, BBMin, BBMax);
-    double ft_ratio = point->pointRatio(a_num);
-
-    std::cout << "Opacity for the Feature: " << opacities_ft[i] << ", " << ft_ratio << std::endl;
     std::vector<float> ft = ply->featureData();
 
     FeaturePointExtraction *f_point =
-        new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i], repeatLevel, BBMin, BBMax, point);
+        new FeaturePointExtraction(ply, ft, thresholds[i], repeatLevel, BBMin, BBMax, point);
 
     std::string ofname(outptFiles[i]);
     ofname += "_f.spbr";
