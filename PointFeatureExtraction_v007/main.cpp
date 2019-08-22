@@ -37,9 +37,12 @@ int main( int argc, char** argv )
 
   //--- Select type of Feature
   ft->setFeatureType( calculateFeature::PointPCA );
-  //  ft->addNoise( 0.1 );
-  //ft->setFeatureType( calculateFeature::NormalPCA );
-  //  ft->setFeatureType( calculateFeature::NormalDispersion );
+  // ft->setFeatureType( calculateFeature::InnerProductOfNormal );
+  // ft->setFeatureType( calculateFeature::DepthDisplacement );
+  // ft->setFeatureType( calculateFeature::CurvatureDifference );
+  // ft->addNoise( 0.1 );
+  // ft->setFeatureType( calculateFeature::NormalPCA );
+  // ft->setFeatureType( calculateFeature::NormalDispersion );
 
   // double div = 50;
   // double div = 100.0;
@@ -47,6 +50,7 @@ int main( int argc, char** argv )
   // double div = 200.0;
   // double div = 300.0;
   double div = 500.0;
+  // double div = 1000.0;
   // std::cout << "Input Division : ";
   // std::cin >> div;
 
@@ -67,13 +71,15 @@ int main( int argc, char** argv )
   kvs::PointObject* object = new kvs::PointObject( *ply );
 
   float ftMax = (float)ft->maxFeature();
+  float ftMin = (float)ft->minFeature();
   kvs::ColorMap cmap( 256.0, 0.0, ftMax );
   //  kvs::ColorMap cmap( 256, 0.0175976, 0.021997 );
+  // kvs::ColorMap cmap( 256, ftMin, ftMax );
   cmap.create();
 
   std::vector<unsigned char> cl;
   for( size_t i=0; i<ply->numberOfVertices(); i++ ) {
-    kvs::RGBColor color( cmap.at( ftvec[i]  ) );
+    kvs::RGBColor color( cmap.at( ftvec[i] ) );
     cl.push_back( color.r() );
     cl.push_back( color.g() );
     cl.push_back( color.b() );

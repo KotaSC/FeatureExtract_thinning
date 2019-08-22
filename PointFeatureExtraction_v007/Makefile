@@ -20,7 +20,7 @@ OBJECTS :=
 INCLUDE_PATH :=-I/usr/local/include/pcl-1.8 -I/opt/local/include/eigen3 -I/opt/local/include
 LIBRARY_PATH :=-L/opt/local/lib -L/usr/local/lib
 # LINK_LIBRARY :=-lpcl_kdtree -lpcl_common -lpcl_search -lpcl_features -framework vecLib
-# LINK_LIBRARY :=-lpcl_kdtree -lpcl_common -lpcl_search -lpcl_features -framework Accelerate
+LINK_LIBRARY :=-framework Accelerate
 
 INSTALL_DIR  :=
 

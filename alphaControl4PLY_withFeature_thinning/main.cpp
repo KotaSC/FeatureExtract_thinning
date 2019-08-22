@@ -6,6 +6,8 @@
 
 #include <cstring>
 #include <cstdlib>
+#include <string>
+#include <sstream>
 
 #include "AlphaControlforPLY.h"
 #include "ImportPointClouds.h"
@@ -29,7 +31,6 @@ int main(int argc, char **argv)
     std::cout << "[Option] -a : Set the opacity ( default is " << OPACITY << " ) \n"
               << "         -l : Set the repeat level ( default is " << REPEAT_LEVEL << " ) \n"
               << "         -i : Set the image resolution ( default is " << IMAGE_RESOLUTION << " ) \n"
-              << "        -fa : Set the opacity for feature extraction ( default is " << FEATURE_OPACITY << " ) \n"
               << "        -ft : Set the threshold for feature extraction ( default is " << THRESHOLD << " ) \n"
               << "[For example] " << argv[0] << " -a 0.1 -l 700 -fa 0.5 -ft 0.03 xxx.xyz"
               << std::endl;
@@ -96,8 +97,39 @@ int main(int argc, char **argv)
         {
           numFiles++;
           std::string output_tmp(OUT_PBR_FILE);
+          std::string tmp;
+          std::stringstream ssLR;
+          std::stringstream ssAlpha;
+          std::stringstream ssFtAlpha;
+          std::stringstream ssTh;
+
+          output_tmp += "LR";
+          ssLR << repeatLevel;
+          ssLR >> tmp;
+          output_tmp += tmp;
+
+          output_tmp += "_alpha";
+          ssAlpha << alpha;
+          ssAlpha >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_ftAlpha";
+          ssFtAlpha << ftAlpha;
+          ssFtAlpha >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_Th";
+          ssTh << ftThresh;
+          ssTh >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_";
           output_tmp += getFileName(argv[i]);
           output_tmp += ".spbr";
+
           inputFiles.push_back(argv[i]);
           outptFiles.push_back(output_tmp);
           opacities.push_back(alpha);
@@ -184,15 +216,15 @@ int main(int argc, char **argv)
     writePBRfile(files, repeatLevel, imageResolution, outptFiles[i], point);
 
     //--- Feature Visualization
-    // 任意の不透明度を実現するために必要な点数を計算する
-    double a_num = point->calculateRequiredPartcleNumber(opacities_ft[i], repeatLevel, BBMin, BBMax);
+    // 任意の不透明度を実現するために必要な点数・増減率を計算する
+    double a_num    = point->calculateRequiredPartcleNumber(opacities_ft[i], repeatLevel, BBMin, BBMax);
     double ft_ratio = point->pointRatio(a_num);
 
     std::cout << "Opacity for the Feature: " << opacities_ft[i] << ", " << ft_ratio << std::endl;
     std::vector<float> ft = ply->featureData();
 
     FeaturePointExtraction *f_point =
-        new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i]);
+        new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i], repeatLevel, BBMin, BBMax, point);
 
     std::string ofname(outptFiles[i]);
     ofname += "_f.spbr";
