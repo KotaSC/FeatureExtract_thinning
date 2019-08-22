@@ -38,7 +38,11 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   // 特徴量の最大値を求める
   double maxFt = *std::max_element( ft.begin(), ft.end() );
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> origin/master
   int num = 0;
   for( size_t i = 0; i < numVert; i++ ) {
     if( ft[i] > threshold ) {
@@ -67,7 +71,11 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   double alphaMin = ALPHA_MIN;
   double dim      = DIMENSION;
   double xMax     = X_MAX;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> origin/master
   double initialPoint = xMax - ( threshold/maxFt );
   double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
 
@@ -106,6 +114,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       SetNormals.push_back( normals[3*index+1] );
       SetNormals.push_back( normals[3*index+2] );
 
+<<<<<<< HEAD
       // SetColors.push_back( colors[3*index] );
       // SetColors.push_back( colors[3*index+1] );
       // SetColors.push_back( colors[3*index+2] );
@@ -113,6 +122,15 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       SetColors.push_back( 255 );
       SetColors.push_back( 0 );
       SetColors.push_back( 0 );
+=======
+      SetColors.push_back( colors[3*index] );
+      SetColors.push_back( colors[3*index+1] );
+      SetColors.push_back( colors[3*index+2] );
+
+      // SetColors.push_back( 255 );
+      // SetColors.push_back( 0 );
+      // SetColors.push_back( 0 );
+>>>>>>> origin/master
 
       // SetColors.push_back( 255 * ft[index]/maxFt );
       // SetColors.push_back( 0 );
@@ -120,7 +138,16 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     }
   }
 
+<<<<<<< HEAD
   SuperClass::setCoords ( kvs::ValueArray<kvs::Real32>( SetCoords  ) );
   SuperClass::setNormals( kvs::ValueArray<kvs::Real32>( SetNormals ) );
   SuperClass::setColors ( kvs::ValueArray<kvs::UInt8> ( SetColors  ) );
 }
+=======
+
+
+  SuperClass::setCoords ( kvs::ValueArray<kvs::Real32>( SetCoords  ) );
+  SuperClass::setNormals( kvs::ValueArray<kvs::Real32>( SetNormals ) );
+  SuperClass::setColors ( kvs::ValueArray<kvs::UInt8> ( SetColors  ) );
+}
+>>>>>>> origin/master

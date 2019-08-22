@@ -8,7 +8,11 @@ const int REPEAT_LEVEL       = 200;
 const int IMAGE_RESOLUTION   = 1000;
 const double OPACITY         = 0.2;
 const double FEATURE_OPACITY = 0.9;
+<<<<<<< HEAD
 const double THRESHOLD       = 0.01;
+=======
+const double THRESHOLD       = 0.5;
+>>>>>>> origin/master
 const char OUT_PBR_FILE[]    = "../SPBR_DATA/out-";
 //---------------------------------------------------
 
