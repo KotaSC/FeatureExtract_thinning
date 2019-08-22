@@ -31,10 +31,7 @@ int main(int argc, char **argv)
     std::cout << "[Option] -a : Set the opacity ( default is " << OPACITY << " ) \n"
               << "         -l : Set the repeat level ( default is " << REPEAT_LEVEL << " ) \n"
               << "         -i : Set the image resolution ( default is " << IMAGE_RESOLUTION << " ) \n"
-<<<<<<< HEAD
-=======
               << "        -fa : Set the opacity for feature extraction ( default is " << FEATURE_OPACITY << " ) \n"
->>>>>>> origin/master
               << "        -ft : Set the threshold for feature extraction ( default is " << THRESHOLD << " ) \n"
               << "[For example] " << argv[0] << " -a 0.1 -l 700 -fa 0.5 -ft 0.03 xxx.xyz"
               << std::endl;
