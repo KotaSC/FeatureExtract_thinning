@@ -115,12 +115,6 @@ int main(int argc, char **argv)
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
           output_tmp += tmp;
 
-          output_tmp += "_ftAlpha";
-          ssFtAlpha << ftAlpha;
-          ssFtAlpha >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
-
           output_tmp += "_Th";
           ssTh << ftThresh;
           ssTh >> tmp;
