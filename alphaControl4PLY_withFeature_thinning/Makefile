@@ -26,7 +26,7 @@ OBJECTS :=
 #---- For iMac
 INCLUDE_PATH :=-Wdeprecated-declarations  -I/usr/local/include/pcl-1.8 -I/opt/local/include/eigen3 -I/opt/local/include
 LIBRARY_PATH :=-L/opt/local/lib -L/usr/local/lib
-LINK_LIBRARY :=-lpcl_kdtree -lflann_cpp -lpcl_common
+# LINK_LIBRARY :=-lpcl_kdtree -lflann_cpp -lpcl_common
 
 INSTALL_DIR  :=
 
