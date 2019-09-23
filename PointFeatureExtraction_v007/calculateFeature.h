@@ -53,6 +53,7 @@ class calculateFeature
   void calcInnerProductOfNormal( kvs::PolygonObject* ply );
   void calcDepthDisplacement( kvs::PolygonObject* ply );
   void calcCurvatureDifference( kvs::PolygonObject* ply );
+  void calcMinimumEntropy( kvs::PolygonObject* ply );
 
   std::vector<float> calcCurvature( kvs::PolygonObject* ply, double bbDiv );
 

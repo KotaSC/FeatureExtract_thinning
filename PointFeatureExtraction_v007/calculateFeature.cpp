@@ -581,7 +581,7 @@ void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
 
   for( int i = 0; i < numVert; i++ ) {
 
-    diffFeature = std::fabs(firstIterationDiv - secondIterationDiv);
+    diffFeature = std::fabs(firstIterationFeature - secondIterationFeature);
 
     m_feature.push_back(diffFeature);
 
