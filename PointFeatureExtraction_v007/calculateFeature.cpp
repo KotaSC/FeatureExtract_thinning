@@ -251,7 +251,8 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
     // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
     double sum = L[0] + L[1] + L[2];                // Sum of eigenvalues
     // double var = searchPoint.x;
-    double var = L[2] / sum;                        // Change of curvature
+    // double var = L[2] / sum;                        // Change of curvature
+    double var = -( L[0]*log(L[0]) + L[1]*log(L[1]) + L[2]*log(L[2]) );  // eigentropy
     // double var = (L[0] - L[1]) / L[0];           // Linearity
     // double var = L[1] - L[2] / L[0];             // Planarity
     // double var = 1 - ( ( L[1] - L[2] ) / L[0] ); // Aplanarity
@@ -581,7 +582,7 @@ void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
 
   for( int i = 0; i < numVert; i++ ) {
 
-    diffFeature = std::fabs(firstIterationFeature - secondIterationFeature);
+    diffFeature = std::fabs(firstIterationFeature[i] - secondIterationFeature[i]);
 
     m_feature.push_back(diffFeature);
 
