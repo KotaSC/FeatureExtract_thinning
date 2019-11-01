@@ -601,6 +601,10 @@ void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 }
 
+void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
+{
+}
+
 std::vector<float> calculateFeature::calcCurvature(kvs::PolygonObject* ply, double bbDiv)
 {
   ply->updateMinMaxCoords();

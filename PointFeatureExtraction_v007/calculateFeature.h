@@ -15,7 +15,8 @@ class calculateFeature
     NormalDispersion     = 2,
     InnerProductOfNormal = 3,
     DepthDisplacement    = 4,
-    CurvatureDifference  = 5
+    CurvatureDifference  = 5,
+    MinimumEntropy       = 7
   };
  public:
   calculateFeature( void );

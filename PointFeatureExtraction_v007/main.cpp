@@ -43,6 +43,7 @@ int main( int argc, char** argv )
   // ft->addNoise( 0.1 );
   // ft->setFeatureType( calculateFeature::NormalPCA );
   // ft->setFeatureType( calculateFeature::NormalDispersion );
+  // ft->setFeatureType( calculateFeature::MinimumEntropy );
 
   // double div = 50;
   // double div = 100.0;
