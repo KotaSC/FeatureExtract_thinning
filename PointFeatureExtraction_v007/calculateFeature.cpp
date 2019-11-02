@@ -251,6 +251,7 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
     // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
     double sum = L[0] + L[1] + L[2];                // Sum of eigenvalues
     // double var = searchPoint.x;
+
     // double var = L[2] / sum;                        // Change of curvature
 
     double lambda1 = L[0] / sum;

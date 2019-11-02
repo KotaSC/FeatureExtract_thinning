@@ -45,15 +45,12 @@ int main( int argc, char** argv )
   // ft->setFeatureType( calculateFeature::NormalDispersion );
   // ft->setFeatureType( calculateFeature::MinimumEntropy );
 
-  // double div = 50;
-  // double div = 100.0;
-  // double div = 150.0;
-  // double div = 200.0;
-  // double div = 300.0;
-  double div = 500.0;
-  // double div = 1000.0;
-  // std::cout << "Input Division : ";
-  // std::cin >> div;
+  double div;
+
+  std::cout << "========================" << std::endl;
+  std::cout << "Input Division : ";
+  std::cin >> div;
+  std::cout << "========================" << std::endl;
 
   ft-> setSearchRadius( div, ply->minObjectCoord() , ply->maxObjectCoord() );
 
