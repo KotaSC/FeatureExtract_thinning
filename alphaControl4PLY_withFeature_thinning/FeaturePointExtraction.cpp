@@ -61,10 +61,10 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::vector<kvs::Real32> SetNormals;
   std::vector<kvs::UInt8>  SetColors;
 
-  double alphaMax = ALPHA_MAX;
-  double alphaMin = ALPHA_MIN;
-  double dim      = DIMENSION;
-  double xMax     = X_MAX;
+  double alphaMax     = ALPHA_MAX;
+  double alphaMin     = ALPHA_MIN;
+  double dim          = DIMENSION;
+  double xMax         = X_MAX;
   double initialPoint = xMax - ( threshold/maxFt );
   double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
 

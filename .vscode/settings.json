@@ -51,6 +51,7 @@
         "cinttypes": "cpp",
         "tuple": "cpp",
         "utility": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "list": "cpp"
     }
 }

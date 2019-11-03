@@ -252,12 +252,12 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
     double sum = L[0] + L[1] + L[2];                // Sum of eigenvalues
     // double var = searchPoint.x;
 
-    // double var = L[2] / sum;                        // Change of curvature
+    double var = L[2] / sum;                        // Change of curvature
 
-    double lambda1 = L[0] / sum;
-    double lambda2 = L[1] / sum;
-    double lambda3 = L[2] / sum;
-    double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );  // eigentropy
+    // double lambda1 = L[0] / sum;
+    // double lambda2 = L[1] / sum;
+    // double lambda3 = L[2] / sum;
+    // double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );  // eigentropy
 
     // double var = (L[0] - L[1]) / L[0];           // Linearity
     // double var = L[1] - L[2] / L[0];             // Planarity
