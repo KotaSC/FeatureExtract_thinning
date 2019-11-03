@@ -8,7 +8,8 @@ const int REPEAT_LEVEL       = 200;
 const int IMAGE_RESOLUTION   = 1000;
 const double OPACITY         = 0.2;
 const double THRESHOLD       = 0.05;
-const char OUT_PBR_FILE[]    = "../SPBR_DATA/out-";
+const char OUT_PBR_FILE[]    = "";
+const char DIR_NAME[]        = "";
 //---------------------------------------------------
 
 #endif
