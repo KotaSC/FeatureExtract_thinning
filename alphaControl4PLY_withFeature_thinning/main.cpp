@@ -19,6 +19,7 @@
 #include "alp_option.h"
 #include "event_control.h"
 #include "FeaturePointExtraction.h"
+#include "feature_customize.h"
 
 const double DEFAULT_CAMERA_DISTANCE = 12.0;
 
@@ -41,6 +42,10 @@ int main(int argc, char **argv)
   int imageResolution = IMAGE_RESOLUTION;
   double alpha        = OPACITY;
   double ftThresh     = THRESHOLD;
+  double alphaMax     = ALPHA_MAX;
+  double alphaMin     = ALPHA_MIN;
+  double dimension    = DIMENSION;
+  double xMax         = X_MAX;
 
   fileList *files = new fileList(argv[1]);
 
@@ -94,13 +99,17 @@ int main(int argc, char **argv)
           std::stringstream ssLR;
           std::stringstream ssAlpha;
           std::stringstream ssTh;
+          std::stringstream ssAlphaMax;
+          std::stringstream ssAlphaMin;
+          std::stringstream ssDimension;
+          std::stringstream ssXMax;
 
           output_tmp += "LR";
           ssLR << repeatLevel;
           ssLR >> tmp;
           output_tmp += tmp;
 
-          output_tmp += "_alpha";
+          output_tmp += "_Alpha";
           ssAlpha << alpha;
           ssAlpha >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
@@ -109,6 +118,30 @@ int main(int argc, char **argv)
           output_tmp += "_Th";
           ssTh << ftThresh;
           ssTh >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_AlphaMax";
+          ssAlphaMax << alphaMax;
+          ssAlphaMax >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_AlphaMin";
+          ssAlphaMin << alphaMin;
+          ssAlphaMin >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_Dimension";
+          ssDimension << dimension;
+          ssDimension >> tmp;
+          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
+          output_tmp += tmp;
+
+          output_tmp += "_XMax";
+          ssXMax << xMax;
+          ssXMax >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
           output_tmp += tmp;
 

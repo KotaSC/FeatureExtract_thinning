@@ -45,11 +45,11 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     }
   }
 
-  // 特徴量の合計値
+  // Max feature value
   // double sumFt = std::accumulate( ftNorm.begin(), ftNorm.end(), 0.0 );
   // std::cout << "Sum of feature value    : " << sumFt << std::endl;
 
-  // 特徴量の平均値
+  // Mean feature value
   // double aveFt = sumFt/ftNorm.size();
   // std::cout << "Avarage of feature value: " << aveFt << std::endl;
 
