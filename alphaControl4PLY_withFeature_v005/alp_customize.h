@@ -9,7 +9,7 @@ const int IMAGE_RESOLUTION   = 1000;
 const double OPACITY         = 0.2;
 const double FEATURE_OPACITY = 0.9;
 const double THRESHOLD       = 0.05;
-const char OUT_PBR_FILE[]    = "../SPBR_DATA/out-"; 
+const char OUT_PBR_FILE[]    = ""../SPBR_DATA/out-";
 //---------------------------------------------------
 
 #endif
