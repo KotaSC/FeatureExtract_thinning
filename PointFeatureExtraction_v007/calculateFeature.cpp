@@ -438,8 +438,8 @@ void calculateFeature::calcDoNFeature(kvs::PolygonObject *ply)
 
   double doN;
   double sigMax = 0.0;
-  double smallRadius  = m_searchRadius;
-  double largeRadius  = m_searchRadius*0.5;
+  double smallRadius  = m_searchRadius*0.8;
+  double largeRadius  = m_searchRadius;
 
   size_t numVert = ply->numberOfVertices();
 
