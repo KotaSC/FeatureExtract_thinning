@@ -13,10 +13,8 @@ class calculateFeature
     PointPCA             = 0,
     NormalPCA            = 1,
     NormalDispersion     = 2,
-    InnerProductOfNormal = 3,
-    DepthDisplacement    = 4,
-    DoNFeature       = 5,
-    MinimumEntropy       = 6
+    DoNFeature           = 3,
+    MinimumEntropy       = 4
   };
  public:
   calculateFeature( void );
