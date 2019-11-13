@@ -436,35 +436,47 @@ void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
   std::vector<float> smallRadFeature;
   std::vector<float> largeRadFeature;
 
-  double doN;
+  double doC;
   double sigMax = 0.0;
-  double smallRadius  = m_searchRadius*0.8;
+  double M;
+
+
+  std::cout << "=========================================================" << std::endl;
+  std::cout << "Input Neighbor Radius Maginification M ( 0 < M < 1 ) : ";
+  std::cin >> M;
+  std::cout << "=========================================================" << std::endl;
+
+
+  double smallRadius  = m_searchRadius*M;
   double largeRadius  = m_searchRadius;
 
   size_t numVert = ply->numberOfVertices();
 
-  std::cout << "======================================" << std::endl;
+  std::cout << "============================================" << std::endl;
+  std::cout << "smallRadius : " << smallRadius << std::endl;
   std::cout << "Start feature calculation with small radius" << std::endl;
 
   smallRadFeature  = calcFeature( ply, smallRadius );
   
   std::cout << "Finish feature calculation with small radius" << std::endl;
-  std::cout << "======================================" << std::endl;
+  std::cout << "============================================" << std::endl;
 
-  std::cout << "======================================" << std::endl;
+  std::cout << "============================================" << std::endl;
+   std::cout << "largeRadius : " << largeRadius << std::endl;
   std::cout << "Start feature calculation with large radius" << std::endl;
 
   largeRadFeature  = calcFeature( ply, largeRadius );
 
   std::cout << "Finish feature calculation with large radius" << std::endl;
-  std::cout << "======================================" << std::endl;
+  std::cout << "============================================" << std::endl;
 
 
   for( int i = 0; i < numVert; i++ ) {
 
-    doN = std::fabs( std::fabs( smallRadFeature[i] ) - std::fabs( largeRadFeature[i] ) ) / 2.0;
+    // Calculate DoC feature
+    doC = std::fabs( std::fabs( smallRadFeature[i] ) - std::fabs( largeRadFeature[i] ) ) / 2.0;
 
-    m_feature.push_back( doN );
+    m_feature.push_back( doC );
 
     // if (sigMax < var)
     //   sigMax = var;
@@ -600,5 +612,5 @@ std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double
   maxFeature = sigMax;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 
-  return featureValue
+  return featureValue;
 }
