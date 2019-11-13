@@ -117,9 +117,9 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   {
     calcNormalDispersion(ply, normal);
   }
-  else if (m_type == DoNFeature)
+  else if (m_type == DoCFeature)
   {
-    calcDoNFeature(ply);
+    calcDoCFeature(ply);
   }
 }
 
@@ -431,7 +431,7 @@ void calculateFeature::calcNormalDispersion(kvs::PolygonObject *ply,
 
 
 
-void calculateFeature::calcDoNFeature(kvs::PolygonObject *ply)
+void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
 {
   std::vector<float> smallRadFeature;
   std::vector<float> largeRadFeature;
@@ -443,8 +443,22 @@ void calculateFeature::calcDoNFeature(kvs::PolygonObject *ply)
 
   size_t numVert = ply->numberOfVertices();
 
+  std::cout << "======================================" << std::endl;
+  std::cout << "Start feature calculation with small radius" << std::endl;
+
   smallRadFeature  = calcFeature( ply, smallRadius );
+  
+  std::cout << "Finish feature calculation with small radius" << std::endl;
+  std::cout << "======================================" << std::endl;
+
+  std::cout << "======================================" << std::endl;
+  std::cout << "Start feature calculation with large radius" << std::endl;
+
   largeRadFeature  = calcFeature( ply, largeRadius );
+
+  std::cout << "Finish feature calculation with large radius" << std::endl;
+  std::cout << "======================================" << std::endl;
+
 
   for( int i = 0; i < numVert; i++ ) {
 
@@ -491,6 +505,10 @@ std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double
 
   kvs::MersenneTwister uniRand;
   double sigMax = 0.0;
+  
+  // Feature data
+  std::vector<float> featureValue;
+  double maxFeature;
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for (size_t i = 0; i < numVert; i++)
@@ -572,15 +590,15 @@ std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double
       var = 0.0;
 
     //---　Contributing rate of 3rd(minimum) component
-    m_feature.push_back(var);
+    featureValue.push_back(var);
     if (sigMax < var)
       sigMax = var;
     if (!((i + 1) % INTERVAL))
       std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
   }
 
-  m_maxFeature = sigMax;
+  maxFeature = sigMax;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 
-  return m_feature;
+  return featureValue
 }
