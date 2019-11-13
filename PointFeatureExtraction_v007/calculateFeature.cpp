@@ -125,9 +125,9 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   {
     calcDepthDisplacement(ply);
   }
-  else if (m_type == CurvatureDifference)
+  else if (m_type == DoNFeature)
   {
-    calcCurvatureDifference(ply);
+    calcDoNFeature(ply);
   }
 }
 
@@ -563,26 +563,26 @@ void calculateFeature::calcDepthDisplacement(kvs::PolygonObject *ply)
   std::cout << "Minimum of Sigma : " << sigMin << std::endl;
 }
 
-void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
+void calculateFeature::calcDoNFeature(kvs::PolygonObject *ply)
 {
-  std::vector<float> firstIterationFeature;
-  std::vector<float> secondIterationFeature;
+  std::vector<float> smallRadFeature;
+  std::vector<float> largeRadFeature;
 
-  float diffFeature;
+  double doN;
   double sigMax = 0.0;
-  double firstIterationDiv  = m_searchRadius;
-  double secondIterationDiv = m_searchRadius*0.5;
+  double smallRadius  = m_searchRadius;
+  double largeRadius  = m_searchRadius*0.5;
 
   size_t numVert = ply->numberOfVertices();
 
-  firstIterationFeature  = calcFeature(ply, firstIterationDiv);
-  secondIterationFeature = calcFeature(ply, secondIterationDiv);
+  smallRadFeature  = calcFeature( ply, smallRadius );
+  largeRadFeature  = calcFeature( ply, largeRadius );
 
   for( int i = 0; i < numVert; i++ ) {
 
-    diffFeature = std::fabs(firstIterationFeature[i] - secondIterationFeature[i]);
+    doN = std::fabs( std::fabs( smallRadFeature[i] ) - std::fabs( largeRadFeature[i] ) ) / 2.0;
 
-    m_feature.push_back(diffFeature);
+    m_feature.push_back( doN );
 
     // if (sigMax < var)
     //   sigMax = var;

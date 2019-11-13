@@ -15,8 +15,8 @@ class calculateFeature
     NormalDispersion     = 2,
     InnerProductOfNormal = 3,
     DepthDisplacement    = 4,
-    CurvatureDifference  = 5,
-    MinimumEntropy       = 7
+    DoNFeature       = 5,
+    MinimumEntropy       = 6
   };
  public:
   calculateFeature( void );
@@ -53,7 +53,7 @@ class calculateFeature
 		       std::vector<float> &normal );
   void calcInnerProductOfNormal( kvs::PolygonObject* ply );
   void calcDepthDisplacement( kvs::PolygonObject* ply );
-  void calcCurvatureDifference( kvs::PolygonObject* ply );
+  void calcDoNFeature( kvs::PolygonObject* ply );
   void calcMinimumEntropy( kvs::PolygonObject* ply );
 
   std::vector<float> calcFeature( kvs::PolygonObject* ply, double bbDiv );
