@@ -56,7 +56,7 @@ class calculateFeature
   void calcCurvatureDifference( kvs::PolygonObject* ply );
   void calcMinimumEntropy( kvs::PolygonObject* ply );
 
-  std::vector<float> calcCurvature( kvs::PolygonObject* ply, double bbDiv );
+  std::vector<float> calcFeature( kvs::PolygonObject* ply, double bbDiv );
 
 };
 

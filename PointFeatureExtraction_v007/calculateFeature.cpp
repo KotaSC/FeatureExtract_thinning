@@ -1,6 +1,5 @@
 #include "calculateFeature.h"
 #include "octree.h"
-#include "RitsCLAPACK3D.h"
 
 #include <vector>
 #include <cmath>
@@ -221,7 +220,6 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
     double s_zy = s_yz;
     double s_xz = s_zx;
 
-    /***
     // Caluculate Covariance matrix and EigenValues using KVS
     //---- Covariance matrix
     kvs::Matrix<double> M( 3, 3 );
@@ -232,7 +230,6 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
     //---- Calcuation of eigenvalues
     kvs::EigenDecomposer<double> eigen( M );
     const kvs::Vector<double>& L = eigen.eigenValues();
-    ***/
 
     // Caluculate Covariance matrix and EigenValues using CLAPACK
     //---- Covariance matrix
@@ -240,11 +237,6 @@ void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
     S_cov[0][0] = s_xx; S_cov[0][1] = s_xy; S_cov[0][2] = s_xz;
     S_cov[1][0] = s_yx; S_cov[1][1] = s_yy; S_cov[1][2] = s_yz;
     S_cov[2][0] = s_zx; S_cov[2][1] = s_zy; S_cov[2][2] = s_zz;
-
-    // Calcuation of covariance-matrix eigen values
-    double L[3];                                         // eigen values; L[0]>= L[1] >= L[2]
-    double normal_vec[3];                                // normalized eigen vector belonging to L[2]
-    RitsCLAPACK3D::EigenValues ( S_cov, L, normal_vec ); // Calc L and normal_vec
 
     // std::cout << L[0] << " " << L[1] << " " << L[2] << std::endl;
 
@@ -583,8 +575,8 @@ void calculateFeature::calcCurvatureDifference(kvs::PolygonObject *ply)
 
   size_t numVert = ply->numberOfVertices();
 
-  firstIterationFeature  = calcCurvature(ply, firstIterationDiv);
-  secondIterationFeature = calcCurvature(ply, secondIterationDiv);
+  firstIterationFeature  = calcFeature(ply, firstIterationDiv);
+  secondIterationFeature = calcFeature(ply, secondIterationDiv);
 
   for( int i = 0; i < numVert; i++ ) {
 
@@ -606,7 +598,7 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
 {
 }
 
-std::vector<float> calculateFeature::calcCurvature(kvs::PolygonObject* ply, double bbDiv)
+std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double bbDiv)
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
