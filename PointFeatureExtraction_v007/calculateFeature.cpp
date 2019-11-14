@@ -117,10 +117,23 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   {
     calcNormalDispersion(ply, normal);
   }
-  else if (m_type == DoCFeature)
+  else if (m_type == RDoCFeature)
   {
-    calcDoCFeature(ply);
+    calcRDoCFeature(ply);
   }
+  else if (m_type == MinimumEntropy)
+  {
+    calcMinimumEntropy(ply);
+  }
+  else if (m_type == MSFeature)
+  {
+    calcMSFeature(ply);
+  }
+  else if (m_type == PlaneBasedFeature)
+  {
+    calcPlaneBasedFeature(ply);
+  }
+
 }
 
 
@@ -344,8 +357,8 @@ void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
     // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
     double sum = L[0] + L[1] + L[2]; // Sum of eigenvalues
     // double var = searchPoint.x;
-    double var = L[2] / sum; // Change of curvature
-    // double var = (L[0] - L[1]) / L[0]; // Linearity
+    // double var = L[2] / sum; // Change of curvature
+    double var = (L[0] - L[1]) / L[0]; // Linearity
     // double var = L[1] - L[2] / L[0];             // Planarity
     // double var = 1 - ( ( L[1] - L[2] ) / L[0] ); // Aplanarity
     // double var = L[0];
@@ -431,12 +444,12 @@ void calculateFeature::calcNormalDispersion(kvs::PolygonObject *ply,
 
 
 
-void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
+void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
 {
   std::vector<float> smallRadFeature;
   std::vector<float> largeRadFeature;
 
-  double doC;
+  double RDoC;
   double sigMax = 0.0;
   double M;
 
@@ -462,7 +475,7 @@ void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
   std::cout << "============================================" << std::endl;
 
   std::cout << "============================================" << std::endl;
-   std::cout << "largeRadius : " << largeRadius << std::endl;
+  std::cout << "largeRadius : " << largeRadius << std::endl;
   std::cout << "Start feature calculation with large radius" << std::endl;
 
   largeRadFeature  = calcFeature( ply, largeRadius );
@@ -474,9 +487,9 @@ void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
   for( int i = 0; i < numVert; i++ ) {
 
     // Calculate DoC feature
-    doC = std::fabs( std::fabs( smallRadFeature[i] ) - std::fabs( largeRadFeature[i] ) ) / 2.0;
+    RDoC = std::fabs( smallRadFeature[i] - largeRadFeature[i] );
 
-    m_feature.push_back( doC );
+    m_feature.push_back( RDoC );
 
     // if (sigMax < var)
     //   sigMax = var;
@@ -489,6 +502,14 @@ void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
 }
 
 void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
+{
+}
+
+void calculateFeature::calcMSFeature(kvs::PolygonObject *ply)
+{
+}
+
+void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
 {
 }
 

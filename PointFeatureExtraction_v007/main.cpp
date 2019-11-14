@@ -37,11 +37,14 @@ int main( int argc, char** argv )
 
   //--- Select type of Feature
   ft->setFeatureType( calculateFeature::PointPCA );
-  // ft->setFeatureType( calculateFeature::DoCFeature );
+  // ft->setFeatureType( calculateFeature::RDoCFeature );
+  // ft->setFeatureType( calculateFeature::MinimumEntropy );
+  // ft->setFeatureType( calculateFeature::MSFeature );
+  // ft->setFeatureType( calculateFeature::PlaneBasedFeature );
+
   // ft->addNoise( 0.1 );
   // ft->setFeatureType( calculateFeature::NormalPCA );
   // ft->setFeatureType( calculateFeature::NormalDispersion );
-  // ft->setFeatureType( calculateFeature::MinimumEntropy );
 
   double div;
 
