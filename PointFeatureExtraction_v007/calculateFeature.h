@@ -13,8 +13,10 @@ class calculateFeature
     PointPCA             = 0,
     NormalPCA            = 1,
     NormalDispersion     = 2,
-    RDoCFeature           = 3,
-    MinimumEntropy       = 4
+    RDoCFeature          = 3,
+    MinimumEntropy       = 4,
+    MSFeature            = 5,
+    PlaneBasedFeature    = 6
   };
  public:
   calculateFeature( void );
@@ -54,6 +56,7 @@ class calculateFeature
   void calcRDoCFeature( kvs::PolygonObject* ply );
   void calcMinimumEntropy( kvs::PolygonObject* ply );
   void calcMSFeature( kvs::PolygonObject* ply );
+  void calcPlaneBasedFeature( kvs::PolygonObject* ply );
 
   std::vector<float> calcFeature( kvs::PolygonObject* ply, double bbDiv );
 

@@ -121,6 +121,19 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   {
     calcRDoCFeature(ply);
   }
+  else if (m_type == MinimumEntropy)
+  {
+    calcMinimumEntropy(ply);
+  }
+  else if (m_type == MSFeature)
+  {
+    calcMSFeature(ply);
+  }
+  else if (m_type == PlaneBasedFeature)
+  {
+    calcPlaneBasedFeature(ply);
+  }
+
 }
 
 
@@ -489,6 +502,14 @@ void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
 }
 
 void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
+{
+}
+
+void calculateFeature::calcMSFeature(kvs::PolygonObject *ply)
+{
+}
+
+void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
 {
 }
 
