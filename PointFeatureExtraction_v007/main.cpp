@@ -42,7 +42,6 @@ int main( int argc, char** argv )
   // ft->setFeatureType( calculateFeature::MSFeature );
   // ft->setFeatureType( calculateFeature::PlaneBasedFeature );
 
-
   // ft->addNoise( 0.1 );
   // ft->setFeatureType( calculateFeature::NormalPCA );
   // ft->setFeatureType( calculateFeature::NormalDispersion );
