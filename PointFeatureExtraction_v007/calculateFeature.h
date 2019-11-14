@@ -13,7 +13,7 @@ class calculateFeature
     PointPCA             = 0,
     NormalPCA            = 1,
     NormalDispersion     = 2,
-    DoCFeature           = 3,
+    RDoCFeature           = 3,
     MinimumEntropy       = 4
   };
  public:
@@ -49,10 +49,11 @@ class calculateFeature
 		      std::vector<float> &normal );
   void calcNormalDispersion( kvs::PolygonObject* ply ,
 		       std::vector<float> &normal );
-  void calcInnerProductOfNormal( kvs::PolygonObject* ply );
-  void calcDepthDisplacement( kvs::PolygonObject* ply );
-  void calcDoCFeature( kvs::PolygonObject* ply );
+
+
+  void calcRDoCFeature( kvs::PolygonObject* ply );
   void calcMinimumEntropy( kvs::PolygonObject* ply );
+  void calcMSFeature( kvs::PolygonObject* ply );
 
   std::vector<float> calcFeature( kvs::PolygonObject* ply, double bbDiv );
 

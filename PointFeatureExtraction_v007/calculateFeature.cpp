@@ -117,9 +117,9 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   {
     calcNormalDispersion(ply, normal);
   }
-  else if (m_type == DoCFeature)
+  else if (m_type == RDoCFeature)
   {
-    calcDoCFeature(ply);
+    calcRDoCFeature(ply);
   }
 }
 
@@ -431,12 +431,12 @@ void calculateFeature::calcNormalDispersion(kvs::PolygonObject *ply,
 
 
 
-void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
+void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
 {
   std::vector<float> smallRadFeature;
   std::vector<float> largeRadFeature;
 
-  double doC;
+  double RDoC;
   double sigMax = 0.0;
   double M;
 
@@ -462,7 +462,7 @@ void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
   std::cout << "============================================" << std::endl;
 
   std::cout << "============================================" << std::endl;
-   std::cout << "largeRadius : " << largeRadius << std::endl;
+  std::cout << "largeRadius : " << largeRadius << std::endl;
   std::cout << "Start feature calculation with large radius" << std::endl;
 
   largeRadFeature  = calcFeature( ply, largeRadius );
@@ -474,9 +474,9 @@ void calculateFeature::calcDoCFeature(kvs::PolygonObject *ply)
   for( int i = 0; i < numVert; i++ ) {
 
     // Calculate DoC feature
-    doC = std::fabs( std::fabs( smallRadFeature[i] ) - std::fabs( largeRadFeature[i] ) ) / 2.0;
+    RDoC = std::fabs( smallRadFeature[i] - largeRadFeature[i] );
 
-    m_feature.push_back( doC );
+    m_feature.push_back( RDoC );
 
     // if (sigMax < var)
     //   sigMax = var;

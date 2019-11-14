@@ -37,7 +37,7 @@ int main( int argc, char** argv )
 
   //--- Select type of Feature
   ft->setFeatureType( calculateFeature::PointPCA );
-  // ft->setFeatureType( calculateFeature::DoCFeature );
+  // ft->setFeatureType( calculateFeature::RDoCFeature );
   // ft->addNoise( 0.1 );
   // ft->setFeatureType( calculateFeature::NormalPCA );
   // ft->setFeatureType( calculateFeature::NormalDispersion );
