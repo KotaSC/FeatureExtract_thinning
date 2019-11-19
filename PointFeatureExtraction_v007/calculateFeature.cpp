@@ -604,24 +604,9 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
 
     //---- Calcuation of eigenvalues and eigenvectors
     kvs::EigenDecomposer<double> eigen( M );
-    // const kvs::Vector<double>& L = eigen.eigenValues();
     const kvs::Matrix<double>& E = eigen.eigenVectors();
 
-    // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
-    // double sum = L[0] + L[1] + L[2];                // Sum of eigenvalues
-    // double var = searchPoint.x;
-
-    // double var = L[2] / sum;                        // Change of curvature
-
-    // double lambda1 = L[0] / sum;
-    // double lambda2 = L[1] / sum;
-    // double lambda3 = L[2] / sum;
-    // double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );  // eigentropy
-
-    // double var = (L[0] - L[1]) / L[0];           // Linearity
-    // double var = L[1] - L[2] / L[0];             // Planarity
-    // double var = 1 - ( ( L[1] - L[2] ) / L[0] ); // Aplanarity
-    // double var = L[0];
+    
 
     if (sum < EPSILON)
       var = 0.0;
@@ -632,7 +617,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
       sigMax = var;
     if (!((i + 1) % INTERVAL))
       std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
-
+  }
 }
 
 std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double bbDiv)
