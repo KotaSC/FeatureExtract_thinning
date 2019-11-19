@@ -602,15 +602,16 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
     M[1][0] = s_yx; M[1][1] = s_yy; M[1][2] = s_yz;
     M[2][0] = s_zx; M[2][1] = s_zy; M[2][2] = s_zz;
 
-    //---- Calcuation of eigenvalues
+    //---- Calcuation of eigenvalues and eigenvectors
     kvs::EigenDecomposer<double> eigen( M );
-    const kvs::Vector<double>& L = eigen.eigenValues();
+    // const kvs::Vector<double>& L = eigen.eigenValues();
+    const kvs::Matrix<double>& E = eigen.eigenVectors();
 
     // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
-    double sum = L[0] + L[1] + L[2];                // Sum of eigenvalues
+    // double sum = L[0] + L[1] + L[2];                // Sum of eigenvalues
     // double var = searchPoint.x;
 
-    double var = L[2] / sum;                        // Change of curvature
+    // double var = L[2] / sum;                        // Change of curvature
 
     // double lambda1 = L[0] / sum;
     // double lambda2 = L[1] / sum;
