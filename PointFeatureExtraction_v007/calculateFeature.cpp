@@ -606,7 +606,22 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
     kvs::EigenDecomposer<double> eigen( M );
     const kvs::Matrix<double>& E = eigen.eigenVectors();
 
-    
+    std::cout << "E[2][0] = " << E[2][0] << std::endl;
+    std::cout << "E[2][1] = " << E[2][1] << std::endl;
+    std::cout << "E[2][2] = " << E[2][2] << std::endl;
+
+    double sum;
+    double var;
+
+    for ( int j = 0; j < n0; j++ )
+    {
+      double px = point[0] - coords[3 * nearInd[j]];
+      double py = point[1] - coords[3 * nearInd[j] + 1];
+      double pz = point[2] - coords[3 * nearInd[j] + 2];
+
+      
+
+    }
 
     if (sum < EPSILON)
       var = 0.0;
