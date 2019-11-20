@@ -602,32 +602,35 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
     M[1][0] = s_yx; M[1][1] = s_yy; M[1][2] = s_yz;
     M[2][0] = s_zx; M[2][1] = s_zy; M[2][2] = s_zz;
 
-    //---- Calcuation of eigenvalues and eigenvectors
+    //---- Calcuation of eigenvectors
     kvs::EigenDecomposer<double> eigen( M );
     const kvs::Matrix<double>& E = eigen.eigenVectors();
 
+    /*---------------------------------------------------
+    // Print eigenvectors
     std::cout << "E[2][0] = " << E[2][0] << std::endl;
     std::cout << "E[2][1] = " << E[2][1] << std::endl;
     std::cout << "E[2][2] = " << E[2][2] << std::endl;
+    ---------------------------------------------------*/
 
-    double sum;
-    double var;
+    int notOnLocalPlane = 0;
 
     for ( int j = 0; j < n0; j++ )
     {
-      double px = point[0] - coords[3 * nearInd[j]];
-      double py = point[1] - coords[3 * nearInd[j] + 1];
-      double pz = point[2] - coords[3 * nearInd[j] + 2];
+      double px = coords[3 * nearInd[j]]     - point[0];
+      double py = coords[3 * nearInd[j] + 1] - point[1];
+      double pz = coords[3 * nearInd[j] + 2] - point[2];
 
-      
+      double localPlane = std::fabs( px*E[2][0] + py*E[2][1] + pz*E[2][2] );
 
+      if ( localPlane > 0.1 )
+        notOnLocalPlane++;
     }
 
-    if (sum < EPSILON)
-      var = 0.0;
+    double var = notOnLocalPlane/n0;
 
-    //---　Contributing rate of 3rd(minimum) component
     m_feature.push_back(var);
+
     if (sigMax < var)
       sigMax = var;
     if (!((i + 1) % INTERVAL))
