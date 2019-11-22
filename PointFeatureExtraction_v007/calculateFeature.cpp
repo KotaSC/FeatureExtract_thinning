@@ -131,7 +131,15 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   }
   else if (m_type == PlaneBasedFeature)
   {
-    calcPlaneBasedFeature(ply);
+
+    double allowableError;
+
+    std::cout << "=====================================" << std::endl;
+    std::cout << "Input allowable error : ";
+    std::cin >> allowableError;
+    std::cout << "=====================================" << std::endl;
+
+    calcPlaneBasedFeature(ply, allowableError);
   }
 
 }
@@ -509,7 +517,7 @@ void calculateFeature::calcMSFeature(kvs::PolygonObject *ply)
 {
 }
 
-void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
+void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double allowableError)
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
@@ -606,13 +614,6 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
     kvs::EigenDecomposer<double> eigen( M );
     const kvs::Matrix<double>& E = eigen.eigenVectors();
 
-    /*---------------------------------------------------
-    // Print eigenvectors
-    std::cout << "E[2][0] = " << E[2][0] << std::endl;
-    std::cout << "E[2][1] = " << E[2][1] << std::endl;
-    std::cout << "E[2][2] = " << E[2][2] << std::endl;
-    ---------------------------------------------------*/
-
     int notOnLocalPlane = 0;
 
     for ( int j = 0; j < n0; j++ )
@@ -623,11 +624,12 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
 
       double localPlane = std::fabs( px*E[2][0] + py*E[2][1] + pz*E[2][2] );
 
-      if ( localPlane > 0.1 )
+      if ( localPlane > allowableError )
         notOnLocalPlane++;
+
     }
 
-    double var = notOnLocalPlane/n0;
+    double var = (double)notOnLocalPlane/(double)n0;
 
     m_feature.push_back(var);
 
@@ -636,6 +638,9 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
     if (!((i + 1) % INTERVAL))
       std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
   }
+
+  m_maxFeature = sigMax;
+  std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 }
 
 std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double bbDiv)
