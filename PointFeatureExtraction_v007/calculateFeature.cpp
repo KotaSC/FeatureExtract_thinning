@@ -135,7 +135,7 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
     double allowableError;
 
     std::cout << "=====================================" << std::endl;
-    std::cout << "Input allowable error : ";
+    std::cout << "Input Allowable Error : ";
     std::cin >> allowableError;
     std::cout << "=====================================" << std::endl;
 
@@ -511,6 +511,7 @@ void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
 
 void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
 {
+
 }
 
 void calculateFeature::calcMSFeature(kvs::PolygonObject *ply)
@@ -618,9 +619,16 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
 
     for ( int j = 0; j < n0; j++ )
     {
-      double px = coords[3 * nearInd[j]]     - point[0];
-      double py = coords[3 * nearInd[j] + 1] - point[1];
-      double pz = coords[3 * nearInd[j] + 2] - point[2];
+
+      // Calculate Local Plane
+      // double px = coords[3 * nearInd[j]]     - point[0];
+      // double py = coords[3 * nearInd[j] + 1] - point[1];
+      // double pz = coords[3 * nearInd[j] + 2] - point[2];
+
+      // Calculate Least Squares Plane
+      double px = coords[3 * nearInd[j]]     - xb;
+      double py = coords[3 * nearInd[j] + 1] - yb;
+      double pz = coords[3 * nearInd[j] + 2] - zb;
 
       double localPlane = std::fabs( px*E[2][0] + py*E[2][1] + pz*E[2][2] );
 
