@@ -663,7 +663,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 }
 
-std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double bbDiv)
+std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double radius)
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
@@ -704,7 +704,7 @@ std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double
 
     vector<size_t> nearInd;
     vector<double> dist;
-    search_points(point, bbDiv, pdata, myTree->octreeRoot, &nearInd, &dist);
+    search_points(point, radius, pdata, myTree->octreeRoot, &nearInd, &dist);
     int n0 = (int)nearInd.size();
 
     //--- Standardization for x, y, z
@@ -786,7 +786,7 @@ std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double
   return featureValue;
 }
 
-std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, double bbDiv)
+std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, double radius)
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
@@ -824,7 +824,7 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
 
     vector<size_t> nearInd;
     vector<double> dist;
-    search_points(point, bbDiv, pdata, myTree->octreeRoot, &nearInd, &dist);
+    search_points(point, radius, pdata, myTree->octreeRoot, &nearInd, &dist);
     int n0 = (int)nearInd.size();
 
     //--- Standardization for x, y, z
