@@ -59,6 +59,8 @@ class calculateFeature
   void calcPlaneBasedFeature( kvs::PolygonObject* ply, double allowableError );
 
   std::vector<float> calcFeature( kvs::PolygonObject* ply, double bbDiv );
+  std::vector<double> calcEigenValues( kvs::PolygonObject* ply, double bbDiv );
+
 
 };
 
