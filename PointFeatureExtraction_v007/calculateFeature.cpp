@@ -1,6 +1,7 @@
 #include "calculateFeature.h"
 #include "octree.h"
 
+#include <Accelerate/Accelerate.h> //CLAPACK
 #include <vector>
 #include <cmath>
 #include <kvs/BoxMuller>
@@ -13,6 +14,7 @@
 const int INTERVAL = 1000000;
 const double EPSILON = 1.0e-16;
 const int MIN_NODE = 15;
+const int DIM = 3;
 
 calculateFeature::calculateFeature(void) : m_type(PointPCA),
                                            m_isNoise(false),
@@ -483,16 +485,63 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
     double s_zy = s_yz;
     double s_xz = s_zx;
 
-    // Caluculate Covariance matrix and EigenValues using KVS
+     /***
+
+    // Caluculate Covariance matrix and EigenVectors using KVS
     //---- Covariance matrix
     kvs::Matrix<double> M( 3, 3 );
     M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_xz;
     M[1][0] = s_yx; M[1][1] = s_yy; M[1][2] = s_yz;
     M[2][0] = s_zx; M[2][1] = s_zy; M[2][2] = s_zz;
 
-    //---- Calcuation of eigenvectors
+    //---- Calcuation of eigenvalues
     kvs::EigenDecomposer<double> eigen( M );
     const kvs::Matrix<double>& E = eigen.eigenVectors();
+
+    ***/
+
+    int N = DIM;
+
+    // local variables
+    double A[N*N]; //NxN matrix
+    double wr[N]; // wr[i] is real part of i-th eiven value
+    double wi[N]; // wi[i] is imaginary part of i-th eiven value
+    double work[4*N]; // working area:
+                      //  Its size should be larger than 4*N
+    double vl[N*N]; // unused array
+    double vr[N*N]; // eigen vector
+                  // vr[0] = x1
+                  // vr[1] = y1
+                  // vr[2] = x2
+                  // vr[3] = y2
+    int n=N;    // number of rows of matrix A
+    int lda=N;  // number of colums of matrix A
+    int ldvl=N; // dim of vl[]
+    int ldvr=N; // dim of vr[]
+    int lwork = 4*N; // working area size:
+                    //  This size should be consistent with
+                    //  the size of array work[] above.
+    int info; // status (0: success)
+    char jobvl = 'N'; // Left eigen value is not calculated.
+    char jobvr = 'V'; // Right eigen value is calculated.
+
+
+    
+    /***
+
+    // Caluculate Covariance matrix and EigenValues using CLAPACK
+    //---- Covariance matrix
+    double S_cov[3][3];
+    S_cov[0][0] = s_xx; S_cov[0][1] = s_xy; S_cov[0][2] = s_xz;
+    S_cov[1][0] = s_yx; S_cov[1][1] = s_yy; S_cov[1][2] = s_yz;
+    S_cov[2][0] = s_zx; S_cov[2][1] = s_zy; S_cov[2][2] = s_zz;
+
+    // Calcuation of covariance-matrix eigen values
+    double L[3];                                         // eigen values; L[0]>= L[1] >= L[2]
+    double normal_vec[3];                                // normalized eigen vector belonging to L[2]
+    RitsCLAPACK3D::EigenValues ( S_cov, L, normal_vec ); // Calc L and normal_vec
+
+    ***/
 
     int notOnLocalPlane = 0;
 
@@ -616,16 +665,33 @@ std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double
     double s_yz = yz / (double)(n0);
     double s_zx = zx / (double)(n0);
 
+    /***
+
+    // Caluculate Covariance matrix and EigenValues using KVS
     //---- Covariance matrix
     kvs::Matrix<double> M( 3, 3 );
-    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_zx;
-    M[1][0] = s_xy; M[1][1] = s_yy; M[1][2] = s_yz;
-    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_zz;
+    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_xz;
+    M[1][0] = s_yx; M[1][1] = s_yy; M[1][2] = s_yz;
+    M[2][0] = s_zx; M[2][1] = s_zy; M[2][2] = s_zz;
 
     //---- Calcuation of eigenvalues
     kvs::EigenDecomposer<double> eigen( M );
-
     const kvs::Vector<double>& L = eigen.eigenValues();
+
+    ***/
+
+    // Caluculate Covariance matrix and EigenValues using CLAPACK
+    //---- Covariance matrix
+    double S_cov[3][3];
+    S_cov[0][0] = s_xx; S_cov[0][1] = s_xy; S_cov[0][2] = s_xz;
+    S_cov[1][0] = s_yx; S_cov[1][1] = s_yy; S_cov[1][2] = s_yz;
+    S_cov[2][0] = s_zx; S_cov[2][1] = s_zy; S_cov[2][2] = s_zz;
+
+    // Calcuation of covariance-matrix eigen values
+    double L[3];                                         // eigen values; L[0]>= L[1] >= L[2]
+    double normal_vec[3];                                // normalized eigen vector belonging to L[2]
+    RitsCLAPACK3D::EigenValues ( S_cov, L, normal_vec ); // Calc L and normal_vec
+
 
     // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
     double sum = L[0] + L[1] + L[2];                // Sum of eigenvalues
@@ -736,16 +802,33 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
     double s_yz = yz / (double)(n0);
     double s_zx = zx / (double)(n0);
 
+    /***
+
+    // Caluculate Covariance matrix and EigenValues using KVS
     //---- Covariance matrix
     kvs::Matrix<double> M( 3, 3 );
-    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_zx;
-    M[1][0] = s_xy; M[1][1] = s_yy; M[1][2] = s_yz;
-    M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_zz;
+    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_xz;
+    M[1][0] = s_yx; M[1][1] = s_yy; M[1][2] = s_yz;
+    M[2][0] = s_zx; M[2][1] = s_zy; M[2][2] = s_zz;
 
     //---- Calcuation of eigenvalues
     kvs::EigenDecomposer<double> eigen( M );
-
     const kvs::Vector<double>& L = eigen.eigenValues();
+
+    ***/
+
+    // Caluculate Covariance matrix and EigenValues using CLAPACK
+    //---- Covariance matrix
+    double S_cov[3][3];
+    S_cov[0][0] = s_xx; S_cov[0][1] = s_xy; S_cov[0][2] = s_xz;
+    S_cov[1][0] = s_yx; S_cov[1][1] = s_yy; S_cov[1][2] = s_yz;
+    S_cov[2][0] = s_zx; S_cov[2][1] = s_zy; S_cov[2][2] = s_zz;
+
+    // Calcuation of covariance-matrix eigen values
+    double L[3];                                         // eigen values; L[0]>= L[1] >= L[2]
+    double normal_vec[3];                                // normalized eigen vector belonging to L[2]
+    RitsCLAPACK3D::EigenValues ( S_cov, L, normal_vec ); // Calc L and normal_vec
+
 
     eigenValue.push_back(L[0]);
     eigenValue.push_back(L[1]);
