@@ -70,7 +70,7 @@ int main( int argc, char** argv )
   kvs::PointObject* object = new kvs::PointObject( *ply );
 
   float ftMax = (float)ft->maxFeature();
-  float ftMin = (float)ft->minFeature();
+  // float ftMin = (float)ft->minFeature();
   kvs::ColorMap cmap( 256.0, 0.0, ftMax );
   //  kvs::ColorMap cmap( 256, 0.0175976, 0.021997 );
   // kvs::ColorMap cmap( 256, ftMin, ftMax );
