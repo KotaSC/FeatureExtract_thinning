@@ -45,7 +45,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     }
   }
 
-  // Max feature value
+  // Sum of feature value
   // double sumFt = std::accumulate( ftNorm.begin(), ftNorm.end(), 0.0 );
   // std::cout << "Sum of feature value    : " << sumFt << std::endl;
 
