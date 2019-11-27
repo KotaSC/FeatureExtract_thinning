@@ -150,7 +150,7 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
 
 void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
 {
-  m_feature = calcFeature( ply, m_searchRadius );
+  m_feature = calcFeatureValues( ply, m_searchRadius );
 }
 
 void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
@@ -345,7 +345,7 @@ void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
   std::cout << "smallRadius : " << smallRadius << std::endl;
   std::cout << "Start feature calculation with small radius" << std::endl;
 
-  smallRadFeature  = calcFeature( ply, smallRadius );
+  smallRadFeature  = calcFeatureValues( ply, smallRadius );
   
   std::cout << "Finish feature calculation with small radius" << std::endl;
   std::cout << "============================================" << std::endl;
@@ -354,7 +354,7 @@ void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
   std::cout << "largeRadius : " << largeRadius << std::endl;
   std::cout << "Start feature calculation with large radius" << std::endl;
 
-  largeRadFeature  = calcFeature( ply, largeRadius );
+  largeRadFeature  = calcFeatureValues( ply, largeRadius );
 
   std::cout << "Finish feature calculation with large radius" << std::endl;
   std::cout << "============================================" << std::endl;
@@ -556,9 +556,9 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 }
 
-std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double radius)
+std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, double radius)
 {
-  
+
   double sigMax = 0.0;
   std::vector<double> eigenValues;
   std::vector<float> featureValues;
