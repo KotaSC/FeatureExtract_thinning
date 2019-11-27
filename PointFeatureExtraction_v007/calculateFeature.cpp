@@ -558,154 +558,39 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
 
 std::vector<float> calculateFeature::calcFeature(kvs::PolygonObject* ply, double radius)
 {
-  ply->updateMinMaxCoords();
-  kvs::ValueArray<kvs::Real32> coords = ply->coords();
-  float *pdata = coords.data();
-  size_t numVert = ply->numberOfVertices();
-  kvs::Vector3f minBB = ply->minObjectCoord();
-  kvs::Vector3f maxBB = ply->maxObjectCoord();
-
-  double *mrange = new double[6];
-  mrange[0] = (double)minBB.x();
-  mrange[1] = (double)maxBB.x();
-  mrange[2] = (double)minBB.y();
-  mrange[3] = (double)maxBB.y();
-  mrange[4] = (double)minBB.z();
-  mrange[5] = (double)maxBB.z();
-
-  // create octree
-  std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
-  std::cout << minBB << " \n"
-            << maxBB << std::endl;
-  octree *myTree = new octree(pdata, numVert, mrange, MIN_NODE);
-
-  kvs::MersenneTwister uniRand;
-  double sigMax = 0.0;
   
-  // Feature data
-  std::vector<float> featureValue;
-  double maxFeature;
+  double sigMax = 0.0;
+  std::vector<double> eigenValues;
+  std::vector<float> featureValues;
+  size_t numVert = ply->numberOfVertices();
 
-  std::cout << "Start OCtree Search..... " << std::endl;
+  eigenValues = calcEigenValues( ply, radius );
+
   for (size_t i = 0; i < numVert; i++)
   {
-    if (i == numVert)
-      --i;
-    double point[3] = {coords[3 * i],
-                       coords[3 * i + 1],
-                       coords[3 * i + 2]};
 
-    vector<size_t> nearInd;
-    vector<double> dist;
-    search_points(point, radius, pdata, myTree->octreeRoot, &nearInd, &dist);
-    int n0 = (int)nearInd.size();
-
-    //--- Standardization for x, y, z
-    double xb = 0.0, yb = 0.0, zb = 0.0;
-    for (int j = 0; j < n0; j++)
-    {
-      // 近傍点の(x, y, z)座標を格納
-      double x = coords[3 * nearInd[j]];
-      double y = coords[3 * nearInd[j] + 1];
-      double z = coords[3 * nearInd[j] + 2];
-
-      xb += x;
-      yb += y;
-      zb += z;
-    }
-    // 平均値を計算
-    xb /= (double)n0;
-    yb /= (double)n0;
-    zb /= (double)n0;
-
-    //--- Calculaton of covariance matrix
-    double xx = 0.0, yy = 0.0, zz = 0.0;
-    double xy = 0.0, yz = 0.0, zx = 0.0;
-    for (int j = 0; j < n0; j++)
-    {
-      // 近傍点の(x, y, z)座標と，平均値との差を計算
-      double nx = (coords[3 * nearInd[j]] - xb);
-      double ny = (coords[3 * nearInd[j] + 1] - yb);
-      double nz = (coords[3 * nearInd[j] + 2] - zb);
-      xx += nx * nx;
-      yy += ny * ny;
-      zz += nz * nz;
-      xy += nx * ny;
-      yz += ny * nz;
-      zx += nz * nx;
-    }
-    // 分散・共分散の計算
-    double s_xx = xx / (double)(n0);
-    double s_yy = yy / (double)(n0);
-    double s_zz = zz / (double)(n0);
-    double s_xy = xy / (double)(n0);
-    double s_yz = yz / (double)(n0);
-    double s_zx = zx / (double)(n0);
-
-    // double s_yx = s_xy;
-    // double s_zy = s_yz;
-    // double s_xz = s_zx;
-
-    /***
-
-    // Caluculate Covariance matrix and EigenValues using KVS
-    //---- Covariance matrix
-    kvs::Matrix<double> M( 3, 3 );
-    M[0][0] = s_xx; M[0][1] = s_xy; M[0][2] = s_xz;
-    M[1][0] = s_yx; M[1][1] = s_yy; M[1][2] = s_yz;
-    M[2][0] = s_zx; M[2][1] = s_zy; M[2][2] = s_zz;
-
-    //---- Calcuation of eigenvalues
-    kvs::EigenDecomposer<double> eigen( M );
-    const kvs::Vector<double>& L = eigen.eigenValues();
-
-    ***/
-
-    // Caluculate Covariance matrix and EigenValues using LAPACK
-    //--- Preparation for LAPACK
-    char jovz = 'V';
-    char uplo = 'U';
-    int n     = DIM;
-    double A[n*n];
-    double W[n];
-    int lwork = n*n;
-    double WORK[n*n];
-    int info;
-
-    //---- Covariance matrix
-    A[0] = s_xx; A[3] = s_xy; A[6] = s_zx;
-    A[1] = 0.0 ; A[4] = s_yy; A[7] = s_yz;
-    A[2] = 0.0 ; A[5] = 0.0 ; A[8] = s_zz;
-
-    //---- Calcuation of eigenvalues and egenvectors
-    dsyev_( &jovz, &uplo, (__CLPK_integer *) &n, A, (__CLPK_integer *) &n,
-            W, WORK, (__CLPK_integer *) &lwork, (__CLPK_integer *) &info );
-
-
-    // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
-    double sum = W[0] + W[1] + W[2];                // Sum of eigenvalues
+    // eigenValues[3*i]: 第1固有値, eigenValues[3*i + 1]: 第2固有値, eigenValues[3*i + 2]: 第3固有値
+    double sum = eigenValues[3*i] + eigenValues[3*i + 1] + eigenValues[3*i + 2];               // Sum of eigenvalues
     // double var = searchPoint.x;
-    double var = W[0] / sum;                        // Change of curvature
-    // double var = (L[0] - L[1]) / L[0];           // Linearity
-    // double var = L[1] - L[2] / L[0];             // Planarity
-    // double var = 1 - ( ( L[1] - L[2] ) / L[0] ); // Aplanarity
-    // double var = L[0];
+    double var = eigenValues[3*i + 2] / sum;                                                   // Change of curvature
+    // double var = ( eigenValues[3*i] - eigenValues[3*i + 1] ) / eigenValues[3*i];            // Linearity
+    // double var = ( eigenValues[3*i + 1] - eigenValues[3*i + 2]) / eigenValues[3*i];         // Planarity
+    // double var = 1 - ( ( eigenValues[3*i + 1] - eigenValues[3*i + 2]) / eigenValues[3*i] ); // Aplanarity
+    // double var = eigenValues[3*i];
 
     if (sum < EPSILON)
       var = 0.0;
 
     //--- Contributing rate of 3rd(minimum) component
-    featureValue.push_back(var);
+    featureValues.push_back(var);
     if (sigMax < var)
       sigMax = var;
-    if (!((i + 1) % INTERVAL))
-      std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
   }
 
-  maxFeature = sigMax;
+  m_maxFeature = sigMax;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 
-  return featureValue;
+  return featureValues;
 }
 
 std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, double radius)
@@ -733,7 +618,7 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
 
   kvs::MersenneTwister uniRand;
 
-  std::vector<double> eigenValue;
+  std::vector<double> eigenValues;
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for (size_t i = 0; i < numVert; i++)
@@ -831,11 +716,14 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
             W, WORK, (__CLPK_integer *) &lwork, (__CLPK_integer *) &info );
 
 
-    eigenValue.push_back(W[2]);
-    eigenValue.push_back(W[1]);
-    eigenValue.push_back(W[0]);
+    eigenValues.push_back(W[2]);
+    eigenValues.push_back(W[1]);
+    eigenValues.push_back(W[0]);
+
+    if (!((i + 1) % INTERVAL))
+      std::cout << i + 1 << ", " << n0 << std::endl;
 
   }
 
-  return eigenValue;
+  return eigenValues;
 }
