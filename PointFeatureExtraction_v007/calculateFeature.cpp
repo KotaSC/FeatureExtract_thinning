@@ -41,7 +41,7 @@ void calculateFeature::setFeatureType(FeatureType type)
 void calculateFeature::addNoise(double noise)
 {
   m_isNoise = true;
-  m_noise = noise;
+  m_noise   = noise;
   std::cout << "ADD NOISE : " << noise << std::endl;
 }
 
@@ -54,8 +54,8 @@ void calculateFeature::setSearchRadius(double divide,
                                        kvs::Vector3f bbmax)
 {
   kvs::Vector3f bb = bbmax - bbmin;
-  double b_leng = bb.length();
-  m_searchRadius = b_leng / divide;
+  double b_leng    = bb.length();
+  m_searchRadius   = b_leng / divide;
 }
 
 void calculateFeature::calc(kvs::PolygonObject *ply)
@@ -63,11 +63,11 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   std::vector<float> normal;
   kvs::BoxMuller normRand;
 
-  kvs::ValueArray<kvs::Real32> coords = ply->coords();
+  kvs::ValueArray<kvs::Real32> coords  = ply->coords();
   kvs::ValueArray<kvs::Real32> normals = ply->normals();
 
   size_t num = ply->numberOfVertices();
-  m_number = num;
+  m_number   = num;
   double d_noise = sqrt(m_searchRadius) * m_noise;
   bool hasNormal = false;
   if (num == ply->numberOfNormals())
@@ -83,9 +83,9 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
 
   for (size_t i = 0; i < num; i++)
   {
-    float x = coords[3 * i];
-    float y = coords[3 * i + 1];
-    float z = coords[3 * i + 2];
+    float x  = coords[3 * i];
+    float y  = coords[3 * i + 1];
+    float z  = coords[3 * i + 2];
     float nx = 0.0;
     float ny = 0.0;
     float nz = 0.0;
