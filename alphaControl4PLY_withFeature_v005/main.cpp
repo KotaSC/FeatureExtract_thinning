@@ -8,6 +8,8 @@
 #include <cstdlib>
 #include <string>
 #include <sstream>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #include "AlphaControlforPLY.h"
 #include "ImportPointClouds.h"
@@ -97,7 +99,10 @@ int main(int argc, char **argv)
         if (getExtension(argv[i]) == allowedFiles[j])
         {
           numFiles++;
+
           std::string output_tmp(OUT_PBR_FILE);
+          std::string dir_name(DIR_NAME);
+
           std::string tmp;
           std::stringstream ssLR;
           std::stringstream ssAlpha;
@@ -127,9 +132,20 @@ int main(int argc, char **argv)
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
           output_tmp += tmp;
 
+          dir_name += "../SPBR_DATA/";
+          dir_name += output_tmp;
+          dir_name += "/";
+
           output_tmp += "_";
           output_tmp += getFileName(argv[i]);
           output_tmp += ".spbr";
+
+          const char* OUT_DIR_NAME = dir_name.c_str();
+
+          mkdir(OUT_DIR_NAME, S_IRWXU);
+
+          output_tmp.insert(0, "out-");
+          output_tmp.insert(0, dir_name);
 
           inputFiles.push_back(argv[i]);
           outptFiles.push_back(output_tmp);
