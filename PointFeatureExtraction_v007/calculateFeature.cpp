@@ -612,6 +612,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
       yb += y;
       zb += z;
     }
+
     // 平均値を計算
     xb /= (double)n0;
     yb /= (double)n0;
@@ -633,6 +634,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
       yz += ny * nz;
       zx += nz * nx;
     }
+
     // 分散・共分散の計算
     double s_xx = xx / (double)(n0);
     double s_yy = yy / (double)(n0);
