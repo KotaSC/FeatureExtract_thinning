@@ -346,7 +346,7 @@ void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
   std::cout << "Start feature calculation with small radius" << std::endl;
 
   smallRadFeature  = calcFeatureValues( ply, smallRadius );
-  
+
   std::cout << "Finish feature calculation with small radius" << std::endl;
   std::cout << "============================================" << std::endl;
 
@@ -378,7 +378,7 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
   std::vector<double> entropy;
   std::vector<double> featureValue;
   size_t numVert = ply->numberOfVertices();
-  
+
   int numItr;
 
   std::cout << "========================" << std::endl;
@@ -390,7 +390,7 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
   {
     for ( int i = 0; i < numVert; i++ )
     {
-      
+
     }
   }
 }
@@ -424,6 +424,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
 
   kvs::MersenneTwister uniRand;
   double sigMax = 0.0;
+  std::vector<float> featureValues;
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for (size_t i = 0; i < numVert; i++)
@@ -544,7 +545,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
 
     double var = (double)notOnLocalPlane/(double)n0;
 
-    m_feature.push_back(var);
+    featureValues.push_back(var);
 
     if (sigMax < var)
       sigMax = var;
@@ -554,6 +555,16 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
 
   m_maxFeature = sigMax;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
+
+  // Normalize feature values
+  float normFt;
+
+  for (float f : featureValues)
+  {
+    normFt = f / sigMax;
+    m_feature.push_back(normFt);
+  }
+
 }
 
 std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, double radius)
@@ -708,7 +719,17 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
   m_maxFeature = sigMax;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 
-  return featureValues;
+  // Normalize feature values
+  float normFt;
+  std::vector<float> ft;
+
+  for (float f : featureValues)
+  {
+    normFt = f / sigMax;
+    ft.push_back(normFt);
+  }
+
+  return ft;
 }
 
 std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, double radius)
