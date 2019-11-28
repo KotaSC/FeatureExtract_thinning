@@ -7,6 +7,7 @@
 #include <kvs/MersenneTwister>
 
 
+const int INTERVAL   = 10000;
 
 FeaturePointExtraction::FeaturePointExtraction( void ) {
 }
@@ -87,11 +88,13 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     double x     = ( ft[index] - threshold ) / maxFt;
     double alpha = grad*std::pow( x, dim ) + alphaMin;
 
-    // 任意の不透明度を実現するために必要な点数・増減率を計算する
+    // 特徴量に応じた不透明度を実現するために必要な点数・増減率を計算する
     double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
     double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0*ratio;
 
+    if (!((i + 1) % INTERVAL))
+      std::cout << i + 1 << ", " << "createNum: " << createNum << std::endl;
 
     for( int j = 0; j < createNum; j++ ) {
 
