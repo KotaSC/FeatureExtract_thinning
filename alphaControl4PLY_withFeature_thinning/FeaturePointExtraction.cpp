@@ -35,9 +35,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
 
-  // 特徴量の最大値を求める
-  double maxFt = *std::max_element( ft.begin(), ft.end() );
-
   int num = 0;
   for( size_t i = 0; i < numVert; i++ ) {
     if( ft[i] > threshold ) {
@@ -45,14 +42,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       num++;
     }
   }
-
-  // Sum of feature value
-  // double sumFt = std::accumulate( ftNorm.begin(), ftNorm.end(), 0.0 );
-  // std::cout << "Sum of feature value    : " << sumFt << std::endl;
-
-  // Mean feature value
-  // double aveFt = sumFt/ftNorm.size();
-  // std::cout << "Avarage of feature value: " << aveFt << std::endl;
 
   kvs::ValueArray<kvs::Real32> coords  = ply->coords();
   kvs::ValueArray<kvs::Real32> normals = ply->normals();
@@ -66,7 +55,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   double alphaMin     = ALPHA_MIN;
   double dim          = DIMENSION;
   double xMax         = X_MAX;
-  double initialPoint = xMax - ( threshold/maxFt );
+  double initialPoint = xMax - threshold;
   double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
 
   std::cout << "===========================================" << std::endl;
@@ -74,7 +63,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::cout << "Min opacity              : " << alphaMin     << std::endl;
   std::cout << "Dimension                : " << dim          << std::endl;
   std::cout << "Gradient                 : " << grad         << std::endl;
-  std::cout << "Max feature value        : " << maxFt        << std::endl;
   std::cout << "Number of feature points : " << num          << std::endl;
   std::cout << "===========================================" << std::endl;
 
@@ -85,7 +73,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
     size_t index = ind[ i ];
 
-    double x     = ( ft[index] - threshold ) / maxFt;
+    double x     = ft[index] - threshold;
     double alpha = grad*std::pow( x, dim ) + alphaMin;
 
     // 特徴量に応じた不透明度を実現するために必要な点数・増減率を計算する
