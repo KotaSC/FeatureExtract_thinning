@@ -559,10 +559,10 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
   // Normalize feature values
   float normFt;
 
-  for (float f : featureValues)
+  for ( float f : featureValues )
   {
     normFt = f / sigMax;
-    m_feature.push_back(normFt);
+    m_feature.push_back( normFt );
   }
 
 }
@@ -723,10 +723,10 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
   float normFt;
   std::vector<float> ft;
 
-  for (float f : featureValues)
+  for ( float f : featureValues )
   {
     normFt = f / sigMax;
-    ft.push_back(normFt);
+    ft.push_back( normFt );
   }
 
   return ft;
