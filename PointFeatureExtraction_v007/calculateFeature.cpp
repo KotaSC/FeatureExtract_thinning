@@ -697,8 +697,8 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     // W[2]: 第1固有値, W[1]: 第2固有値, W[0]: 第3固有値
     double sum = W[2] + W[1] + W[0];               // Sum of eigenvalues
     // double var = searchPoint.x;
-    double var = W[0] / sum;                                                   // Change of curvature
-    // double var = ( W[2] - W[1] ) / W[2];            // Linearity
+    double var = W[0] / sum;                    // Change of curvature
+    // double var = ( W[2] - W[1] ) / W[2];        // Linearity
     // double var = ( W[1] - W[0]) / W[2];         // Planarity
     // double var = 1 - ( ( W[1] - W[0]) / W[2] ); // Aplanarity
     // double var = W[0];
