@@ -99,7 +99,13 @@ int main( int argc, char** argv )
   renderer->enableTwoSideLighting();
   screen.setTitle( "Point Object" );
 
-  screen.registerObject( object, renderer);
+  // kvs::Vector3f cam_pos(0, 12, 0);
+  // kvs::Vector3f cam_up(0, 0, 1);
+
+  // screen.scene()->camera()->setPosition(cam_pos);
+  // screen.scene()->camera()->setUpVector(cam_up);
+
+  screen.registerObject( object, renderer );
 
   screen.show();
 
