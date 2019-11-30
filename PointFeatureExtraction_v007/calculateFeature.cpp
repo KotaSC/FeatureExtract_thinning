@@ -444,7 +444,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
     double xb = 0.0, yb = 0.0, zb = 0.0;
     for (int j = 0; j < n0; j++)
     {
-      // 近傍点の(x, y, z)座標を格納
+
       double x = coords[3 * nearInd[j]];
       double y = coords[3 * nearInd[j] + 1];
       double z = coords[3 * nearInd[j] + 2];
@@ -453,7 +453,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
       yb += y;
       zb += z;
     }
-    // 平均値を計算
+
     xb /= (double)n0;
     yb /= (double)n0;
     zb /= (double)n0;
@@ -463,7 +463,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
     double xy = 0.0, yz = 0.0, zx = 0.0;
     for (int j = 0; j < n0; j++)
     {
-      // 近傍点の(x, y, z)座標と，平均値との差を計算
+
       double nx = (coords[3 * nearInd[j]] - xb);
       double ny = (coords[3 * nearInd[j] + 1] - yb);
       double nz = (coords[3 * nearInd[j] + 2] - zb);
@@ -474,7 +474,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
       yz += ny * nz;
       zx += nz * nx;
     }
-    // 分散・共分散の計算
+
     double s_xx = xx / (double)(n0);
     double s_yy = yy / (double)(n0);
     double s_zz = zz / (double)(n0);
@@ -614,7 +614,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     double xb = 0.0, yb = 0.0, zb = 0.0;
     for (int j = 0; j < n0; j++)
     {
-      // 近傍点の(x, y, z)座標を格納
+
       double x = coords[3 * nearInd[j]];
       double y = coords[3 * nearInd[j] + 1];
       double z = coords[3 * nearInd[j] + 2];
@@ -624,7 +624,6 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
       zb += z;
     }
 
-    // 平均値を計算
     xb /= (double)n0;
     yb /= (double)n0;
     zb /= (double)n0;
@@ -634,7 +633,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     double xy = 0.0, yz = 0.0, zx = 0.0;
     for (int j = 0; j < n0; j++)
     {
-      // 近傍点の(x, y, z)座標と，平均値との差を計算
+
       double nx = (coords[3 * nearInd[j]] - xb);
       double ny = (coords[3 * nearInd[j] + 1] - yb);
       double nz = (coords[3 * nearInd[j] + 2] - zb);
@@ -646,7 +645,6 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
       zx += nz * nx;
     }
 
-    // 分散・共分散の計算
     double s_xx = xx / (double)(n0);
     double s_yy = yy / (double)(n0);
     double s_zz = zz / (double)(n0);
@@ -695,13 +693,29 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
 
 
     // W[2]: 第1固有値, W[1]: 第2固有値, W[0]: 第3固有値
-    double sum = W[2] + W[1] + W[0];               // Sum of eigenvalues
-    // double var = searchPoint.x;
-    double var = W[0] / sum;                    // Change of curvature
-    // double var = ( W[2] - W[1] ) / W[2];        // Linearity
-    // double var = ( W[1] - W[0]) / W[2];         // Planarity
-    // double var = 1 - ( ( W[1] - W[0]) / W[2] ); // Aplanarity
+    // Sum of eigenvalues
+    double sum = W[2] + W[1] + W[0];
+
+    // Change of curvature
+    double var = W[0] / sum;
+
+    // Linearity
+    // double var = ( W[2] - W[1] ) / W[2];
+
+    // Planarity
+    // double var = ( W[1] - W[0]) / W[2];
+
+    // Aplanarity
+    // double var = 1 - ( ( W[1] - W[0]) / W[2] );
+
+    // eigentropy
+    // double lambda1 = W[2] / sum;
+    // double lambda2 = W[1] / sum;
+    // double lambda3 = W[0] / sum;
+    // double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
+
     // double var = W[0];
+    // double var = searchPoint.x;
 
     if (sum < EPSILON)
       var = 0.0;
@@ -777,7 +791,7 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
     double xb = 0.0, yb = 0.0, zb = 0.0;
     for (int j = 0; j < n0; j++)
     {
-      // 近傍点の(x, y, z)座標を格納
+
       double x = coords[3 * nearInd[j]];
       double y = coords[3 * nearInd[j] + 1];
       double z = coords[3 * nearInd[j] + 2];
@@ -786,7 +800,7 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
       yb += y;
       zb += z;
     }
-    // 平均値を計算
+
     xb /= (double)n0;
     yb /= (double)n0;
     zb /= (double)n0;
@@ -796,7 +810,7 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
     double xy = 0.0, yz = 0.0, zx = 0.0;
     for (int j = 0; j < n0; j++)
     {
-      // 近傍点の(x, y, z)座標と，平均値との差を計算
+
       double nx = (coords[3 * nearInd[j]] - xb);
       double ny = (coords[3 * nearInd[j] + 1] - yb);
       double nz = (coords[3 * nearInd[j] + 2] - zb);
@@ -807,7 +821,7 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
       yz += ny * nz;
       zx += nz * nx;
     }
-    // 分散・共分散の計算
+
     double s_xx = xx / (double)(n0);
     double s_yy = yy / (double)(n0);
     double s_zz = zz / (double)(n0);
