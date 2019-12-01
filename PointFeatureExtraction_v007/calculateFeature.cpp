@@ -56,6 +56,11 @@ void calculateFeature::setSearchRadius(double divide,
   kvs::Vector3f bb = bbmax - bbmin;
   double b_leng    = bb.length();
   m_searchRadius   = b_leng / divide;
+
+  std::cout << "==================================" << std::endl;
+  std::cout << "m_searchRadius = " << m_searchRadius << std::endl;
+  std::cout << "==================================" << std::endl;
+
 }
 
 void calculateFeature::calc(kvs::PolygonObject *ply)
@@ -136,10 +141,10 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
 
     double allowableError;
 
-    std::cout << "=====================================" << std::endl;
+    std::cout << "==================================" << std::endl;
     std::cout << "Input Allowable Error : ";
     std::cin >> allowableError;
-    std::cout << "=====================================" << std::endl;
+    std::cout << "==================================" << std::endl;
 
     calcPlaneBasedFeature(ply, allowableError);
   }
@@ -553,7 +558,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
       std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
   }
 
-  m_maxFeature = sigMax;
+  m_maxFeature = 1.0;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 
   // Normalize feature values
@@ -730,7 +735,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
 
   }
 
-  m_maxFeature = sigMax;
+  m_maxFeature = 1.0;
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 
   // Normalize feature values

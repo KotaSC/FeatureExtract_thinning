@@ -36,11 +36,11 @@ int main( int argc, char** argv )
   calculateFeature *ft = new calculateFeature( );
 
   //--- Select type of Feature
-  ft->setFeatureType( calculateFeature::PointPCA );
+  // ft->setFeatureType( calculateFeature::PointPCA );
   // ft->setFeatureType( calculateFeature::RDoCFeature );
   // ft->setFeatureType( calculateFeature::MinimumEntropy );
   // ft->setFeatureType( calculateFeature::MSFeature );
-  // ft->setFeatureType( calculateFeature::PlaneBasedFeature );
+  ft->setFeatureType( calculateFeature::PlaneBasedFeature );
 
   // ft->addNoise( 0.1 );
   // ft->setFeatureType( calculateFeature::NormalPCA );
@@ -48,10 +48,10 @@ int main( int argc, char** argv )
 
   double div;
 
-  std::cout << "========================" << std::endl;
+  std::cout << "==================================" << std::endl;
   std::cout << "Input Division : ";
   std::cin >> div;
-  std::cout << "========================" << std::endl;
+  std::cout << "==================================" << std::endl;
 
   ft-> setSearchRadius( div, ply->minObjectCoord() , ply->maxObjectCoord() );
 
