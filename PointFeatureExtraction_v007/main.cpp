@@ -97,6 +97,8 @@ int main( int argc, char** argv )
 
   kvs::PointRenderer* renderer = new kvs::PointRenderer();
   renderer->enableTwoSideLighting();
+
+  screen.setSize( 1024, 1024 );
   screen.setTitle( "Point Object" );
 
   // kvs::Vector3f cam_pos(0, 12, 0);
