@@ -71,6 +71,14 @@
         "queue": "cpp",
         "set": "cpp",
         "string": "cpp",
-        "hashtable": "cpp"
+        "hashtable": "cpp",
+        "csignal": "cpp",
+        "cfenv": "cpp",
+        "random": "cpp",
+        "unordered_set": "cpp",
+        "map": "cpp",
+        "memory_resource": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     }
 }
