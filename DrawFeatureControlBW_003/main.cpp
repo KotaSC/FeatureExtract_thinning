@@ -102,6 +102,7 @@ int main(int argc, char** argv )
   renderer->enableTwoSideLighting();
   //  renderer->enableAntiAliasing();
   screen.setTitle( "Point Object" );
+  screen.setSize( 1024, 1024 );
   screen.setBackgroundColor( kvs::RGBColor( 255, 255, 255) );
   screen.registerObject( object, renderer);
 
