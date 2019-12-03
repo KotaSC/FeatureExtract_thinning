@@ -138,15 +138,7 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   }
   else if (m_type == PlaneBasedFeature)
   {
-
-    double allowableError;
-
-    std::cout << "==================================" << std::endl;
-    std::cout << "Input Allowable Error : ";
-    std::cin >> allowableError;
-    std::cout << "==================================" << std::endl;
-
-    calcPlaneBasedFeature(ply, allowableError);
+    calcPlaneBasedFeature(ply);
   }
 
 }
@@ -404,7 +396,7 @@ void calculateFeature::calcMSFeature(kvs::PolygonObject *ply)
 {
 }
 
-void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double allowableError)
+void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
@@ -430,6 +422,13 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply, double all
   kvs::MersenneTwister uniRand;
   double sigMax = 0.0;
   std::vector<float> featureValues;
+
+  double allowableError;
+
+  std::cout << "==================================" << std::endl;
+  std::cout << "Input Allowable Error : ";
+  std::cin >> allowableError;
+  std::cout << "==================================" << std::endl;
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for (size_t i = 0; i < numVert; i++)

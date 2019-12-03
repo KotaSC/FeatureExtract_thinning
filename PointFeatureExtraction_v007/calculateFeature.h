@@ -56,7 +56,7 @@ class calculateFeature
   void calcRDoCFeature( kvs::PolygonObject* ply );
   void calcMinimumEntropy( kvs::PolygonObject* ply );
   void calcMSFeature( kvs::PolygonObject* ply );
-  void calcPlaneBasedFeature( kvs::PolygonObject* ply, double allowableError );
+  void calcPlaneBasedFeature( kvs::PolygonObject* ply );
 
   std::vector<float> calcFeatureValues( kvs::PolygonObject* ply, double radius );
   std::vector<double> calcEigenValues( kvs::PolygonObject* ply, double radius );
