@@ -82,7 +82,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     double createNum = 1.0*ratio;
 
     if (!((i + 1) % INTERVAL))
-      std::cout << i + 1 << ", " << "createNum: " << createNum << std::endl;
+      std::cout << i + 1 << ", " << "createNum: " << createNum << ", " << "alpha: " << alpha << std::endl;
 
     for( int j = 0; j < createNum; j++ ) {
 
