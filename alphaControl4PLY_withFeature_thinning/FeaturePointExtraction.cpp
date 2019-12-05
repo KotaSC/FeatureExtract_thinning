@@ -7,7 +7,7 @@
 #include <kvs/MersenneTwister>
 
 
-const int INTERVAL   = 10000;
+const int INTERVAL   = 1000000;
 
 FeaturePointExtraction::FeaturePointExtraction( void ) {
 }
@@ -83,12 +83,14 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
 
     if (!((i + 1) % INTERVAL))
+    {
       std::cout << i + 1 << std::endl;
       std::cout << "Feature Value:        " << ft[index] << std::endl;
       std::cout << "Alpha:                " << alpha     << std::endl;
       std::cout << "Analytical Point Num: " << a_num     << std::endl;
       std::cout << "Point Ratio:          " << ratio     << std::endl;
       std::cout << "Create Point Num:     " << createNum << std::endl;
+    }
 
     for( int j = 0; j < createNum; j++ ) {
 
