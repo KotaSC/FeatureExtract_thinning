@@ -413,6 +413,13 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
   mrange[4] = (double)minBB.z();
   mrange[5] = (double)maxBB.z();
 
+  double allowableError;
+
+  std::cout << "==================================" << std::endl;
+  std::cout << "Input Allowable Error : ";
+  std::cin >> allowableError;
+  std::cout << "==================================" << std::endl;
+
   // create octree
   std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
   std::cout << minBB << " \n"
@@ -422,13 +429,6 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
   kvs::MersenneTwister uniRand;
   double sigMax = 0.0;
   std::vector<float> featureValues;
-
-  double allowableError;
-
-  std::cout << "==================================" << std::endl;
-  std::cout << "Input Allowable Error : ";
-  std::cin >> allowableError;
-  std::cout << "==================================" << std::endl;
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for (size_t i = 0; i < numVert; i++)

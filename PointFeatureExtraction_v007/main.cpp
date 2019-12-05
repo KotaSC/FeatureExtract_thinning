@@ -36,11 +36,11 @@ int main( int argc, char** argv )
   calculateFeature *ft = new calculateFeature( );
 
   //--- Select type of Feature
-  // ft->setFeatureType( calculateFeature::PointPCA );
+  ft->setFeatureType( calculateFeature::PointPCA );
   // ft->setFeatureType( calculateFeature::RDoCFeature );
   // ft->setFeatureType( calculateFeature::MinimumEntropy );
   // ft->setFeatureType( calculateFeature::MSFeature );
-  ft->setFeatureType( calculateFeature::PlaneBasedFeature );
+  // ft->setFeatureType( calculateFeature::PlaneBasedFeature );
 
   // ft->addNoise( 0.1 );
   // ft->setFeatureType( calculateFeature::NormalPCA );
@@ -101,7 +101,11 @@ int main( int argc, char** argv )
   screen.setSize( 1024, 1024 );
   screen.setTitle( "Point Object" );
 
-  kvs::Vector3f cam_pos(-8, 8, 7);
+  // Box
+  // kvs::Vector3f cam_pos(-8, 8, 7);
+  // kvs::Vector3f cam_up(0, 0, 1);
+
+  kvs::Vector3f cam_pos(0, 11, 0);
   kvs::Vector3f cam_up(0, 0, 1);
 
   screen.scene()->camera()->setPosition(cam_pos);
