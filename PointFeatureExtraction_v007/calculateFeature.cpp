@@ -719,7 +719,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     // double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
 
     // double var = W[0];
-    // double var = searchPoint.x;
+    // double var = coords[3 * i];
 
     if (sum < EPSILON)
       var = 0.0;
