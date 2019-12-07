@@ -109,52 +109,51 @@ int main(int argc, char **argv)
           std::stringstream ssDimension;
           std::stringstream ssXMax;
 
-          output_tmp += "LR";
+          dir_name += "../SPBR_DATA/";
+
+          dir_name += "LR";
           ssLR << repeatLevel;
           ssLR >> tmp;
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_Alpha";
+          dir_name += "_Alpha";
           ssAlpha << alpha;
           ssAlpha >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_Th";
+          dir_name += "_Th";
           ssTh << ftThresh;
           ssTh >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_AlphaMax";
+          dir_name += "_AlphaMax";
           ssAlphaMax << alphaMax;
           ssAlphaMax >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_AlphaMin";
+          dir_name += "_AlphaMin";
           ssAlphaMin << alphaMin;
           ssAlphaMin >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_Dimension";
+          dir_name += "_Dimension";
           ssDimension << dimension;
           ssDimension >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_XMax";
+          dir_name += "_XMax";
           ssXMax << xMax;
           ssXMax >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          dir_name += "../SPBR_DATA/";
-          dir_name += output_tmp;
           dir_name += "/";
 
-          output_tmp += "_";
           output_tmp += getFileName(argv[i]);
           output_tmp += ".spbr";
 
@@ -162,7 +161,6 @@ int main(int argc, char **argv)
 
           mkdir(OUT_DIR_NAME, S_IRWXU);
 
-          output_tmp.insert(0, "out-");
           output_tmp.insert(0, dir_name);
 
           inputFiles.push_back(argv[i]);
