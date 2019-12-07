@@ -109,34 +109,33 @@ int main(int argc, char **argv)
           std::stringstream ssFtAlpha;
           std::stringstream ssTh;
 
-          output_tmp += "LR";
+          dir_name += "../SPBR_DATA/";
+
+          dir_name += "LR";
           ssLR << repeatLevel;
           ssLR >> tmp;
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_alpha";
+          dir_name += "_Alpha";
           ssAlpha << alpha;
           ssAlpha >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_ftAlpha";
+          dir_name += "_FtAlpha";
           ssFtAlpha << ftAlpha;
           ssFtAlpha >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          output_tmp += "_th";
+          dir_name += "_Th";
           ssTh << ftThresh;
           ssTh >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          output_tmp += tmp;
+          dir_name += tmp;
 
-          dir_name += "../SPBR_DATA/";
-          dir_name += output_tmp;
           dir_name += "/";
 
-          output_tmp += "_";
           output_tmp += getFileName(argv[i]);
           output_tmp += ".spbr";
 
@@ -144,7 +143,6 @@ int main(int argc, char **argv)
 
           mkdir(OUT_DIR_NAME, S_IRWXU);
 
-          output_tmp.insert(0, "out-");
           output_tmp.insert(0, dir_name);
 
           inputFiles.push_back(argv[i]);
