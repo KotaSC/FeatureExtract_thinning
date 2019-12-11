@@ -372,14 +372,21 @@ void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
 
 void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
 {
+
   std::vector<double> eigenValues;
-  std::vector<vector<double>> eigentropy;
-  std::vector<vector<double>> featureValue;
+
+  std::vector<float> tmpEigentropy;
+  std::vector<float> selectedFeature;
+
+  std::vector<vector<float>> eigentropy;
+  std::vector<vector<float>> featureValues;
 
   size_t numVert = ply->numberOfVertices();
 
   int numItr;
   double itrRadius;
+
+  float sigMax = 0.0;
 
   std::cout << "========================" << std::endl;
   std::cout << "Input Number of Iteration : ";
@@ -388,7 +395,7 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
 
   for ( int j = 0; j < numItr; j++ )
   {
-    itrRadius   = m_searchRadius * (numItr - j);
+    itrRadius   = m_searchRadius * ( ( j+1 ) / numItr );
     eigenValues = calcEigenValues( ply, itrRadius );
 
     for ( size_t i = 0; i < numVert; i++ )
@@ -402,11 +409,53 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
       double lambda1 = eigenValues[i*3] / sum;
       double lambda2 = eigenValues[i*3 + 1] / sum;
       double lambda3 = eigenValues[i*3 + 2] / sum;
-      double eT      = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
+      double et      = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
 
-      featureValue[j].push_back(ft);
-      eigentropy[j].push_back(eT);
+      if (sum < EPSILON)
+      {
+        ft = 0.0;
+        et = 0.0;
+      }
+
+      if (!((i + 1) % INTERVAL))
+        std::cout << i + 1 << ", " << "Feature Value: "  << ft  << ", " << "Eigentropy: " << et << std::endl;
+
+
+      featureValues[j].push_back( ft );
+      eigentropy[j].push_back( et );
     }
+
+    eigenValues.clear();
+  }
+
+  for ( size_t i = 0; i < numVert; i++ )
+  {
+    for ( int j = 0; j < numItr; j++ )
+    {
+      tmpEigentropy.push_back( eigentropy[j][i] );
+    }
+
+    std::vector<float>::iterator minIt = std::min_element( tmpEigentropy.begin(), tmpEigentropy.end() );
+    size_t minEigentropyIndex          = std::distance( tmpEigentropy.begin(), minIt );
+
+    tmpEigentropy.clear();
+
+    selectedFeature.push_back( featureValues[minEigentropyIndex][i] );
+
+    if ( sigMax < featureValues[minEigentropyIndex][i] )
+      sigMax = featureValues[minEigentropyIndex][i];
+  }
+
+  m_maxFeature = 1.0;
+  std::cout << "Maximun of Sigma : " << sigMax << std::endl;
+
+  // Normalize feature values
+  float normFt;
+
+  for ( float f : selectedFeature )
+  {
+    normFt = f / sigMax;
+    m_feature.push_back( normFt );
   }
 }
 

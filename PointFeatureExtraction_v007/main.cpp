@@ -36,9 +36,9 @@ int main( int argc, char** argv )
   calculateFeature *ft = new calculateFeature( );
 
   //--- Select type of Feature
-  ft->setFeatureType( calculateFeature::PointPCA );
+  // ft->setFeatureType( calculateFeature::PointPCA );
   // ft->setFeatureType( calculateFeature::RDoCFeature );
-  // ft->setFeatureType( calculateFeature::MinimumEntropy );
+  ft->setFeatureType( calculateFeature::MinimumEntropy );
   // ft->setFeatureType( calculateFeature::MSFeature );
   // ft->setFeatureType( calculateFeature::PlaneBasedFeature );
 
