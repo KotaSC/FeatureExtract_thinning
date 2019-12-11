@@ -98,18 +98,18 @@ int main( int argc, char** argv )
   kvs::PointRenderer* renderer = new kvs::PointRenderer();
   renderer->enableTwoSideLighting();
 
-  screen.setSize( 2000, 2000 );
+  screen.setSize( 1000, 1000 );
   screen.setTitle( "Point Object" );
 
   // Box
-  // kvs::Vector3f cam_pos(-8, 8, 7);
-  // kvs::Vector3f cam_up(0, 0, 1);
+  kvs::Vector3f cam_pos(-8, 8, 7);
+  kvs::Vector3f cam_up(0, 0, 1);
 
   // kvs::Vector3f cam_pos(0, 11, 0);
   // kvs::Vector3f cam_up(0, 0, 1);
 
-  // screen.scene()->camera()->setPosition(cam_pos);
-  // screen.scene()->camera()->setUpVector(cam_up);
+  screen.scene()->camera()->setPosition(cam_pos);
+  screen.scene()->camera()->setUpVector(cam_up);
 
   screen.registerObject( object, renderer );
 

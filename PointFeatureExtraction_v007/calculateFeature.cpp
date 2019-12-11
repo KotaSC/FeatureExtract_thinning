@@ -372,22 +372,40 @@ void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
 
 void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
 {
-  std::vector<double> entropy;
-  std::vector<double> featureValue;
+  std::vector<double> eigenValues;
+  std::vector<vector<double>> eigentropy;
+  std::vector<vector<double>> featureValue;
+
   size_t numVert = ply->numberOfVertices();
 
   int numItr;
+  double itrRadius;
 
   std::cout << "========================" << std::endl;
   std::cout << "Input Number of Iteration : ";
-  std::cin >> numItr;
+  std::cin  >> numItr;
   std::cout << "========================" << std::endl;
 
   for ( int j = 0; j < numItr; j++ )
   {
-    for ( int i = 0; i < numVert; i++ )
-    {
+    itrRadius   = m_searchRadius * (numItr - j);
+    eigenValues = calcEigenValues( ply, itrRadius );
 
+    for ( size_t i = 0; i < numVert; i++ )
+    {
+      double sum = eigenValues[i*3] + eigenValues[i*3 + 1] + eigenValues[i*3 + 2];
+
+      // Change of curvature
+      double ft = eigenValues[i*3 + 2] / sum;
+
+      // Eigentropy
+      double lambda1 = eigenValues[i*3] / sum;
+      double lambda2 = eigenValues[i*3 + 1] / sum;
+      double lambda3 = eigenValues[i*3 + 2] / sum;
+      double eT      = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
+
+      featureValue[j].push_back(ft);
+      eigentropy[j].push_back(eT);
     }
   }
 }
@@ -701,7 +719,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     double sum = W[2] + W[1] + W[0];
 
     // Change of curvature
-    double var = W[0] / sum;
+    // double var = W[0] / sum;
 
     // Linearity
     // double var = ( W[2] - W[1] ) / W[2];
@@ -710,7 +728,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     // double var = ( W[1] - W[0]) / W[2];
 
     // Aplanarity
-    // double var = 1 - ( ( W[1] - W[0]) / W[2] );
+    double var = 1 - ( ( W[1] - W[0]) / W[2] );
 
     // Eigentropy
     // double lambda1 = W[2] / sum;
