@@ -403,12 +403,8 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
 
       double sum = eigenValues[i*3] + eigenValues[i*3 + 1] + eigenValues[i*3 + 2];
 
-      // std::cout << "sum = " << sum << std::endl;
-
       // Change of curvature
       double ft = eigenValues[i*3 + 2] / sum;
-
-      // std::cout << "ft = " << ft << std::endl;
 
       // Eigentropy
       double lambda1 = eigenValues[i*3] / sum;
@@ -416,30 +412,22 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
       double lambda3 = eigenValues[i*3 + 2] / sum;
       double et      = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
 
-      if (sum < EPSILON)
+      if ( sum < EPSILON )
       {
         ft = 0.0;
         et = 0.0;
       }
 
-      if (et < EPSILON || isnan(et) )
+      if ( isnan(et) )
       {
         et = 0.0;
-        // std::cout << "test" << std::endl;
       }
-
-      if (!((i + 1) % INTERVAL))
-        std::cout << i + 1 << ", " << "Feature Value: "  << ft  << ", " << "Eigentropy: " << et << std::endl;
-
-
-      // featureValues[j].push_back(ft);
-      // eigentropy[j].push_back(et);
 
       featureValues[j][i] = ft;
       eigentropy[j][i]    = et;
 
-      // std::cout << "et = " << et << std::endl;
-      // std::cout << "eigentropy[" << j << "][" << i << "] = " << eigentropy[j][i] << std::endl;
+      if (!((i + 1) % INTERVAL))
+        std::cout << i + 1 << ", " << "Feature Value: "  << ft  << ", " << "Eigentropy: " << et << std::endl;
 
     }
 
@@ -451,19 +439,14 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
     for ( int j = 0; j < numItr; j++ )
     {
       tmpEigentropy.push_back( eigentropy[j][i] );
-      // std::cout << "eigentropy[" << j << "][" << i << "] = " << eigentropy[j][i] << std::endl;
     }
 
     std::vector<float>::iterator minIt = std::min_element( tmpEigentropy.begin(), tmpEigentropy.end() );
     size_t minEigentropyIndex          = std::distance( tmpEigentropy.begin(), minIt );
 
-    // std::cout << "Index = " << minEigentropyIndex << std::endl;
-
     tmpEigentropy.clear();
 
     selectedFeature.push_back( featureValues[minEigentropyIndex][i] );
-
-    // std::cout << "selected " << featureValues[minEigentropyIndex][i] << std::endl;
 
     if ( sigMax < featureValues[minEigentropyIndex][i] )
       sigMax = featureValues[minEigentropyIndex][i];
