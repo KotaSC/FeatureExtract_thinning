@@ -783,13 +783,17 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     // double var = ( W[1] - W[0]) / W[2];
 
     // Aplanarity
-    double var = 1 - ( ( W[1] - W[0]) / W[2] );
+    // double var = 1 - ( ( W[1] - W[0]) / W[2] );
 
     // Eigentropy
-    // double lambda1 = W[2] / sum;
-    // double lambda2 = W[1] / sum;
-    // double lambda3 = W[0] / sum;
-    // double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
+    double lambda1 = W[2] / sum;
+    double lambda2 = W[1] / sum;
+    double lambda3 = W[0] / sum;
+    double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
+
+    if ( isnan(var) )
+      var = 0.0;
+
 
     // double var = W[0];
     // double var = coords[3 * i];
