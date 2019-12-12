@@ -422,12 +422,24 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
         et = 0.0;
       }
 
+      if (et < EPSILON || isnan(et) )
+      {
+        et = 0.0;
+        // std::cout << "test" << std::endl;
+      }
+
       if (!((i + 1) % INTERVAL))
         std::cout << i + 1 << ", " << "Feature Value: "  << ft  << ", " << "Eigentropy: " << et << std::endl;
 
 
-      featureValues[j].push_back(ft);
-      eigentropy[j].push_back(et);
+      // featureValues[j].push_back(ft);
+      // eigentropy[j].push_back(et);
+
+      featureValues[j][i] = ft;
+      eigentropy[j][i]    = et;
+
+      // std::cout << "et = " << et << std::endl;
+      // std::cout << "eigentropy[" << j << "][" << i << "] = " << eigentropy[j][i] << std::endl;
 
     }
 
@@ -439,11 +451,13 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
     for ( int j = 0; j < numItr; j++ )
     {
       tmpEigentropy.push_back( eigentropy[j][i] );
-      std::cout << "eigentropy[" << j << "][" << i << "]" << eigentropy[j][i] << std::endl;
+      // std::cout << "eigentropy[" << j << "][" << i << "] = " << eigentropy[j][i] << std::endl;
     }
 
     std::vector<float>::iterator minIt = std::min_element( tmpEigentropy.begin(), tmpEigentropy.end() );
     size_t minEigentropyIndex          = std::distance( tmpEigentropy.begin(), minIt );
+
+    // std::cout << "Index = " << minEigentropyIndex << std::endl;
 
     tmpEigentropy.clear();
 
