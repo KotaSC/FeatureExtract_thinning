@@ -403,8 +403,12 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
 
       double sum = eigenValues[i*3] + eigenValues[i*3 + 1] + eigenValues[i*3 + 2];
 
+      // std::cout << "sum = " << sum << std::endl;
+
       // Change of curvature
       double ft = eigenValues[i*3 + 2] / sum;
+
+      // std::cout << "ft = " << ft << std::endl;
 
       // Eigentropy
       double lambda1 = eigenValues[i*3] / sum;
@@ -435,6 +439,7 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
     for ( int j = 0; j < numItr; j++ )
     {
       tmpEigentropy.push_back( eigentropy[j][i] );
+      std::cout << "eigentropy[" << j << "][" << i << "]" << eigentropy[j][i] << std::endl;
     }
 
     std::vector<float>::iterator minIt = std::min_element( tmpEigentropy.begin(), tmpEigentropy.end() );
@@ -443,6 +448,8 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
     tmpEigentropy.clear();
 
     selectedFeature.push_back( featureValues[minEigentropyIndex][i] );
+
+    // std::cout << "selected " << featureValues[minEigentropyIndex][i] << std::endl;
 
     if ( sigMax < featureValues[minEigentropyIndex][i] )
       sigMax = featureValues[minEigentropyIndex][i];
