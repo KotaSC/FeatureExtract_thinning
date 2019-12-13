@@ -47,7 +47,7 @@ int main(int argc, char **argv)
   double alphaMax     = ALPHA_MAX;
   double alphaMin     = ALPHA_MIN;
   double dimension    = DIMENSION;
-  double xMax         = X_MAX;
+  double xMax         = X_ALPHA_MAX;
 
   fileList *files = new fileList(argv[1]);
 
