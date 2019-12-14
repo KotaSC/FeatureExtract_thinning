@@ -397,11 +397,13 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
   {
 
     itrRadius   = m_searchRadius * ( (double)( j+1 ) / (double)numItr );
-    eigenValues = calcEigenValues( ply, itrRadius );
 
     std::cout << "==================================" << std::endl;
     std::cout << "Start iteration number " << j+1 << std::endl;
-    std::cout << "m_searchRadius = " << m_searchRadius << std::endl;
+    std::cout << "Search Radius = " << itrRadius << std::endl;
+    std::cout << std::endl;
+
+    eigenValues = calcEigenValues( ply, itrRadius );
 
     for ( size_t i = 0; i < numVert; i++ )
     {
