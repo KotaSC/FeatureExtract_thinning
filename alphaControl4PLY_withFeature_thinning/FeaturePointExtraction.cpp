@@ -54,9 +54,11 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   double alphaMax     = ALPHA_MAX;
   double alphaMin     = ALPHA_MIN;
   double dim          = DIMENSION;
-  double xMax         = X_MAX;
-  double initialPoint = xMax - threshold;
+  double fAlphaMax    = F_ALPHA_MAX;
+  double initialPoint = fAlphaMax - threshold;
   double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
+
+  double alphaSum  = 0.0;
 
   std::cout << "===========================================" << std::endl;
   std::cout << "Max opacity              : " << alphaMax     << std::endl;
@@ -76,7 +78,9 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     double x     = ft[index] - threshold;
     double alpha = grad*std::pow( x, dim ) + alphaMin;
 
-    // 特徴量に応じた不透明度を実現するために必要な点数・増減率を計算する
+    alphaSum += alpha;
+
+    // Caluculate Point Number and Increase Ratio according to Feature Value
     double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
     double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0*ratio;
@@ -102,16 +106,22 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       SetNormals.push_back( normals[3*index+1] );
       SetNormals.push_back( normals[3*index+2] );
 
-      SetColors.push_back( colors[3*index] );
-      SetColors.push_back( colors[3*index+1] );
-      SetColors.push_back( colors[3*index+2] );
+      // SetColors.push_back( colors[3*index] );
+      // SetColors.push_back( colors[3*index+1] );
+      // SetColors.push_back( colors[3*index+2] );
 
-      // SetColors.push_back( 255 );
-      // SetColors.push_back( 0 );
-      // SetColors.push_back( 0 );
+      SetColors.push_back( 255 );
+      SetColors.push_back( 0 );
+      SetColors.push_back( 0 );
 
     }
   }
+
+   double alphaMean = alphaSum / num;
+
+  std::cout << "===========================================" << std::endl;
+  std::cout << "Average Opacity = " << alphaMean << std::endl;
+  std::cout << "===========================================" << std::endl;
 
   SuperClass::setCoords ( kvs::ValueArray<kvs::Real32>( SetCoords  ) );
   SuperClass::setNormals( kvs::ValueArray<kvs::Real32>( SetNormals ) );

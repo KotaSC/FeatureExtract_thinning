@@ -25,6 +25,7 @@
 
 const double DEFAULT_CAMERA_DISTANCE = 12.0;
 
+
 int main(int argc, char **argv)
 {
   if (argc < 2)
@@ -47,7 +48,7 @@ int main(int argc, char **argv)
   double alphaMax     = ALPHA_MAX;
   double alphaMin     = ALPHA_MIN;
   double dimension    = DIMENSION;
-  double xMax         = X_ALPHA_MAX;
+  double fAlphaMax    = F_ALPHA_MAX;
 
   fileList *files = new fileList(argv[1]);
 
@@ -107,7 +108,7 @@ int main(int argc, char **argv)
           std::stringstream ssAlphaMax;
           std::stringstream ssAlphaMin;
           std::stringstream ssDimension;
-          std::stringstream ssXMax;
+          std::stringstream ssFAlphaMax;
 
           dir_name += "../SPBR_DATA/";
 
@@ -146,9 +147,9 @@ int main(int argc, char **argv)
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
           dir_name += tmp;
 
-          dir_name += "_XMax";
-          ssXMax << xMax;
-          ssXMax >> tmp;
+          dir_name += "_FAlphaMax";
+          ssFAlphaMax << fAlphaMax;
+          ssFAlphaMax >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
           dir_name += tmp;
 
