@@ -46,15 +46,6 @@ int main( int argc, char** argv )
   // ft->setFeatureType( calculateFeature::NormalPCA );
   // ft->setFeatureType( calculateFeature::NormalDispersion );
 
-  double div;
-
-  std::cout << "==================================" << std::endl;
-  std::cout << "Input Division : ";
-  std::cin >> div;
-  std::cout << "==================================" << std::endl;
-
-  ft-> setSearchRadius( div, ply->minObjectCoord() , ply->maxObjectCoord() );
-
   //---- Calculation
   ft->calc( ply );
 

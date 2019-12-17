@@ -29,8 +29,11 @@ class calculateFeature
   void addNoise( double noise );
   void setSearchRadius( double distance );
   void setSearchRadius( double divide,
-			kvs::Vector3f bbmin,
-			kvs::Vector3f bbmax  );
+			                  kvs::Vector3f bbmin,
+			                  kvs::Vector3f bbmax  );
+  double setMinMaxSearchRadius( double divide,
+			                    kvs::Vector3f bbmin,
+			                    kvs::Vector3f bbmax  );
   void calc( kvs::PolygonObject* ply );
   double maxFeature( void ) { return m_maxFeature; }
   double minFeature( void ) { return m_minFeature; }

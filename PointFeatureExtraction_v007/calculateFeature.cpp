@@ -58,8 +58,24 @@ void calculateFeature::setSearchRadius(double divide,
   m_searchRadius   = b_leng / divide;
 
   std::cout << "==================================" << std::endl;
-  std::cout << "m_searchRadius = " << m_searchRadius << std::endl;
+  std::cout << "Search Radius = " << m_searchRadius << std::endl;
   std::cout << "==================================" << std::endl;
+
+}
+
+double calculateFeature::setMinMaxSearchRadius(double divide,
+                                         kvs::Vector3f bbmin,
+                                         kvs::Vector3f bbmax)
+{
+  kvs::Vector3f bb = bbmax - bbmin;
+  double b_leng    = bb.length();
+  double searchRadius   = b_leng / divide;
+
+  std::cout << "==================================" << std::endl;
+  std::cout << "Search Radius = " << searchRadius << std::endl;
+  std::cout << "==================================" << std::endl;
+
+  return searchRadius;
 
 }
 
@@ -75,6 +91,19 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   m_number   = num;
   double d_noise = sqrt(m_searchRadius) * m_noise;
   bool hasNormal = false;
+
+  if (m_type != MinimumEntropy)
+  {
+    double div;
+
+    std::cout << "==================================" << std::endl;
+    std::cout << "Input Division : ";
+    std::cin >> div;
+    std::cout << "==================================" << std::endl;
+
+    setSearchRadius( div, ply->minObjectCoord() , ply->maxObjectCoord() );
+  }
+
   if (num == ply->numberOfNormals())
     hasNormal = true;
   if (!hasNormal)
@@ -380,14 +409,29 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
 
   size_t numVert = ply->numberOfVertices();
 
-  int numItr;
-  double itrRadius;
-
   float sigMax = 0.0;
 
+  double minDiv;
+  double maxDiv;
+  int numItr;
+
   std::cout << "==================================" << std::endl;
+  std::cout << "Input Minimum Division : ";
+  std::cin  >> minDiv;
+  std::cout << std::endl;
+  std::cout << "Input Maximum Division : ";
+  std::cin  >> maxDiv;
+  std::cout << std::endl;
   std::cout << "Input Number of Iteration : ";
   std::cin  >> numItr;
+  std::cout << "==================================" << std::endl;
+
+  double minSearchRadius = setMinMaxSearchRadius( maxDiv, ply->minObjectCoord(), ply->maxObjectCoord() );
+  double maxSearchRadius = setMinMaxSearchRadius( minDiv, ply->minObjectCoord(), ply->maxObjectCoord() );
+
+  std::cout << "==================================" << std::endl;
+  std::cout << "Minimum Search Radius = " << minSearchRadius << std::endl;
+  std::cout << "Maximum Search Radius = " << maxSearchRadius << std::endl;
   std::cout << "==================================" << std::endl;
 
   std::vector<vector<float>> eigentropy( numItr, vector<float>(numVert) );
@@ -396,14 +440,14 @@ void calculateFeature::calcMinimumEntropy(kvs::PolygonObject *ply)
   for ( int j = 0; j < numItr; j++ )
   {
 
-    itrRadius   = m_searchRadius * ( (double)( j+1 ) / (double)numItr );
+    double itrSearchRadius = minSearchRadius + ( j+1 )*( ( maxSearchRadius - minSearchRadius ) / numItr );
 
     std::cout << "==================================" << std::endl;
     std::cout << "Start iteration number " << j+1 << std::endl;
-    std::cout << "Search Radius = " << itrRadius << std::endl;
+    std::cout << "Search Radius = " << itrSearchRadius << std::endl;
     std::cout << std::endl;
 
-    eigenValues = calcEigenValues( ply, itrRadius );
+    eigenValues = calcEigenValues( ply, itrSearchRadius );
 
     for ( size_t i = 0; i < numVert; i++ )
     {
