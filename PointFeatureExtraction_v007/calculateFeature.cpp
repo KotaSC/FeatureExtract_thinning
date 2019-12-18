@@ -447,15 +447,19 @@ void calculateFeature::calcMinimumEntropyFeature(kvs::PolygonObject *ply)
       double sum = eigenValues[i*3] + eigenValues[i*3 + 1] + eigenValues[i*3 + 2];
 
       // Change of curvature
-      double ft = eigenValues[i*3 + 2] / sum;
+      // double ft = eigenValues[i*3 + 2] / sum;
 
       // Linearity
-      // double ft = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
+      double ft = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
 
       // Aplanarity
       // double ft = 1 - ( ( eigenValues[i*3 + 1] - eigenValues[i*3 + 2] ) / eigenValues[i*3] );
 
       // Eigentropy
+      // double lambda1 = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
+      // double lambda2 = ( eigenValues[i*3 + 1] - eigenValues[i*3 + 2] ) / eigenValues[i*3];
+      // double lambda3 = eigenValues[i*3 + 2] / eigenValues[i*3];
+
       double lambda1 = eigenValues[i*3] / sum;
       double lambda2 = eigenValues[i*3 + 1] / sum;
       double lambda3 = eigenValues[i*3 + 2] / sum;
