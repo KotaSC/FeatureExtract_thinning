@@ -2,8 +2,12 @@
 #include "octree.h"
 
 #include <Accelerate/Accelerate.h> //CLAPACK
+
 #include <vector>
 #include <cmath>
+#include <fstream>
+#include <sstream>
+
 #include <kvs/BoxMuller>
 #include <kvs/EigenDecomposer>
 #include <kvs/Vector3>
@@ -428,7 +432,7 @@ void calculateFeature::calcMinimumEntropyFeature(kvs::PolygonObject *ply)
   for ( int j = 0; j < numItr; j++ )
   {
 
-    double itrSearchRadius = minSearchRadius + ( j * ( maxSearchRadius - minSearchRadius ) / ( numItr-1 ) );
+    double itrSearchRadius = minSearchRadius + ( j * ( maxSearchRadius - minSearchRadius ) / (double)( numItr-1.0 ) );
 
     std::cout << "==================================" << std::endl;
     std::cout << "Start iteration number " << j+1 << std::endl;
@@ -444,6 +448,12 @@ void calculateFeature::calcMinimumEntropyFeature(kvs::PolygonObject *ply)
 
       // Change of curvature
       double ft = eigenValues[i*3 + 2] / sum;
+
+      // Linearity
+      // double ft = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
+
+      // Aplanarity
+      // double ft = 1 - ( ( eigenValues[i*3 + 1] - eigenValues[i*3 + 2] ) / eigenValues[i*3] );
 
       // Eigentropy
       double lambda1 = eigenValues[i*3] / sum;
@@ -816,7 +826,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     // double var = W[0] / sum;
 
     // Linearity
-    // double var = ( W[2] - W[1] ) / W[2];
+    double var = ( W[2] - W[1] ) / W[2];
 
     // Planarity
     // double var = ( W[1] - W[0]) / W[2];
@@ -825,13 +835,13 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     // double var = 1 - ( ( W[1] - W[0]) / W[2] );
 
     // Eigentropy
-    double lambda1 = W[2] / sum;
-    double lambda2 = W[1] / sum;
-    double lambda3 = W[0] / sum;
-    double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
+    // double lambda1 = W[2] / sum;
+    // double lambda2 = W[1] / sum;
+    // double lambda3 = W[0] / sum;
+    // double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
 
-    if ( isnan(var) )
-      var = 0.0;
+    // if ( isnan(var) )
+    //   var = 0.0;
 
 
     // double var = W[0];
@@ -856,11 +866,13 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
   // Normalize feature values
   float normFt;
   std::vector<float> ft;
+  std::ofstream fout( "../XYZ_DATA/ft.csv" );
 
   for ( float f : featureValues )
   {
     normFt = f / sigMax;
     ft.push_back( normFt );
+    fout << normFt << std::endl;
   }
 
   return ft;
