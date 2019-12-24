@@ -33,7 +33,7 @@ int main( int argc, char** argv )
   std::cout << "Max : " << ply->maxObjectCoord() << std::endl;
 
   //--- Set up for calculating feature
-  calculateFeature *ft = new calculateFeature( );
+  calculateFeature *ft = new calculateFeature();
 
   //--- Select type of Feature
   // ft->setFeatureType( calculateFeature::PointPCA );

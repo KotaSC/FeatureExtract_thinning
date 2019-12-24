@@ -447,10 +447,10 @@ void calculateFeature::calcMinimumEntropyFeature(kvs::PolygonObject *ply)
       double sum = eigenValues[i*3] + eigenValues[i*3 + 1] + eigenValues[i*3 + 2];
 
       // Change of curvature
-      // double ft = eigenValues[i*3 + 2] / sum;
+      double ft = eigenValues[i*3 + 2] / sum;
 
       // Linearity
-      double ft = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
+      // double ft = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
 
       // Aplanarity
       // double ft = 1 - ( ( eigenValues[i*3 + 1] - eigenValues[i*3 + 2] ) / eigenValues[i*3] );
@@ -827,10 +827,10 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     double sum = W[2] + W[1] + W[0];
 
     // Change of curvature
-    // double var = W[0] / sum;
+    double var = W[0] / sum;
 
     // Linearity
-    double var = ( W[2] - W[1] ) / W[2];
+    // double var = ( W[2] - W[1] ) / W[2];
 
     // Planarity
     // double var = ( W[1] - W[0]) / W[2];
@@ -870,13 +870,13 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
   // Normalize feature values
   float normFt;
   std::vector<float> ft;
-  std::ofstream fout( "../XYZ_DATA/ft.csv" );
+  // std::ofstream fout( "../XYZ_DATA/ft.csv" );
 
   for ( float f : featureValues )
   {
     normFt = f / sigMax;
     ft.push_back( normFt );
-    fout << normFt << std::endl;
+    // fout << normFt << std::endl;
   }
 
   return ft;
