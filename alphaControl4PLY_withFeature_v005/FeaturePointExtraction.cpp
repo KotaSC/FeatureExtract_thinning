@@ -23,7 +23,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::vector<int> ind;
 
   int num = 0;
-  for( size_t i=0; i< numVert; i++ ) {
+  for( size_t i = 0; i < numVert; i++ ) {
     if( ft[i] > threshold ) {
       ind.push_back( i );
       num++;
@@ -59,13 +59,13 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     SetNormals.push_back( normals[3*index+1] );
     SetNormals.push_back( normals[3*index+2] );
 
-    // SetColors.push_back( colors[3*index] );
-    // SetColors.push_back( colors[3*index+1] );
-    // SetColors.push_back( colors[3*index+2] );
+    SetColors.push_back( colors[3*index] );
+    SetColors.push_back( colors[3*index+1] );
+    SetColors.push_back( colors[3*index+2] );
 
-    SetColors.push_back( 255 );
-    SetColors.push_back( 0 );
-    SetColors.push_back( 0 );
+    // SetColors.push_back( 255 );
+    // SetColors.push_back( 0 );
+    // SetColors.push_back( 0 );
 
   }
 
