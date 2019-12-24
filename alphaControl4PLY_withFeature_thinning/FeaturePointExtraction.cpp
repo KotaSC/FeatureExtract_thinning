@@ -4,8 +4,6 @@
 #include <numeric>
 #include <cmath>
 #include <algorithm>
-#include <kvs/MersenneTwister>
-
 
 const int INTERVAL = 1000000;
 
@@ -67,9 +65,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::cout << "Gradient                 : " << grad         << std::endl;
   std::cout << "Number of feature points : " << num          << std::endl;
   std::cout << "===========================================" << std::endl;
-
-
-  kvs::MersenneTwister uniRand;
 
   for ( int i = 0; i < num; i++ ) {
 
