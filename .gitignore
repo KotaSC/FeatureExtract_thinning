@@ -39,3 +39,7 @@
 # Image data
 *.png
 *.bmp
+
+# Text data
+*.txt
+*.rtf
