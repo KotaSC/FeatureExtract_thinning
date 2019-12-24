@@ -7,7 +7,7 @@
 #include <kvs/MersenneTwister>
 
 
-const int INTERVAL   = 1000000;
+const int INTERVAL = 1000000;
 
 FeaturePointExtraction::FeaturePointExtraction( void ) {
 }
@@ -106,13 +106,13 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       SetNormals.push_back( normals[3*index+1] );
       SetNormals.push_back( normals[3*index+2] );
 
-      // SetColors.push_back( colors[3*index] );
-      // SetColors.push_back( colors[3*index+1] );
-      // SetColors.push_back( colors[3*index+2] );
+      SetColors.push_back( colors[3*index] );
+      SetColors.push_back( colors[3*index+1] );
+      SetColors.push_back( colors[3*index+2] );
 
-      SetColors.push_back( 255 );
-      SetColors.push_back( 0 );
-      SetColors.push_back( 0 );
+      // SetColors.push_back( 255 );
+      // SetColors.push_back( 0 );
+      // SetColors.push_back( 0 );
 
     }
   }
