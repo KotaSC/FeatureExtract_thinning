@@ -49,6 +49,10 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   for( int i=0; i<createNum; i++ ) {
 
     size_t id = (size_t)((double)num*uniRand());
+
+    if( id == num )
+      id--;
+
     size_t index = ind[ id ];
 
     SetCoords.push_back( coords[3*index] );
@@ -59,13 +63,13 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     SetNormals.push_back( normals[3*index+1] );
     SetNormals.push_back( normals[3*index+2] );
 
-    SetColors.push_back( colors[3*index] );
-    SetColors.push_back( colors[3*index+1] );
-    SetColors.push_back( colors[3*index+2] );
+    // SetColors.push_back( colors[3*index] );
+    // SetColors.push_back( colors[3*index+1] );
+    // SetColors.push_back( colors[3*index+2] );
 
-    // SetColors.push_back( 255 );
-    // SetColors.push_back( 0 );
-    // SetColors.push_back( 0 );
+    SetColors.push_back( 255 );
+    SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
 
   }
 
