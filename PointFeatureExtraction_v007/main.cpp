@@ -3,7 +3,8 @@
 #include <vector>
 #include "importPointClouds.h"
 #include "calculateFeature.h"
-#include "writeFeature.h"
+// #include "writeFeature.h"
+#include "writeFeatureColor.h"
 
 #include <kvs/PolygonObject>
 #include <kvs/PointObject>
