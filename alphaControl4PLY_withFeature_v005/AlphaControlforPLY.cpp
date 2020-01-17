@@ -28,6 +28,8 @@ AlphaControlforPLY::AlphaControlforPLY(kvs::PolygonObject *plyObject,
                                        kvs::Vector3f BBMax,
                                        int repeatLevel,
                                        double alpha,
+                                       std::vector<float> &ft,
+                                       double threshold,
                                        bool hasFace) : kvs::PointObject(),
                                                        m_searchRadius(0.0),
                                                        m_ratio(1.0),
@@ -54,8 +56,19 @@ AlphaControlforPLY::AlphaControlforPLY(kvs::PolygonObject *plyObject,
     std::cerr << "PLY data dosen't have polygons" << std::endl;
     int num = calculateRequiredPartcleNumber(alpha, repeatLevel,
                                              BBMin, BBMax);
+
+    size_t numVert = plyObject->numberOfVertices();
+    std::vector<int> ind;
+
+    size_t notFeaturePointNum = 0;
+    for( size_t i = 0; i < numVert; i++ ) {
+      if( ft[i] <= threshold ) {
+        ind.push_back( i );
+        notFeaturePointNum++;
+      }
+    }
     calculatePointRaio(num, plyObject);
-    setParticles(plyObject);
+    setParticles(plyObject, ind, notFeaturePointNum);
   }
 }
 
@@ -218,14 +231,14 @@ void AlphaControlforPLY::calculatePointRaio(const double analyticalNum,
             << ", Diff : " << averageNum - analyticalNum << std::endl;
 }
 
-void AlphaControlforPLY::setParticles(kvs::PolygonObject *ply)
+void AlphaControlforPLY::setParticles(kvs::PolygonObject *ply, std::vector<int> &ind, size_t notFeaturePointNum)
 {
-  size_t numVert = ply->numberOfVertices();
+  size_t numVert = notFeaturePointNum;
   size_t createNum = (unsigned int)numVert * m_ratio;
   size_t multiNum = (unsigned int)m_ratio;
   size_t oddNum = createNum - multiNum * numVert;
-  std::cout << "Number of Original Vertices : " << numVert << std::endl;
-  std::cout << "Number of setting Particles : " << createNum << "( " << multiNum * numVert << " + " << oddNum << " )" << std::endl;
+  std::cout << "Number of Non-Feature Points : " << numVert << std::endl;
+  std::cout << "Number of setting Particles  : " << createNum << "( " << multiNum * numVert << " + " << oddNum << " )" << std::endl;
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
   kvs::ValueArray<kvs::Real32> normals = ply->normals();
   kvs::ValueArray<kvs::UInt8> colors = ply->colors();
@@ -241,7 +254,14 @@ void AlphaControlforPLY::setParticles(kvs::PolygonObject *ply)
   std::vector<unsigned int> counter;
   for (size_t i = 0; i < createNum; i++)
   {
-    size_t index = (size_t)((double)numVert * uniRand());
+
+    size_t id = (size_t)((double)notFeaturePointNum*uniRand());
+
+    if(id == notFeaturePointNum)
+      id--;
+
+    size_t index = ind[ id ];
+
     counter.push_back(index);
     SetCoords.push_back(coords[3 * index]);
     SetCoords.push_back(coords[3 * index + 1]);
