@@ -63,13 +63,21 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     SetNormals.push_back( normals[3*index+1] );
     SetNormals.push_back( normals[3*index+2] );
 
+    // Original
     // SetColors.push_back( colors[3*index] );
     // SetColors.push_back( colors[3*index+1] );
     // SetColors.push_back( colors[3*index+2] );
 
-    SetColors.push_back( 255 );
+    // Red
+    // SetColors.push_back( 255 );
+    // SetColors.push_back( 0 );
+    // SetColors.push_back( 0 );
+
+    // Black
     SetColors.push_back( 0 );
     SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
+
 
   }
 

@@ -17,8 +17,6 @@ class AlphaControlforPLY : public kvs::PointObject
 					   kvs::Vector3f BBMax,
 					   int repeatLevel,
 					   double alpha,
-					   std::vector<float> &ft,
-					   double threshold,
 					   bool hface);
 
   private:
@@ -33,7 +31,7 @@ class AlphaControlforPLY : public kvs::PointObject
 							 kvs::Vector3f BBMax);
 	void calculatePointRaio(const double analyticalNum,
 							kvs::PolygonObject *ply);
-	void setParticles(kvs::PolygonObject *ply, std::vector<int> &ind, size_t notFeaturePointNum);
+	void setParticles(kvs::PolygonObject *ply);
 
   public:
     double calculateRequiredPartcleNumber(double alpha,
