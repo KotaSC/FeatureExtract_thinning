@@ -219,10 +219,12 @@ int main(int argc, char **argv)
     std::cout << "\n=============================================================" << std::endl;
     std::cout << "Creating Particles from: " << inputFiles[i] << std::endl;
 
+    std::vector<float> ft = ply->featureData();
+
     // kvs::PointObject *point =
     AlphaControlforPLY* point =
         new AlphaControlforPLY(ply, screen.scene()->camera(), BBMin, BBMax,
-                               repeatLevel, opacities[i], ply->isFase());
+                               repeatLevel, opacities[i], ft, thresholds[i], ply->isFase());
     std::cout << "Number of Particles: " << point->numberOfVertices() << std::endl;
 
     object->add(*kvs::PointObject::DownCast(point));
@@ -236,13 +238,11 @@ int main(int argc, char **argv)
     double ft_ratio = point->pointRatio(a_num);
 
     std::cout << "===========================" << std::endl;
-    std::cout << "a_num = " << a_num << std::endl;
+    std::cout << "a_num    = " << a_num << std::endl;
     std::cout << "ft_ratio = " << ft_ratio << std::endl;
     std::cout << "===========================" << std::endl;
 
-
     std::cout << "Opacity for the Feature: " << opacities_ft[i] << ", " << ft_ratio << std::endl;
-    std::vector<float> ft = ply->featureData();
 
     FeaturePointExtraction *f_point =
         new FeaturePointExtraction(ply, ft, ft_ratio, thresholds[i]);

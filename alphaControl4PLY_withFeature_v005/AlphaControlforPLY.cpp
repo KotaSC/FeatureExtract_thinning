@@ -9,7 +9,7 @@
 #include "ply.h"
 #include "octree.h"
 
-const double RADIUS = 50.0;                       // Range of Search as (triangle of bounding box)/RADIUS
+const double RADIUS  = 50.0;                      // Range of Search as (triangle of bounding box)/RADIUS
 const int SEARCH_NUM = 100;                       // Number of Points for Counting Sphere
 const int NEAR_POINT = 10;                        // Number of Minimun of Nearest Point into a Counting Sphere
 const kvs::Vector3ui DEFAUT_COLOR(255, 255, 255); // If a data dosen't have color
@@ -28,6 +28,8 @@ AlphaControlforPLY::AlphaControlforPLY(kvs::PolygonObject *plyObject,
                                        kvs::Vector3f BBMax,
                                        int repeatLevel,
                                        double alpha,
+                                       std::vector<float> &ft,
+					                             double threshold,
                                        bool hasFace) : kvs::PointObject(),
                                                        m_searchRadius(0.0),
                                                        m_ratio(1.0),
@@ -52,10 +54,9 @@ AlphaControlforPLY::AlphaControlforPLY(kvs::PolygonObject *plyObject,
   else
   {
     std::cerr << "PLY data dosen't have polygons" << std::endl;
-    int num = calculateRequiredPartcleNumber(alpha, repeatLevel,
-                                             BBMin, BBMax);
+    int num = calculateRequiredPartcleNumber(alpha, repeatLevel, BBMin, BBMax);
     calculatePointRaio(num, plyObject);
-    setParticles(plyObject);
+    setParticles(plyObject, ft, threshold);
   }
 }
 
@@ -218,7 +219,7 @@ void AlphaControlforPLY::calculatePointRaio(const double analyticalNum,
             << ", Diff : " << averageNum - analyticalNum << std::endl;
 }
 
-void AlphaControlforPLY::setParticles(kvs::PolygonObject *ply)
+void AlphaControlforPLY::setParticles(kvs::PolygonObject *ply, std::vector<float> &ft, double threshold)
 {
   size_t numVert = ply->numberOfVertices();
   size_t createNum = (unsigned int)numVert * m_ratio;
@@ -242,33 +243,41 @@ void AlphaControlforPLY::setParticles(kvs::PolygonObject *ply)
   for (size_t i = 0; i < createNum; i++)
   {
     size_t index = (size_t)((double)numVert * uniRand());
-    counter.push_back(index);
-    SetCoords.push_back(coords[3 * index]);
-    SetCoords.push_back(coords[3 * index + 1]);
-    SetCoords.push_back(coords[3 * index + 2]);
-    if (ply->numberOfNormals() == numVert)
+    if (index == numVert)
+      --index;
+
+    if (ft[index] <= threshold)
     {
-      SetNormals.push_back(normals[3 * index]);
-      SetNormals.push_back(normals[3 * index + 1]);
-      SetNormals.push_back(normals[3 * index + 2]);
-    }
-    else
-    {
-      SetNormals.push_back(nom.x());
-      SetNormals.push_back(nom.y());
-      SetNormals.push_back(nom.z());
-    }
-    if (ply->numberOfColors() == numVert)
-    {
-      SetColors.push_back(colors[3 * index]);
-      SetColors.push_back(colors[3 * index + 1]);
-      SetColors.push_back(colors[3 * index + 2]);
-    }
-    else
-    {
-      SetColors.push_back(col.x());
-      SetColors.push_back(col.y());
-      SetColors.push_back(col.z());
+      counter.push_back(index);
+
+      SetCoords.push_back(coords[3 * index]);
+      SetCoords.push_back(coords[3 * index + 1]);
+      SetCoords.push_back(coords[3 * index + 2]);
+
+      if (ply->numberOfNormals() == numVert)
+      {
+        SetNormals.push_back(normals[3 * index]);
+        SetNormals.push_back(normals[3 * index + 1]);
+        SetNormals.push_back(normals[3 * index + 2]);
+      }
+      else
+      {
+        SetNormals.push_back(nom.x());
+        SetNormals.push_back(nom.y());
+        SetNormals.push_back(nom.z());
+      }
+      if (ply->numberOfColors() == numVert)
+      {
+        SetColors.push_back(colors[3 * index]);
+        SetColors.push_back(colors[3 * index + 1]);
+        SetColors.push_back(colors[3 * index + 2]);
+      }
+      else
+      {
+        SetColors.push_back(col.x());
+        SetColors.push_back(col.y());
+        SetColors.push_back(col.z());
+      }
     }
   }
 
