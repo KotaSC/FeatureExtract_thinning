@@ -15,6 +15,8 @@ enum WritingDataType {
 const float NORMAL[3] ={ 0.0, 0.0, 0.0 };
 const int COLOR[3] = {0, 255, 255};
 
+const double th = 0.3;
+
 void writeFeature( kvs::PolygonObject *ply,
 	      std::vector<float> &ft,
 	      char* filename,
@@ -64,7 +66,7 @@ void writeFeature( kvs::PolygonObject *ply,
       b = (int)color.b();
 
       // Color Edge
-      // if(ft[i] > 0.3){
+      // if(ft[i] > th){
       //   r = (int)255;
       //   g = (int)0;
       //   b = (int)0;
