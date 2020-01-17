@@ -77,8 +77,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     SetColors.push_back( 0 );
     SetColors.push_back( 0 );
     SetColors.push_back( 0 );
-
-
   }
 
   SuperClass::setCoords( kvs::ValueArray<kvs::Real32>( SetCoords ) );
