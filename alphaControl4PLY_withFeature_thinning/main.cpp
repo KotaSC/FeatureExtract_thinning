@@ -237,13 +237,10 @@ int main(int argc, char **argv)
     std::cout << "\n=============================================================" << std::endl;
     std::cout << "Creating Particles from: " << inputFiles[i] << std::endl;
 
-    //--- Feature Visualization
-    std::vector<float> ft = ply->featureData();
-
     // kvs::PointObject *point =
     AlphaControlforPLY* point =
         new AlphaControlforPLY(ply, screen.scene()->camera(), BBMin, BBMax,
-                               repeatLevel, opacities[i], ft, thresholds[i], ply->isFase());
+                               repeatLevel, opacities[i], ply->isFase());
     std::cout << "Number of Particles: " << point->numberOfVertices() << std::endl;
 
     object->add(*kvs::PointObject::DownCast(point));
@@ -251,6 +248,8 @@ int main(int argc, char **argv)
     //---- File Output
     writePBRfile(files, repeatLevel, imageResolution, outptFiles[i], point);
 
+    //--- Feature Visualization
+    std::vector<float> ft = ply->featureData();
 
     FeaturePointExtraction *f_point =
         new FeaturePointExtraction(ply, ft, thresholds[i], repeatLevel, BBMin, BBMax, point);
