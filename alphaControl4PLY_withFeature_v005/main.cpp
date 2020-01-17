@@ -223,8 +223,16 @@ int main(int argc, char **argv)
 
     // kvs::PointObject *point =
     AlphaControlforPLY* point =
-        new AlphaControlforPLY(ply, screen.scene()->camera(), BBMin, BBMax,
-                               repeatLevel, opacities[i], ft, thresholds[i], ply->isFase());
+        new AlphaControlforPLY(ply,
+                               screen.scene()->camera(),
+                               BBMin,
+                               BBMax,
+                               repeatLevel,
+                               opacities[i],
+                               ft,
+                               thresholds[i],
+                               ply->isFase());
+
     std::cout << "Number of Particles: " << point->numberOfVertices() << std::endl;
 
     object->add(*kvs::PointObject::DownCast(point));
