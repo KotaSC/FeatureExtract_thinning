@@ -35,7 +35,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   int num = 0;
   for( size_t i = 0; i < numVert; i++ ) {
-    if( ft[i] > threshold ) {
+    if( ft[i] >= threshold ) {
       ind.push_back( i );
       num++;
     }
@@ -73,6 +73,9 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     double x     = ft[index] - threshold;
     double alpha = grad*std::pow( x, dim ) + alphaMin;
 
+    if ( ft[index] >= F_ALPHA_MAX )
+      alpha = alphaMax;
+
     alphaSum += alpha;
 
     // Caluculate Point Number and Increase Ratio according to Feature Value
@@ -108,11 +111,10 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       SetColors.push_back( 255 );
       SetColors.push_back( 0 );
       SetColors.push_back( 0 );
-
     }
   }
 
-   double alphaMean = alphaSum / num;
+  double alphaMean = alphaSum / num;
 
   std::cout << "===========================================" << std::endl;
   std::cout << "Average Opacity = " << alphaMean << std::endl;
