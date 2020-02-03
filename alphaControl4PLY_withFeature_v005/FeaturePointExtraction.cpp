@@ -24,7 +24,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   int num = 0;
   for( size_t i = 0; i < numVert; i++ ) {
-    if( ft[i] > threshold ) {
+    if( ft[i] >= threshold ) {
       ind.push_back( i );
       num++;
     }
@@ -46,7 +46,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   kvs::MersenneTwister uniRand;
 
-  for( int i=0; i<createNum; i++ ) {
+  for( int i=0; i < createNum; i++ ) {
 
     size_t id = (size_t)((double)num*uniRand());
 
@@ -69,14 +69,14 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     // SetColors.push_back( colors[3*index+2] );
 
     // Red
-    // SetColors.push_back( 255 );
-    // SetColors.push_back( 0 );
-    // SetColors.push_back( 0 );
+    SetColors.push_back( 255 );
+    SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
 
     // Black
-    SetColors.push_back( 0 );
-    SetColors.push_back( 0 );
-    SetColors.push_back( 0 );
+    // SetColors.push_back( 0 );
+    // SetColors.push_back( 0 );
+    // SetColors.push_back( 0 );
   }
 
   SuperClass::setCoords( kvs::ValueArray<kvs::Real32>( SetCoords ) );

@@ -246,7 +246,7 @@ void AlphaControlforPLY::setParticles(kvs::PolygonObject *ply, std::vector<float
     if (index == numVert)
       --index;
 
-    if (ft[index] <= threshold)
+    if (ft[index] < threshold)
     {
       counter.push_back(index);
 
