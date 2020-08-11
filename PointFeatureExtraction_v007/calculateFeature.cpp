@@ -342,59 +342,6 @@ void calculateFeature::calcNormalDispersion(kvs::PolygonObject *ply,
 }
 
 
-
-void calculateFeature::calcRDoCFeature(kvs::PolygonObject *ply)
-{
-  std::vector<float> smallRadFeature;
-  std::vector<float> largeRadFeature;
-
-  double RDoC;
-  double M;
-
-
-  std::cout << "=========================================================" << std::endl;
-  std::cout << "Input Neighbor Radius Maginification M ( 0 < M < 1 ) : ";
-  std::cin >> M;
-  std::cout << "=========================================================" << std::endl;
-
-
-  double smallRadius  = m_searchRadius*M;
-  double largeRadius  = m_searchRadius;
-
-  size_t numVert = ply->numberOfVertices();
-
-  std::cout << "============================================" << std::endl;
-  std::cout << "smallRadius : " << smallRadius << std::endl;
-  std::cout << "Start feature calculation with small radius" << std::endl;
-
-  smallRadFeature  = calcFeatureValues( ply, smallRadius );
-
-  std::cout << "Finish feature calculation with small radius" << std::endl;
-  std::cout << "============================================" << std::endl;
-
-  std::cout << "============================================" << std::endl;
-  std::cout << "largeRadius : " << largeRadius << std::endl;
-  std::cout << "Start feature calculation with large radius" << std::endl;
-
-  largeRadFeature  = calcFeatureValues( ply, largeRadius );
-
-  std::cout << "Finish feature calculation with large radius" << std::endl;
-  std::cout << "============================================" << std::endl;
-
-
-  for( int i = 0; i < numVert; i++ ) {
-
-    // Calculate DoC feature
-    RDoC = std::fabs( smallRadFeature[i] - largeRadFeature[i] );
-
-    m_feature.push_back( RDoC );
-
-  }
-
-  m_maxFeature = *std::max_element( m_feature.begin(), m_feature.end() );;
-  std::cout << "Maximun of Sigma : " << m_maxFeature << std::endl;
-}
-
 void calculateFeature::calcMinimumEntropyFeature(kvs::PolygonObject *ply)
 {
 
@@ -518,9 +465,6 @@ void calculateFeature::calcMinimumEntropyFeature(kvs::PolygonObject *ply)
   }
 }
 
-void calculateFeature::calcMSFeature(kvs::PolygonObject *ply)
-{
-}
 
 void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
 {
