@@ -69,14 +69,14 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     // SetColors.push_back( colors[3*index+2] );
 
     // Red
-    SetColors.push_back( 255 );
-    SetColors.push_back( 0 );
-    SetColors.push_back( 0 );
+    // SetColors.push_back( 255 );
+    // SetColors.push_back( 0 );
+    // SetColors.push_back( 0 );
 
     // Black
-    // SetColors.push_back( 0 );
-    // SetColors.push_back( 0 );
-    // SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
   }
 
   SuperClass::setCoords( kvs::ValueArray<kvs::Real32>( SetCoords ) );
