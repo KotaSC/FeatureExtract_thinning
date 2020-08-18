@@ -58,13 +58,10 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   double alphaSum  = 0.0;
 
-  std::cout << "===========================================" << std::endl;
-  std::cout << "Max opacity              : " << alphaMax     << std::endl;
-  std::cout << "Min opacity              : " << alphaMin     << std::endl;
-  std::cout << "Dimension                : " << dim          << std::endl;
-  std::cout << "Gradient                 : " << grad         << std::endl;
-  std::cout << "Number of feature points : " << num          << std::endl;
-  std::cout << "===========================================" << std::endl;
+  std::cout << "Max opacity              : " << alphaMax << std::endl;
+  std::cout << "Min opacity              : " << alphaMin << std::endl;
+  std::cout << "Dimension                : " << dim      << std::endl;
+  std::cout << "Number of feature points : " << num      << std::endl;
 
   for ( int i = 0; i < num; i++ ) {
 
@@ -113,12 +110,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
       // SetColors.push_back( 0 );
     }
   }
-
-  double alphaMean = alphaSum / num;
-
-  std::cout << "===========================================" << std::endl;
-  std::cout << "Average Opacity = " << alphaMean << std::endl;
-  std::cout << "===========================================" << std::endl;
 
   SuperClass::setCoords ( kvs::ValueArray<kvs::Real32>( SetCoords  ) );
   SuperClass::setNormals( kvs::ValueArray<kvs::Real32>( SetNormals ) );
