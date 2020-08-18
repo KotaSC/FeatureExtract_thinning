@@ -90,14 +90,12 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
   {
     double div;
 
-    std::cout << "==================================" << std::endl;
     std::cout << "Input Division : ";
     std::cin >> div;
 
     setSearchRadius( div, ply->minObjectCoord() , ply->maxObjectCoord() );
 
     std::cout << "Search Radius = " << m_searchRadius << std::endl;
-    std::cout << "==================================" << std::endl;
   }
 
   if (num == ply->numberOfNormals())
