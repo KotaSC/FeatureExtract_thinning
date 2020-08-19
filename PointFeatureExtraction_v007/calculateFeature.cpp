@@ -20,51 +20,51 @@ const double EPSILON = 1.0e-16;
 const int MIN_NODE   = 15;
 const int DIM        = 3;
 
-calculateFeature::calculateFeature(void) : m_type(PointPCA),
-                                           m_isNoise(false),
-                                           m_noise(0.0),
-                                           m_searchRadius(0.01)
+calculateFeature::calculateFeature( void ) : m_type( PointPCA ),
+                                             m_isNoise( false ),
+                                             m_noise( 0.0 ),
+                                             m_searchRadius( 0.01 )
 {
 }
 
-calculateFeature::calculateFeature(const FeatureType type,
-                                   const double distance,
-                                   kvs::PolygonObject *ply) : m_type(type),
-                                                              m_isNoise(false),
-                                                              m_noise(0.0),
-                                                              m_searchRadius(distance)
+calculateFeature::calculateFeature( const FeatureType type,
+                                    const double distance,
+                                    kvs::PolygonObject *ply ) : m_type(type),
+                                                                m_isNoise(false),
+                                                                m_noise(0.0),
+                                                                m_searchRadius(distance)
 {
-  calc(ply);
+  calc( ply );
 }
 
-void calculateFeature::setFeatureType(FeatureType type)
+void calculateFeature::setFeatureType( FeatureType type )
 {
   m_type = type;
 }
 
-void calculateFeature::addNoise(double noise)
+void calculateFeature::addNoise( double noise )
 {
   m_isNoise = true;
   m_noise   = noise;
   std::cout << "ADD NOISE : " << noise << std::endl;
 }
 
-void calculateFeature::setSearchRadius(double distance)
+void calculateFeature::setSearchRadius( double distance )
 {
   m_searchRadius = distance;
 }
-void calculateFeature::setSearchRadius(double divide,
-                                       kvs::Vector3f bbmin,
-                                       kvs::Vector3f bbmax)
+void calculateFeature::setSearchRadius( double divide,
+                                        kvs::Vector3f bbmin,
+                                        kvs::Vector3f bbmax )
 {
   kvs::Vector3f bb = bbmax - bbmin;
   double b_leng    = bb.length();
   m_searchRadius   = b_leng / divide;
 }
 
-double calculateFeature::setMinMaxSearchRadius(double divide,
-                                         kvs::Vector3f bbmin,
-                                         kvs::Vector3f bbmax)
+double calculateFeature::setMinMaxSearchRadius( double divide,
+                                                kvs::Vector3f bbmin,
+                                                kvs::Vector3f bbmax )
 {
   kvs::Vector3f bb = bbmax - bbmin;
   double b_leng    = bb.length();
@@ -73,7 +73,7 @@ double calculateFeature::setMinMaxSearchRadius(double divide,
   return searchRadius;
 }
 
-void calculateFeature::calc(kvs::PolygonObject *ply)
+void calculateFeature::calc( kvs::PolygonObject *ply )
 {
   std::vector<float> normal;
   kvs::BoxMuller normRand;
@@ -83,10 +83,10 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
 
   size_t num = ply->numberOfVertices();
   m_number   = num;
-  double d_noise = sqrt(m_searchRadius) * m_noise;
+  double d_noise = sqrt( m_searchRadius ) * m_noise;
   bool hasNormal = false;
 
-  if (m_type != MinimumEntropyFeature)
+  if ( m_type != MinimumEntropyFeature )
   {
     double div;
 
@@ -98,18 +98,18 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
     std::cout << "Search Radius = " << m_searchRadius << std::endl;
   }
 
-  if (num == ply->numberOfNormals())
+  if ( num == ply->numberOfNormals() )
     hasNormal = true;
-  if (!hasNormal)
+  if ( !hasNormal )
   {
-    if (m_isNoise || m_type == NormalPCA || m_type == NormalDispersion)
+    if ( m_isNoise || m_type == NormalPCA || m_type == NormalDispersion )
     {
       std::cout << "Cannot add Noise" << std::endl;
-      exit(1);
+      exit( 1 );
     }
   }
 
-  for (size_t i = 0; i < num; i++)
+  for ( size_t i = 0; i < num; i++ )
   {
     float x  = coords[3 * i];
     float y  = coords[3 * i + 1];
@@ -117,64 +117,56 @@ void calculateFeature::calc(kvs::PolygonObject *ply)
     float nx = 0.0;
     float ny = 0.0;
     float nz = 0.0;
-    if (hasNormal)
+    if ( hasNormal )
     {
       nx = normals[3 * i];
       ny = normals[3 * i + 1];
       nz = normals[3 * i + 2];
     }
-    if (m_isNoise)
+    if ( m_isNoise )
     {
-      double dt = normRand.rand(0.0, d_noise * d_noise);
+      double dt = normRand.rand( 0.0, d_noise * d_noise );
       x += dt * nx;
       y += dt * ny;
       z += dt * nz;
     }
-    normal.push_back(nx);
-    normal.push_back(ny);
-    normal.push_back(nz);
+    normal.push_back( nx );
+    normal.push_back( ny );
+    normal.push_back( nz );
   }
 
-  if (m_type == PointPCA)
+  if ( m_type == PointPCA )
   {
-    calcPointPCA(ply);
+    calcPointPCA( ply );
   }
-  else if (m_type == NormalPCA)
+  else if ( m_type == NormalPCA )
   {
-    calcNormalPCA(ply, normal);
+    calcNormalPCA( ply, normal );
   }
-  else if (m_type == NormalDispersion)
+  else if ( m_type == NormalDispersion )
   {
-    calcNormalDispersion(ply, normal);
+    calcNormalDispersion( ply, normal );
   }
-  else if (m_type == RDoCFeature)
+  else if ( m_type == MinimumEntropyFeature )
   {
-    calcRDoCFeature(ply);
+    calcMinimumEntropyFeature( ply );
   }
-  else if (m_type == MinimumEntropyFeature)
+  else if ( m_type == PlaneBasedFeature )
   {
-    calcMinimumEntropyFeature(ply);
-  }
-  else if (m_type == MSFeature)
-  {
-    calcMSFeature(ply);
-  }
-  else if (m_type == PlaneBasedFeature)
-  {
-    calcPlaneBasedFeature(ply);
+    calcPlaneBasedFeature( ply );
   }
 
 }
 
 
 
-void calculateFeature::calcPointPCA(kvs::PolygonObject *ply)
+void calculateFeature::calcPointPCA( kvs::PolygonObject *ply )
 {
   m_feature = calcFeatureValues( ply, m_searchRadius );
 }
 
-void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
-                                     std::vector<float> &normal)
+void calculateFeature::calcNormalPCA( kvs::PolygonObject *ply,
+                                      std::vector<float> &normal )
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
@@ -270,8 +262,8 @@ void calculateFeature::calcNormalPCA(kvs::PolygonObject *ply,
   std::cout << "Maximun of Sigma : " << sigMax << std::endl;
 }
 
-void calculateFeature::calcNormalDispersion(kvs::PolygonObject *ply,
-                                            std::vector<float> &normal)
+void calculateFeature::calcNormalDispersion( kvs::PolygonObject *ply,
+                                             std::vector<float> &normal )
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
@@ -340,7 +332,7 @@ void calculateFeature::calcNormalDispersion(kvs::PolygonObject *ply,
 }
 
 
-void calculateFeature::calcMinimumEntropyFeature(kvs::PolygonObject *ply)
+void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
 {
 
   std::vector<double> eigenValues;
@@ -464,7 +456,7 @@ void calculateFeature::calcMinimumEntropyFeature(kvs::PolygonObject *ply)
 }
 
 
-void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
+void calculateFeature::calcPlaneBasedFeature( kvs::PolygonObject *ply )
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
@@ -639,7 +631,7 @@ void calculateFeature::calcPlaneBasedFeature(kvs::PolygonObject *ply)
 
 }
 
-std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, double radius)
+std::vector<float> calculateFeature::calcFeatureValues( kvs::PolygonObject* ply, double radius )
 {
 
   ply->updateMinMaxCoords();
@@ -661,7 +653,7 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
   std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
   std::cout << minBB << " \n"
             << maxBB << std::endl;
-  octree *myTree = new octree(pdata, numVert, mrange, MIN_NODE);
+  octree *myTree = new octree( pdata, numVert, mrange, MIN_NODE );
 
   kvs::MersenneTwister uniRand;
 
@@ -669,22 +661,22 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
   double sigMax = 0.0;
 
   std::cout << "Start OCtree Search..... " << std::endl;
-  for (size_t i = 0; i < numVert; i++)
+  for ( size_t i = 0; i < numVert; i++ )
   {
-    if (i == numVert)
+    if ( i == numVert )
       --i;
-    double point[3] = {coords[3 * i],
-                       coords[3 * i + 1],
-                       coords[3 * i + 2]};
+    double point[3] = { coords[3 * i],
+                        coords[3 * i + 1],
+                        coords[3 * i + 2] };
 
     vector<size_t> nearInd;
     vector<double> dist;
-    search_points(point, radius, pdata, myTree->octreeRoot, &nearInd, &dist);
+    search_points( point, radius, pdata, myTree->octreeRoot, &nearInd, &dist );
     int n0 = (int)nearInd.size();
 
     //--- Standardization for x, y, z
     double xb = 0.0, yb = 0.0, zb = 0.0;
-    for (int j = 0; j < n0; j++)
+    for ( int j = 0; j < n0; j++ )
     {
 
       double x = coords[3 * nearInd[j]];
@@ -706,9 +698,9 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     for (int j = 0; j < n0; j++)
     {
 
-      double nx = (coords[3 * nearInd[j]] - xb);
-      double ny = (coords[3 * nearInd[j] + 1] - yb);
-      double nz = (coords[3 * nearInd[j] + 2] - zb);
+      double nx = ( coords[3 * nearInd[j]] - xb );
+      double ny = ( coords[3 * nearInd[j] + 1] - yb );
+      double nz = ( coords[3 * nearInd[j] + 2] - zb );
       xx += nx * nx;
       yy += ny * ny;
       zz += nz * nz;
@@ -789,19 +781,18 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
     // if ( isnan(var) )
     //   var = 0.0;
 
-
     // double var = W[0];
     // double var = coords[3 * i];
 
-    if (sum < EPSILON)
+    if ( sum < EPSILON )
       var = 0.0;
 
     //--- Contributing rate of 3rd(minimum) component
-    featureValues.push_back(var);
-    if (sigMax < var)
+    featureValues.push_back( var );
+    if ( sigMax < var )
       sigMax = var;
 
-    if (!((i + 1) % INTERVAL))
+    if ( !((i + 1) % INTERVAL) )
       std::cout << i + 1 << ", " << n0 << ": " << var << std::endl;
 
   }
@@ -812,19 +803,17 @@ std::vector<float> calculateFeature::calcFeatureValues(kvs::PolygonObject* ply, 
   // Normalize feature values
   float normFt;
   std::vector<float> ft;
-  // std::ofstream fout( "../XYZ_DATA/ft.csv" );
 
   for ( float f : featureValues )
   {
     normFt = f / sigMax;
     ft.push_back( normFt );
-    // fout << normFt << std::endl;
   }
 
   return ft;
 }
 
-std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, double radius)
+std::vector<double> calculateFeature::calcEigenValues( kvs::PolygonObject* ply, double radius )
 {
   ply->updateMinMaxCoords();
   kvs::ValueArray<kvs::Real32> coords = ply->coords();
@@ -845,24 +834,24 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
   std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
   std::cout << minBB << " \n"
             << maxBB << std::endl;
-  octree *myTree = new octree(pdata, numVert, mrange, MIN_NODE);
+  octree *myTree = new octree( pdata, numVert, mrange, MIN_NODE );
 
   kvs::MersenneTwister uniRand;
 
   std::vector<double> eigenValues;
 
   std::cout << "Start OCtree Search..... " << std::endl;
-  for (size_t i = 0; i < numVert; i++)
+  for ( size_t i = 0; i < numVert; i++ )
   {
     if (i == numVert)
       --i;
-    double point[3] = {coords[3 * i],
-                       coords[3 * i + 1],
-                       coords[3 * i + 2]};
+    double point[3] = { coords[3 * i],
+                        coords[3 * i + 1],
+                        coords[3 * i + 2] };
 
     vector<size_t> nearInd;
     vector<double> dist;
-    search_points(point, radius, pdata, myTree->octreeRoot, &nearInd, &dist);
+    search_points( point, radius, pdata, myTree->octreeRoot, &nearInd, &dist );
     int n0 = (int)nearInd.size();
 
     //--- Standardization for x, y, z
@@ -889,9 +878,9 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
     for (int j = 0; j < n0; j++)
     {
 
-      double nx = (coords[3 * nearInd[j]] - xb);
-      double ny = (coords[3 * nearInd[j] + 1] - yb);
-      double nz = (coords[3 * nearInd[j] + 2] - zb);
+      double nx = ( coords[3 * nearInd[j]] - xb );
+      double ny = ( coords[3 * nearInd[j] + 1] - yb );
+      double nz = ( coords[3 * nearInd[j] + 2] - zb );
       xx += nx * nx;
       yy += ny * ny;
       zz += nz * nz;
@@ -947,9 +936,9 @@ std::vector<double> calculateFeature::calcEigenValues(kvs::PolygonObject* ply, d
             W, WORK, (__CLPK_integer *) &lwork, (__CLPK_integer *) &info );
 
 
-    eigenValues.push_back(W[2]);
-    eigenValues.push_back(W[1]);
-    eigenValues.push_back(W[0]);
+    eigenValues.push_back( W[2] );
+    eigenValues.push_back( W[1] );
+    eigenValues.push_back( W[0] );
 
     if (!((i + 1) % INTERVAL))
       std::cout << i + 1 << ", " << n0 << " EigenValues: ( " << eigenValues[0] << ", "  << eigenValues[1] << ", " << eigenValues[2] << " )" << std::endl;

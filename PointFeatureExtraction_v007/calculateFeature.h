@@ -13,11 +13,18 @@ class calculateFeature
     PointPCA              = 0,
     NormalPCA             = 1,
     NormalDispersion      = 2,
-    RDoCFeature           = 3,
-    MinimumEntropyFeature = 4,
-    MSFeature             = 5,
-    PlaneBasedFeature     = 6
+    MinimumEntropyFeature = 3,
+    PlaneBasedFeature     = 4
   };
+
+  enum FeatureValueID {
+    CHANGE_OF_CURVATURE_ID,
+    APLANARITY_ID,
+    LINEARITY_ID,
+    SUM_OF_EIGENVALUES_ID,
+    PLANARITY_ID,
+  };
+
  public:
   calculateFeature( void );
   calculateFeature( const FeatureType type,
