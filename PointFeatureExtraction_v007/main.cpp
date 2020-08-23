@@ -21,12 +21,12 @@ int main( int argc, char** argv )
   strcpy( outXYZfile, OUT_FILE );
   if( argc < 2 ) {
     std::cout << "USAGE: " << argv[0] << " data_file output_File(option)" << std::endl;
-    exit(1);
+    exit( 1 );
   } else if( argc == 3 ) {
     strcpy( outXYZfile, argv[2] );
   }
   //--- Inheritance of KVS::PolygonObject
-  ImportPointClouds *ply = new ImportPointClouds( argv[1] ) ;
+  ImportPointClouds *ply = new ImportPointClouds( argv[1] );
   ply->updateMinMaxCoords();
   std::cout << "PLY Mim, Max Coords:" << std::endl;
   std::cout << "Min : " << ply->minObjectCoord() << std::endl;
@@ -37,9 +37,7 @@ int main( int argc, char** argv )
 
   //--- Select type of Feature
   ft->setFeatureType( calculateFeature::PointPCA );
-  // ft->setFeatureType( calculateFeature::RDoCFeature );
   // ft->setFeatureType( calculateFeature::MinimumEntropyFeature );
-  // ft->setFeatureType( calculateFeature::MSFeature );
   // ft->setFeatureType( calculateFeature::PlaneBasedFeature );
 
   // ft->addNoise( 0.1 );
@@ -63,7 +61,7 @@ int main( int argc, char** argv )
   float ftMax = (float)ft->maxFeature();
   // float ftMin = (float)ft->minFeature();
   kvs::ColorMap cmap( 256.0, 0.0, ftMax );
-  //  kvs::ColorMap cmap( 256, 0.0175976, 0.021997 );
+  // kvs::ColorMap cmap( 256, 0.0175976, 0.021997 );
   // kvs::ColorMap cmap( 256, ftMin, ftMax );
   cmap.create();
 

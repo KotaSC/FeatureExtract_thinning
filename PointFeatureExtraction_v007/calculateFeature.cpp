@@ -29,10 +29,10 @@ calculateFeature::calculateFeature( void ) : m_type( PointPCA ),
 
 calculateFeature::calculateFeature( const FeatureType type,
                                     const double distance,
-                                    kvs::PolygonObject *ply ) : m_type(type),
-                                                                m_isNoise(false),
-                                                                m_noise(0.0),
-                                                                m_searchRadius(distance)
+                                    kvs::PolygonObject *ply ) : m_type( type ),
+                                                                m_isNoise( false ),
+                                                                m_noise( 0.0 ),
+                                                                m_searchRadius( distance )
 {
   calc( ply );
 }
