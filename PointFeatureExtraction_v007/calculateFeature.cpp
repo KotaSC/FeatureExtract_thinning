@@ -348,14 +348,12 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
   double maxDiv;
   int numItr;
 
-  std::cout << "==================================" << std::endl;
   std::cout << "Input Minimum Division : ";
   std::cin  >> minDiv;
   std::cout << "Input Maximum Division : ";
   std::cin  >> maxDiv;
   std::cout << "Input Number of Iteration : ";
   std::cin  >> numItr;
-  std::cout << "==================================" << std::endl;
 
   double minSearchRadius = setMinMaxSearchRadius( maxDiv, ply->minObjectCoord(), ply->maxObjectCoord() );
   double maxSearchRadius = setMinMaxSearchRadius( minDiv, ply->minObjectCoord(), ply->maxObjectCoord() );
@@ -371,7 +369,6 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
 
     double itrSearchRadius = minSearchRadius + ( j * ( maxSearchRadius - minSearchRadius ) / (double)( numItr-1.0 ) );
 
-    std::cout << "==================================" << std::endl;
     std::cout << "Start iteration number " << j+1 << std::endl;
     std::cout << "Search Radius = " << itrSearchRadius << std::endl;
     std::cout << std::endl;
@@ -393,10 +390,6 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
       // double ft = 1 - ( ( eigenValues[i*3 + 1] - eigenValues[i*3 + 2] ) / eigenValues[i*3] );
 
       // Eigentropy
-      // double lambda1 = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
-      // double lambda2 = ( eigenValues[i*3 + 1] - eigenValues[i*3 + 2] ) / eigenValues[i*3];
-      // double lambda3 = eigenValues[i*3 + 2] / eigenValues[i*3];
-
       double lambda1 = eigenValues[i*3] / sum;
       double lambda2 = eigenValues[i*3 + 1] / sum;
       double lambda3 = eigenValues[i*3 + 2] / sum;
