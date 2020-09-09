@@ -1,5 +1,6 @@
 #include "FeaturePointExtraction.h"
 #include "feature_customize.h"
+#include "alp_customize.h"
 #include <vector>
 #include <numeric>
 #include <cmath>
@@ -56,8 +57,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   double initialPoint = fAlphaMax - threshold;
   double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
 
-  double alphaSum  = 0.0;
-
   std::cout << "Max opacity              : " << alphaMax << std::endl;
   std::cout << "Min opacity              : " << alphaMin << std::endl;
   std::cout << "Dimension                : " << dim      << std::endl;
@@ -73,15 +72,13 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     if ( ft[index] >= F_ALPHA_MAX )
       alpha = alphaMax;
 
-    alphaSum += alpha;
-
     // Caluculate Point Number and Increase Ratio according to Feature Value
     double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
     double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0*ratio;
 
 
-    if (!((i + 1) % INTERVAL))
+    if ( !((i + 1) % INTERVAL) )
     {
       std::cout << i + 1 << std::endl;
       std::cout << "Feature Value:        " << ft[index] << std::endl;
