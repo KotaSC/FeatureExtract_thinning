@@ -48,7 +48,7 @@ class calculateFeature
  private:
   size_t m_number;
   FeatureType m_type;
-  std::vector<float> m_feature;	/* Feature Data */
+  std::vector<float> m_feature;	// Feature Data
   bool m_isNoise;
   double m_noise;
   double m_searchRadius;
@@ -57,15 +57,10 @@ class calculateFeature
 
  private:
   void calcPointPCA( kvs::PolygonObject* ply );
-  void calcNormalPCA( kvs::PolygonObject* ply,
-		      std::vector<float> &normal );
-  void calcNormalDispersion( kvs::PolygonObject* ply ,
-		       std::vector<float> &normal );
+  void calcNormalPCA( kvs::PolygonObject* ply, std::vector<float> &normal );
+  void calcNormalDispersion( kvs::PolygonObject* ply, std::vector<float> &normal );
 
-
-  void calcRDoCFeature( kvs::PolygonObject* ply );
   void calcMinimumEntropyFeature( kvs::PolygonObject* ply );
-  void calcMSFeature( kvs::PolygonObject* ply );
   void calcPlaneBasedFeature( kvs::PolygonObject* ply );
 
   std::vector<float> calcFeatureValues( kvs::PolygonObject* ply, double radius );

@@ -468,10 +468,8 @@ void calculateFeature::calcPlaneBasedFeature( kvs::PolygonObject *ply )
 
   double allowableError;
 
-  std::cout << "==================================" << std::endl;
   std::cout << "Input Allowable Error : ";
   std::cin >> allowableError;
-  std::cout << "==================================" << std::endl;
 
   // create octree
   std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
