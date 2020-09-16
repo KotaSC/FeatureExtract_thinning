@@ -1,5 +1,4 @@
 #include "FeaturePointExtraction.h"
-#include "feature_customize.h"
 #include "alp_customize.h"
 #include <vector>
 #include <numeric>
@@ -13,19 +12,19 @@ FeaturePointExtraction::FeaturePointExtraction( void ) {
 
 FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject* ply,
                                                 std::vector<float> &ft,
-                                                double threshold,
+                                                double smallFth,
                                                 int repeatLevel,
                                                 kvs::Vector3f BBMin,
                                                 kvs::Vector3f BBMax,
                                                 AlphaControlforPLY *fpoint )
 {
-  alpbaControl4Feature( ply, ft, threshold, repeatLevel, BBMin, BBMax, fpoint );
+  alpbaControl4Feature( ply, ft, smallFth, repeatLevel, BBMin, BBMax, fpoint );
 
 }
 
 void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
                                                    std::vector<float> &ft,
-                                                   double threshold,
+                                                   double smallFth,
                                                    int repeatLevel,
                                                    kvs::Vector3f BBMin,
 					                                         kvs::Vector3f BBMax,
@@ -36,7 +35,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
   int num = 0;
   for( size_t i = 0; i < numVert; i++ ) {
-    if( ft[i] >= threshold ) {
+    if( ft[i] >= smallFth ) {
       ind.push_back( i );
       num++;
     }
@@ -50,11 +49,11 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::vector<kvs::Real32> SetNormals;
   std::vector<kvs::UInt8>  SetColors;
 
-  double alphaMax     = ALPHA_MAX;
   double alphaMin     = ALPHA_MIN;
+  double alphaMax     = ALPHA_MAX;
+  double largeFth     = LARGE_F_TH;
   double dim          = DIMENSION;
-  double fAlphaMax    = F_ALPHA_MAX;
-  double initialPoint = fAlphaMax - threshold;
+  double initialPoint = largeFth - smallFth;
   double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
 
   std::cout << "Max opacity              : " << alphaMax << std::endl;
@@ -66,10 +65,10 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
     size_t index = ind[ i ];
 
-    double x     = ft[index] - threshold;
+    double x     = ft[index] - smallFth;
     double alpha = grad*std::pow( x, dim ) + alphaMin;
 
-    if ( ft[index] >= F_ALPHA_MAX )
+    if ( ft[index] >= LARGE_F_TH )
       alpha = alphaMax;
 
     // Caluculate Point Number and Increase Ratio according to Feature Value

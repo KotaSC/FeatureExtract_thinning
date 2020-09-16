@@ -32,10 +32,10 @@ int main(int argc, char **argv)
   {
     std::cout << "USAGE: " << argv[0] << "lst-file or data-file (and options)." << std::endl;
     std::cout << "lst-file cannot require options \n";
-    std::cout << "[Option] -a : Set the opacity ( default is " << OPACITY << " ) \n"
+    std::cout << "[Option] -a : Set the opacity ( default is " << ALPHA_MIN << " ) \n"
               << "         -l : Set the repeat level ( default is " << REPEAT_LEVEL << " ) \n"
               << "         -i : Set the image resolution ( default is " << IMAGE_RESOLUTION << " ) \n"
-              << "        -ft : Set the threshold for feature extraction ( default is " << THRESHOLD << " ) \n"
+              << "        -ft : Set the threshold for feature extraction ( default is " << SMALL_F_TH << " ) \n"
               << "[For example] " << argv[0] << " -a 0.1 -l 700 -ft 0.03 xxx.xyz"
               << std::endl;
     exit(1);
@@ -43,12 +43,11 @@ int main(int argc, char **argv)
 
   int repeatLevel     = REPEAT_LEVEL;
   int imageResolution = IMAGE_RESOLUTION;
-  double alpha        = OPACITY;
-  double ftThresh     = THRESHOLD;
-  double alphaMax     = ALPHA_MAX;
+  double smallFth     = SMALL_F_TH;
+  double largeFth     = LARGE_F_TH;
   double alphaMin     = ALPHA_MIN;
+  double alphaMax     = ALPHA_MAX;
   double dimension    = DIMENSION;
-  double fAlphaMax    = F_ALPHA_MAX;
 
   fileList *files = new fileList(argv[1]);
 
@@ -71,13 +70,13 @@ int main(int argc, char **argv)
       }
       else if (!strncmp(ALPHA_OPTION, argv[i], strlen(ALPHA_OPTION)))
       {
-        alpha = atof(argv[i + 1]);
+        alphaMin = atof(argv[i + 1]);
         i++;
-        if (alpha <= 0.0)
-          alpha = 0.001;
-        else if (alpha > 0.99)
-          alpha = 0.99;
-        std::cout << "Setting alpha " << alpha << std::endl;
+        if (alphaMin <= 0.0)
+          alphaMin = 0.001;
+        else if (alphaMin > 0.99)
+          alphaMin = 0.99;
+        std::cout << "Setting alpha " << alphaMin << std::endl;
       }
       else if (!strncmp(IMAGE_RESOLUTION_OPTION, argv[i], strlen(IMAGE_RESOLUTION_OPTION)))
       {
@@ -86,7 +85,7 @@ int main(int argc, char **argv)
       }
       else if (!strncmp(FEATURE_THRESHOLD, argv[i], strlen(FEATURE_THRESHOLD)))
       {
-        ftThresh = atof(argv[i + 1]);
+        smallFth = atof(argv[i + 1]);
         i++;
       }
     }
@@ -98,76 +97,69 @@ int main(int argc, char **argv)
         {
           numFiles++;
 
-          std::string output_tmp(OUT_PBR_FILE);
-          std::string dir_name(DIR_NAME);
+          std::string outputTmp(OUT_PBR_FILE);
+          std::string dirName(DIR_NAME);
 
           std::string tmp;
           std::stringstream ssLR;
-          std::stringstream ssAlpha;
-          std::stringstream ssTh;
+          std::stringstream sssmallFth;
+          std::stringstream ssLargeFth;
           std::stringstream ssAlphaMax;
           std::stringstream ssAlphaMin;
           std::stringstream ssDimension;
-          std::stringstream ssFAlphaMax;
 
-          dir_name += "../SPBR_DATA/";
+            dirName += "../SPBR_DATA/";
 
-          dir_name += "LR";
+          dirName += "LR";
           ssLR << repeatLevel;
           ssLR >> tmp;
-          dir_name += tmp;
+          dirName += tmp;
 
-          dir_name += "_Alpha";
-          ssAlpha << alpha;
-          ssAlpha >> tmp;
+          dirName += "_fth";
+          sssmallFth << smallFth;
+          sssmallFth >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dir_name += tmp;
+          dirName += tmp;
 
-          dir_name += "_Th";
-          ssTh << ftThresh;
-          ssTh >> tmp;
+          dirName += "_Fth";
+          ssLargeFth << largeFth;
+          ssLargeFth >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dir_name += tmp;
+          dirName += tmp;
 
-          dir_name += "_AlphaMax";
+          dirName += "_AlphaMax";
           ssAlphaMax << alphaMax;
           ssAlphaMax >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dir_name += tmp;
+          dirName += tmp;
 
-          dir_name += "_AlphaMin";
+          dirName += "_AlphaMin";
           ssAlphaMin << alphaMin;
           ssAlphaMin >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dir_name += tmp;
+          dirName += tmp;
 
-          dir_name += "_Dimension";
+          dirName += "_Dimension";
           ssDimension << dimension;
           ssDimension >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dir_name += tmp;
+          dirName += tmp;
 
-          dir_name += "_FAlphaMax";
-          ssFAlphaMax << fAlphaMax;
-          ssFAlphaMax >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dir_name += tmp;
+          dirName += "/";
 
-          dir_name += "/";
+          outputTmp += getFileName(argv[i]);
+          outputTmp += ".spbr";
 
-          output_tmp += getFileName(argv[i]);
-          output_tmp += ".spbr";
-
-          const char* OUT_DIR_NAME = dir_name.c_str();
+          const char* OUT_DIR_NAME = dirName.c_str();
 
           mkdir(OUT_DIR_NAME, S_IRWXU);
 
-          output_tmp.insert(0, dir_name);
+          outputTmp.insert(0, dirName);
 
           inputFiles.push_back(argv[i]);
-          outptFiles.push_back(output_tmp);
-          opacities.push_back(alpha);
-          thresholds.push_back(ftThresh);
+          outptFiles.push_back(outputTmp);
+          opacities.push_back(alphaMin);
+          thresholds.push_back(smallFth);
         }
       }
     }
