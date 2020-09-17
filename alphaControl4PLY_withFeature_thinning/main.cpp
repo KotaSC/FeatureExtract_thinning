@@ -21,7 +21,6 @@
 #include "alp_option.h"
 #include "event_control.h"
 #include "FeaturePointExtraction.h"
-#include "feature_customize.h"
 
 const double DEFAULT_CAMERA_DISTANCE = 12.0;
 
