@@ -4,6 +4,7 @@
 #include <kvs/Module>
 #include <kvs/PointObject>
 #include <kvs/PolygonObject>
+#include <kvs/Camera>
 
 class AlphaControlforPLY : public kvs::PointObject
 {
