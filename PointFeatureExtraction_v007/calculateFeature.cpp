@@ -9,7 +9,7 @@
 #include <sstream>
 
 #include <kvs/BoxMuller>
-#include <kvs/EigenDecomposer>
+// #include <kvs/EigenDecomposer>
 #include <kvs/Vector3>
 #include <kvs/Matrix33>
 #include <kvs/Matrix>
@@ -239,18 +239,45 @@ void calculateFeature::calcNormalPCA( kvs::PolygonObject *ply,
     M[2][0] = s_zx; M[2][1] = s_yz; M[2][2] = s_zz;
 
     //---- Calcuation of eigenvalues
-    kvs::EigenDecomposer<double> eigen( M );
+    // kvs::EigenDecomposer<double> eigen( M );
 
-    const kvs::Vector<double>& L = eigen.eigenValues();
+    // const kvs::Vector<double>& L = eigen.eigenValues();
 
     // L[0]: 第1固有値, L[1]: 第2固有値, L[2]: 第3固有値
-    double sum = L[0] + L[1] + L[2]; // Sum of eigenvalues
+    // double sum = L[0] + L[1] + L[2]; // Sum of eigenvalues
     // double var = searchPoint.x;
-    double var = L[2] / sum; // Change of curvature
+    // double var = L[2] / sum; // Change of curvature
     // double var = (L[0] - L[1]) / L[0]; // Linearity
     // double var = L[1] - L[2] / L[0];             // Planarity
     // double var = 1 - ( ( L[1] - L[2] ) / L[0] ); // Aplanarity
     // double var = L[0];
+
+    // Caluculate Covariance matrix and EigenVectors using LAPACK
+    //--- Preparation for LAPACK
+    char jovz = 'V';
+    char uplo = 'U';
+    int n     = DIM;
+    double A[n*n];
+    double W[n];
+    int lwork = n*n;
+    double WORK[n*n];
+    int info;
+
+    //---- Covariance matrix
+    A[0] = s_xx; A[3] = s_xy; A[6] = s_zx;
+    A[1] = 0.0 ; A[4] = s_yy; A[7] = s_yz;
+    A[2] = 0.0 ; A[5] = 0.0 ; A[8] = s_zz;
+
+    //---- Calcuation of eigenvalues and egenvectors
+    dsyev_( &jovz, &uplo, (__CLPK_integer *) &n, A, (__CLPK_integer *) &n,
+            W, WORK, (__CLPK_integer *) &lwork, (__CLPK_integer *) &info );
+
+    // W[2]: 第1固有値, W[1]: 第2固有値, W[0]: 第3固有値
+    // Sum of eigenvalues
+    double sum = W[2] + W[1] + W[0];
+
+    // Change of curvature
+    double var = W[0] / sum;
 
     m_feature.push_back(var);
     if (sigMax < var)
