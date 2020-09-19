@@ -9,7 +9,6 @@
 #include <sstream>
 
 #include <kvs/BoxMuller>
-// #include <kvs/EigenDecomposer>
 #include <kvs/Vector3>
 #include <kvs/Matrix33>
 #include <kvs/Matrix>
