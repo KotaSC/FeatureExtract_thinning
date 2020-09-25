@@ -56,14 +56,14 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   double initialPoint = largeFth - smallFth;
   double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
 
-  std::cout << "============================="           << std::endl;
+  std::cout << "==================================="     << std::endl;
   std::cout << "Minimum opacity          : " << alphaMin << std::endl;
-  std::cout << "Max opacity              : " << alphaMax << std::endl;
+  std::cout << "Maximum opacity          : " << alphaMax << std::endl;
   std::cout << "Small threshold          : " << smallFth << std::endl;
   std::cout << "Large threshold          : " << largeFth << std::endl;
   std::cout << "Dimension                : " << dim      << std::endl;
   std::cout << "Number of feature points : " << num      << std::endl;
-  std::cout << "============================="           << std::endl;
+  std::cout << "==================================="     << std::endl;
 
   for ( int i = 0; i < num; i++ ) {
 

@@ -107,7 +107,7 @@ int main(int argc, char **argv)
           std::stringstream ssAlphaMin;
           std::stringstream ssDimension;
 
-            dirName += "../SPBR_DATA/";
+          dirName += "../SPBR_DATA/";
 
           dirName += "LR";
           ssLR << repeatLevel;
