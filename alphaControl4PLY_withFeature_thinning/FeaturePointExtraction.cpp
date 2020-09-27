@@ -5,8 +5,10 @@
 #include <numeric>
 #include <cmath>
 #include <algorithm>
+#include <kvs/BoxMuller>
 
 const int INTERVAL = 1000000;
+const int MIN_NODE = 15;
 
 FeaturePointExtraction::FeaturePointExtraction( void ) {
 }
@@ -128,12 +130,58 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   std::vector<int> ind;
 
   int num = 0;
-  for (size_t i = 0; i < numVert; i++)
+  for ( size_t i = 0; i < numVert; i++ )
   {
-    if (ft[i] >= smallFth)
+    if ( ft[i] >= smallFth )
     {
       ind.push_back(i);
       num++;
     }
+  }
+
+  ply->updateMinMaxCoords();
+  kvs::ValueArray<kvs::Real32> coords = ply->coords();
+  float *pdata = coords.data();
+  kvs::Vector3f minBB = ply->minObjectCoord();
+  kvs::Vector3f maxBB = ply->maxObjectCoord();
+
+  double *mrange = new double[6];
+  mrange[0] = (double)minBB.x();
+  mrange[1] = (double)maxBB.x();
+  mrange[2] = (double)minBB.y();
+  mrange[3] = (double)maxBB.y();
+  mrange[4] = (double)minBB.z();
+  mrange[5] = (double)maxBB.z();
+
+  // create octree
+  std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
+  std::cout << minBB << " \n"
+            << maxBB << std::endl;
+  octree *myTree = new octree( pdata, numVert, mrange, MIN_NODE );
+
+  kvs::MersenneTwister uniRand;
+
+  double div;
+
+  std::cout << "Input Division : ";
+  std::cin >> div;
+
+  kvs::Vector3f bb = maxBB - minBB;
+  double b_leng    = bb.length();
+  double radius    = b_leng / div;
+
+  std::cout << "Start OCtree Search..... " << std::endl;
+  for ( size_t i = 0; i < numVert; i++ )
+  {
+    if (i == numVert)
+      --i;
+    double point[3] = { coords[3 * i],
+                        coords[3 * i + 1],
+                        coords[3 * i + 2] };
+
+    vector<size_t> nearInd;
+    vector<double> dist;
+    search_points( point, radius, pdata, myTree->octreeRoot, &nearInd, &dist );
+    int n0 = (int)nearInd.size();
   }
 }
