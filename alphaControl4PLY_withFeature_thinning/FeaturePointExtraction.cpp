@@ -1,5 +1,6 @@
 #include "FeaturePointExtraction.h"
 #include "alp_customize.h"
+#include "octree.h"
 #include <vector>
 #include <numeric>
 #include <cmath>
@@ -19,7 +20,6 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject* ply,
                                                 AlphaControlforPLY *fpoint )
 {
   alpbaControl4Feature( ply, ft, smallFth, repeatLevel, BBMin, BBMax, fpoint );
-
 }
 
 void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
@@ -114,4 +114,26 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   SuperClass::setCoords ( kvs::ValueArray<kvs::Real32>( SetCoords  ) );
   SuperClass::setNormals( kvs::ValueArray<kvs::Real32>( SetNormals ) );
   SuperClass::setColors ( kvs::ValueArray<kvs::UInt8> ( SetColors  ) );
+}
+
+void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *ply,
+                                                           std::vector<float> &ft,
+                                                           double smallFth,
+                                                           int repeatLevel,
+                                                           kvs::Vector3f BBMin,
+                                                           kvs::Vector3f BBMax,
+                                                           AlphaControlforPLY *fpoint )
+{
+  size_t numVert = ply->numberOfVertices();
+  std::vector<int> ind;
+
+  int num = 0;
+  for (size_t i = 0; i < numVert; i++)
+  {
+    if (ft[i] >= smallFth)
+    {
+      ind.push_back(i);
+      num++;
+    }
+  }
 }

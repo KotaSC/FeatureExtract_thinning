@@ -14,20 +14,28 @@ class FeaturePointExtraction: public kvs::PointObject {
  public:
   FeaturePointExtraction( void );
   FeaturePointExtraction( kvs::PolygonObject* ply,
-						  std::vector<float> &ft,
-						  double threshold,
-						  int repeatLevel,
-						  kvs::Vector3f BBMin,
-					   	  kvs::Vector3f BBMax,
-						  AlphaControlforPLY *fpoint );
+						              std::vector<float> &ft,
+						              double threshold,
+						              int repeatLevel,
+						              kvs::Vector3f BBMin,
+					   	            kvs::Vector3f BBMax,
+						              AlphaControlforPLY *fpoint );
  private:
   void alpbaControl4Feature( kvs::PolygonObject* ply,
-						     std::vector<float> &ft,
-						     double threshold,
-							 int repeatLevel,
-							 kvs::Vector3f BBMin,
-							 kvs::Vector3f BBMax,
-							 AlphaControlforPLY *fpoint );
+						                 std::vector<float> &ft,
+						                 double threshold,
+								             int repeatLevel,
+							               kvs::Vector3f BBMin,
+							               kvs::Vector3f BBMax,
+							               AlphaControlforPLY *fpoint );
+
+	void adaptiveAlphaControl4Feature( kvs::PolygonObject *ply,
+																		 std::vector<float> &ft,
+																		 double threshold,
+																		 int repeatLevel,
+																		 kvs::Vector3f BBMin,
+																		 kvs::Vector3f BBMax,
+																		 AlphaControlforPLY *fpoint );
 };
 
 

@@ -79,6 +79,10 @@
         "map": "cpp",
         "memory_resource": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "__errc": "cpp",
+        "__node_handle": "cpp",
+        "bit": "cpp",
+        "stack": "cpp"
     }
 }
