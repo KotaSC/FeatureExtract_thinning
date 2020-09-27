@@ -22,6 +22,7 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject* ply,
                                                 AlphaControlforPLY *fpoint )
 {
   alpbaControl4Feature( ply, ft, smallFth, repeatLevel, BBMin, BBMax, fpoint );
+  adaptiveAlphaControl4Feature( ply, ft, smallFth, repeatLevel, BBMin, BBMax, fpoint );
 }
 
 void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
@@ -74,7 +75,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
     double x     = ft[index] - smallFth;
     double alpha = grad*std::pow( x, dim ) + alphaMin;
 
-    if ( ft[index] >= LARGE_F_TH )
+    if ( ft[index] >= largeFth )
       alpha = alphaMax;
 
     // Caluculate Point Number and Increase Ratio according to Feature Value
@@ -139,12 +140,12 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
     }
   }
 
-  double alphaMin = ALPHA_MIN;
-  double alphaMax = ALPHA_MAX;
-  double largeFth = LARGE_F_TH;
-  double dim = DIMENSION;
+  double alphaMin     = ALPHA_MIN;
+  double alphaMax     = ALPHA_MAX;
+  double largeFth     = LARGE_F_TH;
+  double dim          = DIMENSION;
   double initialPoint = largeFth - smallFth;
-  double grad = (alphaMax - alphaMin) / std::pow(initialPoint, dim);
+  double grad         = (alphaMax - alphaMin) / std::pow(initialPoint, dim);
 
   std::cout << "===================================" << std::endl;
   std::cout << "Minimum opacity          : " << alphaMin << std::endl;
@@ -220,10 +221,10 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
     aveNearestFt = sumNearestFt / n0;
 
-    double x = ft[index] - smallFth;
+    double x     = ft[index] - smallFth;
     double alpha = grad * std::pow(x, dim) + alphaMin;
 
-    if (ft[index] >= LARGE_F_TH)
+    if ( ft[index] >= largeFth )
       alpha = alphaMax;
 
     // Caluculate Point Number and Increase Ratio according to Feature Value
@@ -231,7 +232,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
     double ratio = fpoint->pointRatio(a_num);
     double createNum = 1.0 * ratio;
 
-    if (!((i + 1) % INTERVAL))
+    if ( !((i + 1) % INTERVAL) )
     {
       std::cout << i + 1 << std::endl;
       std::cout << "Feature Value:        " << ft[index] << std::endl;
@@ -244,24 +245,24 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
     for (int j = 0; j < createNum; j++)
     {
 
-      SetCoords.push_back(coords[3 * index]);
-      SetCoords.push_back(coords[3 * index + 1]);
-      SetCoords.push_back(coords[3 * index + 2]);
+      SetCoords.push_back( coords[3 * index] );
+      SetCoords.push_back( coords[3 * index + 1] );
+      SetCoords.push_back( coords[3 * index + 2] );
 
-      SetNormals.push_back(normals[3 * index]);
-      SetNormals.push_back(normals[3 * index + 1]);
-      SetNormals.push_back(normals[3 * index + 2]);
+      SetNormals.push_back( normals[3 * index] );
+      SetNormals.push_back( normals[3 * index + 1] );
+      SetNormals.push_back( normals[3 * index + 2] );
 
-      SetColors.push_back(colors[3 * index]);
-      SetColors.push_back(colors[3 * index + 1]);
-      SetColors.push_back(colors[3 * index + 2]);
+      SetColors.push_back( colors[3 * index] );
+      SetColors.push_back( colors[3 * index + 1] );
+      SetColors.push_back( colors[3 * index + 2] );
 
       // SetColors.push_back( 255 );
       // SetColors.push_back( 0 );
       // SetColors.push_back( 0 );
     }
   }
-  SuperClass::setCoords(kvs::ValueArray<kvs::Real32>(SetCoords));
-  SuperClass::setNormals(kvs::ValueArray<kvs::Real32>(SetNormals));
-  SuperClass::setColors(kvs::ValueArray<kvs::UInt8>(SetColors));
+  SuperClass::setCoords( kvs::ValueArray<kvs::Real32>(SetCoords) );
+  SuperClass::setNormals( kvs::ValueArray<kvs::Real32>(SetNormals) );
+  SuperClass::setColors( kvs::ValueArray<kvs::UInt8>(SetColors) );
 }
