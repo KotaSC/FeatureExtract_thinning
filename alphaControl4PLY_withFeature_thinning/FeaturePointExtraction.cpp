@@ -5,7 +5,6 @@
 #include <numeric>
 #include <cmath>
 #include <algorithm>
-#include <kvs/BoxMuller>
 
 const int INTERVAL = 1000000;
 const int MIN_NODE = 15;
@@ -184,8 +183,6 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
             << maxBB << std::endl;
   octree *myTree = new octree( pdata, numVert, mrange, MIN_NODE );
 
-  kvs::MersenneTwister uniRand;
-
   double div;
 
   std::cout << "Input Division : ";
@@ -228,8 +225,8 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
       alpha = alphaMax;
 
     // Caluculate Point Number and Increase Ratio according to Feature Value
-    double a_num = fpoint->calculateRequiredPartcleNumber(alpha, repeatLevel, BBMin, BBMax);
-    double ratio = fpoint->pointRatio(a_num);
+    double a_num     = fpoint->calculateRequiredPartcleNumber(alpha, repeatLevel, BBMin, BBMax);
+    double ratio     = fpoint->pointRatio(a_num);
     double createNum = 1.0 * ratio;
 
     if ( !((i + 1) % INTERVAL) )
@@ -244,7 +241,6 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
     for (int j = 0; j < createNum; j++)
     {
-
       SetCoords.push_back( coords[3 * index] );
       SetCoords.push_back( coords[3 * index + 1] );
       SetCoords.push_back( coords[3 * index + 2] );
