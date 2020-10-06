@@ -36,9 +36,10 @@ class FeaturePointExtraction: public kvs::PointObject {
 																		 kvs::Vector3f BBMin,
 																		 kvs::Vector3f BBMax,
 																		 AlphaControlforPLY *fpoint );
+
+	std::vector<double> calcOpacity( int featurePointNum,
+                                   std::vector<float> &featureValue,
+                                   std::vector<int> &featurePointIndex );
 };
-
-
-
 
 #endif

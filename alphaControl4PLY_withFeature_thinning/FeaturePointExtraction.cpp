@@ -139,22 +139,6 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
     }
   }
 
-  double alphaMin     = ALPHA_MIN;
-  double alphaMax     = ALPHA_MAX;
-  double largeFth     = LARGE_F_TH;
-  double dim          = DIMENSION;
-  double initialPoint = largeFth - smallFth;
-  double grad         = (alphaMax - alphaMin) / std::pow(initialPoint, dim);
-
-  std::cout << "===================================" << std::endl;
-  std::cout << "Minimum opacity          : " << alphaMin << std::endl;
-  std::cout << "Maximum opacity          : " << alphaMax << std::endl;
-  std::cout << "Small threshold          : " << smallFth << std::endl;
-  std::cout << "Large threshold          : " << largeFth << std::endl;
-  std::cout << "Dimension                : " << dim << std::endl;
-  std::cout << "Number of feature points : " << num << std::endl;
-  std::cout << "===================================" << std::endl;
-
   ply->updateMinMaxCoords();
 
   kvs::ValueArray<kvs::Real32> coords  = ply->coords();
@@ -218,24 +202,18 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
     aveNearestFt = sumNearestFt / n0;
 
-    double x     = ft[index] - smallFth;
-    double alpha = grad * std::pow(x, dim) + alphaMin;
-
-    if ( ft[index] >= largeFth )
-      alpha = alphaMax;
-
     // Caluculate Point Number and Increase Ratio according to Feature Value
-    double a_num     = fpoint->calculateRequiredPartcleNumber(alpha, repeatLevel, BBMin, BBMax);
-    double ratio     = fpoint->pointRatio(a_num);
+    double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
+    double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0 * ratio;
 
     if ( !((i + 1) % INTERVAL) )
     {
       std::cout << i + 1 << std::endl;
       std::cout << "Feature Value:        " << ft[index] << std::endl;
-      std::cout << "Alpha:                " << alpha << std::endl;
-      std::cout << "Analytical Point Num: " << a_num << std::endl;
-      std::cout << "Point Ratio:          " << ratio << std::endl;
+      std::cout << "Alpha:                " << alpha     << std::endl;
+      std::cout << "Analytical Point Num: " << a_num     << std::endl;
+      std::cout << "Point Ratio:          " << ratio     << std::endl;
       std::cout << "Create Point Num:     " << createNum << std::endl;
     }
 
@@ -261,4 +239,52 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   SuperClass::setCoords( kvs::ValueArray<kvs::Real32>(SetCoords) );
   SuperClass::setNormals( kvs::ValueArray<kvs::Real32>(SetNormals) );
   SuperClass::setColors( kvs::ValueArray<kvs::UInt8>(SetColors) );
+}
+
+std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
+                                                         std::vector<float> &featureValue,
+                                                         std::vector<int> &featurePointIndex )
+{
+
+  double alphaMin;
+  double alphaMax;
+  double smallFth;
+  double largeFth;
+  double dim;
+
+  std::cout << "Minimum opacity : ";
+  std::cin >> alphaMin;
+
+  std::cout << "Maximum opacity : ";
+  std::cin >> alphaMax;
+
+  std::cout << "Small feature value threshold : ";
+  std::cin >> smallFth;
+
+  std::cout << "Large feature value threshold : ";
+  std::cin >> largeFth;
+
+  std::cout << "Dimension : ";
+  std::cin >> dim;
+
+  double initialPoint = largeFth - smallFth;
+  double grad         = ( alphaMax - alphaMin ) / std::pow( initialPoint, dim );
+
+  std::vector<double> alphaVec;
+
+  for ( size_t i = 0; i < featurePointNum; i++ )
+  {
+    if ( i == featurePointNum )
+      --i;
+
+    size_t index = featurePointIndex[i];
+
+    double f     = featureValue[index] - smallFth;
+    double alpha = grad * std::pow( f, dim ) + alphaMin;
+
+    if ( featureValue[index] >= largeFth )
+      alpha = alphaMax;
+  }
+
+  return alphaVec;
 }
