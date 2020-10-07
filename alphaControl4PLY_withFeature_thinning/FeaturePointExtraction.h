@@ -16,6 +16,7 @@ class FeaturePointExtraction: public kvs::PointObject {
   	FeaturePointExtraction( kvs::PolygonObject* ply,
 						              	std::vector<float> &ft,
 						              	double threshold,
+														double alphaMin,
 						              	int repeatLevel,
 						              	kvs::Vector3f BBMin,
 					   	            	kvs::Vector3f BBMax,
@@ -25,6 +26,7 @@ class FeaturePointExtraction: public kvs::PointObject {
 		void alpbaControl4Feature( kvs::PolygonObject* ply,
 						              	   std::vector<float> &ft,
 															 double threshold,
+															 double alphaMin,
 															 int repeatLevel,
 							                 kvs::Vector3f BBMin,
 							                 kvs::Vector3f BBMax,
@@ -33,6 +35,7 @@ class FeaturePointExtraction: public kvs::PointObject {
 		void adaptiveAlphaControl4Feature( kvs::PolygonObject *ply,
 																		   std::vector<float> &ft,
 																		   double threshold,
+																			 double alphaMin,
 																		   int repeatLevel,
 																		   kvs::Vector3f BBMin,
 																		   kvs::Vector3f BBMax,
@@ -40,6 +43,7 @@ class FeaturePointExtraction: public kvs::PointObject {
 
 		std::vector<double> calcOpacity( int featurePointNum,
 																		 double threshold,
+																		 double alphaMin,
                                      std::vector<float> &featureValue,
                                      std::vector<int> &featurePointIndex );
 };

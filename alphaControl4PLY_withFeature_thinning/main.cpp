@@ -43,21 +43,25 @@ int main(int argc, char **argv)
   int repeatLevel;
   int imageResolution;
   double smallFth;
+  double alphaMin;
 
-  std::cout << "=================================" << std::endl;
-  std::cout << "Input parameters." << std::endl;
-  std::cout << "Repeat Level : ";
+  std::cout
+      << "=================================" << std::endl;
+  std::cout << "Input parameters" << std::endl;
+  std::cout << "Repeat Level: ";
   std::cin >> repeatLevel;
 
-  std::cout << "Image resolution : ";
+  std::cout << "Image resolution: ";
   std::cin >> imageResolution;
 
-  std::cout << "Feature value threshold : ";
+  std::cout << "Feature value threshold: ";
   std::cin >> smallFth;
+
+  std::cout << "Minimum opacity: ";
+  std::cin >> alphaMin;
   std::cout << "=================================" << std::endl;
 
   double largeFth  = LARGE_F_TH;
-  double alphaMin  = ALPHA_MIN;
   double alphaMax  = ALPHA_MAX;
   double dimension = DIMENSION;
 
@@ -264,7 +268,14 @@ int main(int argc, char **argv)
 
     //--- Feature Visualization
     FeaturePointExtraction *f_point =
-        new FeaturePointExtraction(ply, ft, thresholds[i], repeatLevel, BBMin, BBMax, point);
+        new FeaturePointExtraction(ply,
+                                   ft,
+                                   thresholds[i],
+                                   opacities[i],
+                                   repeatLevel,
+                                   BBMin,
+                                   BBMax,
+                                   point);
 
     std::string ofname(outptFiles[i]);
     ofname += "_f.spbr";

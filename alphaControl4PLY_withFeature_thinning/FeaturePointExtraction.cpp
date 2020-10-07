@@ -12,25 +12,27 @@ const int MIN_NODE = 15;
 FeaturePointExtraction::FeaturePointExtraction( void ) {
 }
 
-FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject* ply,
-                                                std::vector<float> &ft,
-                                                double smallFth,
-                                                int repeatLevel,
-                                                kvs::Vector3f BBMin,
-                                                kvs::Vector3f BBMax,
-                                                AlphaControlforPLY *fpoint )
+FeaturePointExtraction::FeaturePointExtraction(kvs::PolygonObject *ply,
+                                               std::vector<float> &ft,
+                                               double smallFth,
+                                               double alphaMin,
+                                               int repeatLevel,
+                                               kvs::Vector3f BBMin,
+                                               kvs::Vector3f BBMax,
+                                               AlphaControlforPLY *fpoint)
 {
-  alpbaControl4Feature( ply, ft, smallFth, repeatLevel, BBMin, BBMax, fpoint );
-  // adaptiveAlphaControl4Feature( ply, ft, smallFth, repeatLevel, BBMin, BBMax, fpoint );
+  alpbaControl4Feature( ply, ft, smallFth, alphaMin, repeatLevel, BBMin, BBMax, fpoint );
+  // adaptiveAlphaControl4Feature( ply, ft, smallFth, alphaMin, repeatLevel, BBMin, BBMax, fpoint );
 }
 
-void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
-                                                   std::vector<float> &ft,
-                                                   double smallFth,
-                                                   int repeatLevel,
-                                                   kvs::Vector3f BBMin,
-					                                         kvs::Vector3f BBMax,
-                                                   AlphaControlforPLY *fpoint )
+void FeaturePointExtraction::alpbaControl4Feature(kvs::PolygonObject *ply,
+                                                  std::vector<float> &ft,
+                                                  double smallFth,
+                                                  double alphaMin,
+                                                  int repeatLevel,
+                                                  kvs::Vector3f BBMin,
+                                                  kvs::Vector3f BBMax,
+                                                  AlphaControlforPLY *fpoint)
 {
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
@@ -52,8 +54,8 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::vector<kvs::UInt8>  SetColors;
 
   std::cout << "====================================" << std::endl;
-  std::cout << "Input opacity function parameters." << std::endl;
-  std::vector<double> alphaVec = calcOpacity( num, smallFth, ft, ind );
+  std::cout << "Input opacity function parameters" << std::endl;
+  std::vector<double> alphaVec = calcOpacity( num, smallFth, alphaMin, ft, ind );
   std::cout << "====================================" << std::endl;
 
   for ( int i = 0; i < num; i++ ) {
@@ -105,6 +107,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *ply,
                                                            std::vector<float> &ft,
                                                            double smallFth,
+                                                           double alphaMin,
                                                            int repeatLevel,
                                                            kvs::Vector3f BBMin,
                                                            kvs::Vector3f BBMax,
@@ -161,11 +164,11 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   double radius    = b_leng / div;
 
   std::cout << "====================================" << std::endl;
-  std::cout << "Input Type(b) function parameters." << std::endl;
-  std::vector<double> alphaVecTypeB = calcOpacity(num, smallFth, ft, ind);
+  std::cout << "Input Type(b) function parameters" << std::endl;
+  std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
 
-  std::cout << "\nInput Type(c) function parameters." << std::endl;
-  std::vector<double> alphaVecTypeC = calcOpacity(num, smallFth, ft, ind);
+  std::cout << "\nInput Type(c) function parameters" << std::endl;
+  std::vector<double> alphaVecTypeC = calcOpacity( num, smallFth, alphaMin, ft, ind );
   std::cout << "====================================" << std::endl;
 
   std::cout << "Start OCtree Search..... " << std::endl;
@@ -242,25 +245,22 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
 std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
                                                          double smallFth,
+                                                         double alphaMin,
                                                          std::vector<float> &featureValue,
                                                          std::vector<int> &featurePointIndex )
 {
 
-  double alphaMin;
   double alphaMax;
   double largeFth;
   double dim;
 
-  std::cout << "Minimum opacity : ";
-  std::cin >> alphaMin;
-
-  std::cout << "Maximum opacity : ";
+  std::cout << "Maximum opacity: ";
   std::cin >> alphaMax;
 
-  std::cout << "Large feature value threshold : ";
+  std::cout << "Large feature value threshold: ";
   std::cin >> largeFth;
 
-  std::cout << "Dimension : ";
+  std::cout << "Dimension: ";
   std::cin >> dim;
 
   double initialPoint = largeFth - smallFth;
