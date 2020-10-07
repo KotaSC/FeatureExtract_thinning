@@ -51,7 +51,10 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
   std::vector<kvs::Real32> SetNormals;
   std::vector<kvs::UInt8>  SetColors;
 
-  std::vector<double> alphaVec = calcOpacity( num, ft, ind );
+  std::cout << "====================================" << std::endl;
+  std::cout << "Input opacity function parameters." << std::endl;
+  std::vector<double> alphaVec = calcOpacity( num, smallFth, ft, ind );
+  std::cout << "====================================" << std::endl;
 
   for ( int i = 0; i < num; i++ ) {
 
@@ -59,7 +62,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject* ply,
 
     // Caluculate Point Number and Increase Ratio according to Feature Value
     double alpha     = alphaVec[i];
-    double a_num     = fpoint->calculateRequiredPartcleNumber(alpha, repeatLevel, BBMin, BBMax);
+    double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
     double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0*ratio;
 
@@ -157,7 +160,13 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   double b_leng    = bb.length();
   double radius    = b_leng / div;
 
-  std::vector<double> alphaVec = calcOpacity( num, ft, ind );
+  std::cout << "====================================" << std::endl;
+  std::cout << "Input Type(b) function parameters." << std::endl;
+  std::vector<double> alphaVecTypeB = calcOpacity(num, smallFth, ft, ind);
+
+  std::cout << "\nInput Type(c) function parameters." << std::endl;
+  std::vector<double> alphaVecTypeC = calcOpacity(num, smallFth, ft, ind);
+  std::cout << "====================================" << std::endl;
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for ( size_t i = 0; i < num; i++ )
@@ -185,9 +194,15 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
     aveNearestFt = sumNearestFt / n0;
 
+    double alpha;
+
+    if ( aveNearestFt < 0.5 )
+      alpha = alphaVecTypeC[i];
+    else
+      alpha = alphaVecTypeB[i];
+
     // Caluculate Point Number and Increase Ratio according to Feature Value
-    double alpha     = alphaVec[i];
-    double a_num     = fpoint->calculateRequiredPartcleNumber(alpha, repeatLevel, BBMin, BBMax);
+    double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
     double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0 * ratio;
 
@@ -226,13 +241,13 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 }
 
 std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
+                                                         double smallFth,
                                                          std::vector<float> &featureValue,
                                                          std::vector<int> &featurePointIndex )
 {
 
   double alphaMin;
   double alphaMax;
-  double smallFth;
   double largeFth;
   double dim;
 
@@ -241,9 +256,6 @@ std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
 
   std::cout << "Maximum opacity : ";
   std::cin >> alphaMax;
-
-  std::cout << "Small feature value threshold : ";
-  std::cin >> smallFth;
 
   std::cout << "Large feature value threshold : ";
   std::cin >> largeFth;

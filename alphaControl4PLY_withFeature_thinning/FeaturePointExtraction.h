@@ -11,35 +11,37 @@
 class FeaturePointExtraction: public kvs::PointObject {
   kvsModuleSuperClass( kvs::PointObject );
 
- public:
-  FeaturePointExtraction( void );
-  FeaturePointExtraction( kvs::PolygonObject* ply,
-						              std::vector<float> &ft,
-						              double threshold,
-						              int repeatLevel,
-						              kvs::Vector3f BBMin,
-					   	            kvs::Vector3f BBMax,
-						              AlphaControlforPLY *fpoint );
- private:
-  void alpbaControl4Feature( kvs::PolygonObject* ply,
-						                 std::vector<float> &ft,
-						                 double threshold,
-								             int repeatLevel,
-							               kvs::Vector3f BBMin,
-							               kvs::Vector3f BBMax,
-							               AlphaControlforPLY *fpoint );
+	public:
+		FeaturePointExtraction( void );
+  	FeaturePointExtraction( kvs::PolygonObject* ply,
+						              	std::vector<float> &ft,
+						              	double threshold,
+						              	int repeatLevel,
+						              	kvs::Vector3f BBMin,
+					   	            	kvs::Vector3f BBMax,
+						              	AlphaControlforPLY *fpoint );
 
-	void adaptiveAlphaControl4Feature( kvs::PolygonObject *ply,
-																		 std::vector<float> &ft,
+	private:
+		void alpbaControl4Feature( kvs::PolygonObject* ply,
+						              	   std::vector<float> &ft,
+															 double threshold,
+															 int repeatLevel,
+							                 kvs::Vector3f BBMin,
+							                 kvs::Vector3f BBMax,
+															 AlphaControlforPLY *fpoint );
+
+		void adaptiveAlphaControl4Feature( kvs::PolygonObject *ply,
+																		   std::vector<float> &ft,
+																		   double threshold,
+																		   int repeatLevel,
+																		   kvs::Vector3f BBMin,
+																		   kvs::Vector3f BBMax,
+																		   AlphaControlforPLY *fpoint );
+
+		std::vector<double> calcOpacity( int featurePointNum,
 																		 double threshold,
-																		 int repeatLevel,
-																		 kvs::Vector3f BBMin,
-																		 kvs::Vector3f BBMax,
-																		 AlphaControlforPLY *fpoint );
-
-	std::vector<double> calcOpacity( int featurePointNum,
-                                   std::vector<float> &featureValue,
-                                   std::vector<int> &featurePointIndex );
+                                     std::vector<float> &featureValue,
+                                     std::vector<int> &featurePointIndex );
 };
 
 #endif

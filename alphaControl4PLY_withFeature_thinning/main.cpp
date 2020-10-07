@@ -40,13 +40,26 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  int repeatLevel     = REPEAT_LEVEL;
-  int imageResolution = IMAGE_RESOLUTION;
-  double smallFth     = SMALL_F_TH;
-  double largeFth     = LARGE_F_TH;
-  double alphaMin     = ALPHA_MIN;
-  double alphaMax     = ALPHA_MAX;
-  double dimension    = DIMENSION;
+  int repeatLevel;
+  int imageResolution;
+  double smallFth;
+
+  std::cout << "=================================" << std::endl;
+  std::cout << "Input parameters." << std::endl;
+  std::cout << "Repeat Level : ";
+  std::cin >> repeatLevel;
+
+  std::cout << "Image resolution : ";
+  std::cin >> imageResolution;
+
+  std::cout << "Feature value threshold : ";
+  std::cin >> smallFth;
+  std::cout << "=================================" << std::endl;
+
+  double largeFth  = LARGE_F_TH;
+  double alphaMin  = ALPHA_MIN;
+  double alphaMax  = ALPHA_MAX;
+  double dimension = DIMENSION;
 
   fileList *files = new fileList(argv[1]);
 
