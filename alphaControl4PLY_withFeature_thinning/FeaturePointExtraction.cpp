@@ -1,5 +1,4 @@
 #include "FeaturePointExtraction.h"
-#include "alp_customize.h"
 #include "octree.h"
 #include <vector>
 #include <numeric>

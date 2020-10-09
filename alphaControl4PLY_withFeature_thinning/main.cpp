@@ -29,14 +29,7 @@ int main(int argc, char **argv)
 {
   if (argc < 2)
   {
-    std::cout << "USAGE: " << argv[0] << "lst-file or data-file (and options)." << std::endl;
-    std::cout << "lst-file cannot require options \n";
-    std::cout << "[Option] -a : Set the opacity ( default is " << ALPHA_MIN << " ) \n"
-              << "         -l : Set the repeat level ( default is " << REPEAT_LEVEL << " ) \n"
-              << "         -i : Set the image resolution ( default is " << IMAGE_RESOLUTION << " ) \n"
-              << "        -ft : Set the threshold for feature extraction ( default is " << SMALL_F_TH << " ) \n"
-              << "[For example] " << argv[0] << " -a 0.1 -l 700 -ft 0.03 xxx.xyz"
-              << std::endl;
+    std::cout << "USAGE: " << argv[0] << " lst-file or data-file." << std::endl;
     exit(1);
   }
 
