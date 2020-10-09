@@ -7,14 +7,14 @@ const int MIN_NODE = 15;
 FeaturePointExtraction::FeaturePointExtraction( void ) {
 }
 
-FeaturePointExtraction::FeaturePointExtraction(kvs::PolygonObject *ply,
-                                               std::vector<float> &ft,
-                                               double smallFth,
-                                               double alphaMin,
-                                               int repeatLevel,
-                                               kvs::Vector3f BBMin,
-                                               kvs::Vector3f BBMax,
-                                               AlphaControlforPLY *fpoint)
+FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject *ply,
+                                                std::vector<float> &ft,
+                                                double smallFth,
+                                                double alphaMin,
+                                                int repeatLevel,
+                                                kvs::Vector3f BBMin,
+                                                kvs::Vector3f BBMax,
+                                                AlphaControlforPLY *fpoint )
 {
   int colorID;
   int pfeID;
@@ -48,15 +48,15 @@ FeaturePointExtraction::FeaturePointExtraction(kvs::PolygonObject *ply,
     adaptiveAlphaControl4Feature( ply, ft, smallFth, alphaMin, colorID, repeatLevel, BBMin, BBMax, fpoint );
 }
 
-void FeaturePointExtraction::alpbaControl4Feature(kvs::PolygonObject *ply,
-                                                  std::vector<float> &ft,
-                                                  double smallFth,
-                                                  double alphaMin,
-                                                  int colorID,
-                                                  int repeatLevel,
-                                                  kvs::Vector3f BBMin,
-                                                  kvs::Vector3f BBMax,
-                                                  AlphaControlforPLY *fpoint)
+void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
+                                                   std::vector<float> &ft,
+                                                   double smallFth,
+                                                   double alphaMin,
+                                                   int colorID,
+                                                   int repeatLevel,
+                                                   kvs::Vector3f BBMin,
+                                                   kvs::Vector3f BBMax,
+                                                   AlphaControlforPLY *fpoint )
 {
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
@@ -187,7 +187,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
   double div;
 
-  std::cout << "\nInput Division : ";
+  std::cout << "\nInput Division >> ";
   std::cin >> div;
   std::cout << std::endl;
 
@@ -294,13 +294,13 @@ std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
   double largeFth;
   double dim;
 
-  std::cout << "Maximum opacity: ";
+  std::cout << "Maximum opacity in range [0, 1] >> ";
   std::cin >> alphaMax;
 
-  std::cout << "Large feature value threshold: ";
+  std::cout << "Large feature value threshold in range [0, 1] >> ";
   std::cin >> largeFth;
 
-  std::cout << "Dimension: ";
+  std::cout << "Point proliferation exponent >> ";
   std::cin >> dim;
   std::cout << std::endl;
 

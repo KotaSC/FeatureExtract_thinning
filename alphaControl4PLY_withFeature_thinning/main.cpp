@@ -38,16 +38,16 @@ int main(int argc, char **argv)
   double alphaMin;
 
   std::cout << "\nInput parameters" << std::endl;
-  std::cout << "Repeat Level: ";
+  std::cout << "Repeat Level >> ";
   std::cin >> repeatLevel;
 
-  std::cout << "Image resolution: ";
+  std::cout << "Image resolution >> ";
   std::cin >> imageResolution;
 
-  std::cout << "Feature value threshold: ";
+  std::cout << "Feature value threshold in range [0, 1] >> ";
   std::cin >> smallFth;
 
-  std::cout << "Minimum opacity: ";
+  std::cout << "Minimum opacity in range [0, 1] >> ";
   std::cin >> alphaMin;
   std::cout << std::endl;
 
