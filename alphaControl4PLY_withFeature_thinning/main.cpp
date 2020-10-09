@@ -45,8 +45,7 @@ int main(int argc, char **argv)
   double smallFth;
   double alphaMin;
 
-  std::cout << "=================================" << std::endl;
-  std::cout << "Input parameters" << std::endl;
+  std::cout << "\nInput parameters" << std::endl;
   std::cout << "Repeat Level: ";
   std::cin >> repeatLevel;
 
@@ -58,7 +57,7 @@ int main(int argc, char **argv)
 
   std::cout << "Minimum opacity: ";
   std::cin >> alphaMin;
-  std::cout << "=================================" << std::endl;
+  std::cout << std::endl;
 
   fileList *files = new fileList(argv[1]);
 
