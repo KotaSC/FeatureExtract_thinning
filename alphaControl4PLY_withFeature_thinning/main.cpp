@@ -45,8 +45,7 @@ int main(int argc, char **argv)
   double smallFth;
   double alphaMin;
 
-  std::cout
-      << "=================================" << std::endl;
+  std::cout << "=================================" << std::endl;
   std::cout << "Input parameters" << std::endl;
   std::cout << "Repeat Level: ";
   std::cin >> repeatLevel;
@@ -60,10 +59,6 @@ int main(int argc, char **argv)
   std::cout << "Minimum opacity: ";
   std::cin >> alphaMin;
   std::cout << "=================================" << std::endl;
-
-  double largeFth  = LARGE_F_TH;
-  double alphaMax  = ALPHA_MAX;
-  double dimension = DIMENSION;
 
   fileList *files = new fileList(argv[1]);
 
@@ -119,10 +114,7 @@ int main(int argc, char **argv)
           std::string tmp;
           std::stringstream ssLR;
           std::stringstream sssmallFth;
-          std::stringstream ssLargeFth;
-          std::stringstream ssAlphaMax;
           std::stringstream ssAlphaMin;
-          std::stringstream ssDimension;
 
           dirName += "../SPBR_DATA/";
 
@@ -137,27 +129,9 @@ int main(int argc, char **argv)
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
           dirName += tmp;
 
-          dirName += "_Fth";
-          ssLargeFth << largeFth;
-          ssLargeFth >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dirName += tmp;
-
-          dirName += "_AlphaMax";
-          ssAlphaMax << alphaMax;
-          ssAlphaMax >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dirName += tmp;
-
           dirName += "_AlphaMin";
           ssAlphaMin << alphaMin;
           ssAlphaMin >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dirName += tmp;
-
-          dirName += "_Dimension";
-          ssDimension << dimension;
-          ssDimension >> tmp;
           tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
           dirName += tmp;
 

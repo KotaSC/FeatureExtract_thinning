@@ -21,7 +21,16 @@ FeaturePointExtraction::FeaturePointExtraction(kvs::PolygonObject *ply,
                                                kvs::Vector3f BBMax,
                                                AlphaControlforPLY *fpoint)
 {
-  alpbaControl4Feature( ply, ft, smallFth, alphaMin, repeatLevel, BBMin, BBMax, fpoint );
+  int pfeID;
+
+  std::cout << "Select feature extraction type" << std::endl;
+  std::cout << "Normal point feature extraction: " << NORMAL_PFE_ID << ", ";
+  std::cout << "Adaptive point feature extraction: " << ADAPTIVE_PFE_ID << std::endl;
+
+  std::cout << "Select an ID >> ";
+  std::cin >> pfeID;
+
+  alpbaControl4Feature(ply, ft, smallFth, alphaMin, repeatLevel, BBMin, BBMax, fpoint);
   // adaptiveAlphaControl4Feature( ply, ft, smallFth, alphaMin, repeatLevel, BBMin, BBMax, fpoint );
 }
 
