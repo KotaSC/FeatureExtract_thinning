@@ -294,7 +294,6 @@ std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
                                                          std::vector<float> &featureValue,
                                                          std::vector<int> &featurePointIndex )
 {
-
   double alphaMax;
   double largeFth;
   double dim;
