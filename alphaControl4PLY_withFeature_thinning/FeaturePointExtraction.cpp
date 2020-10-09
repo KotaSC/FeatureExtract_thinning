@@ -1,9 +1,5 @@
 #include "FeaturePointExtraction.h"
 #include "octree.h"
-#include <vector>
-#include <numeric>
-#include <cmath>
-#include <algorithm>
 
 const int INTERVAL = 1000000;
 const int MIN_NODE = 15;
