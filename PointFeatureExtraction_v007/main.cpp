@@ -35,9 +35,24 @@ int main( int argc, char** argv )
   //--- Set up for calculating feature
   calculateFeature *ft = new calculateFeature();
 
-  //--- Select type of Feature
-  ft->setFeatureType( calculateFeature::PointPCA );
-  // ft->setFeatureType( calculateFeature::MinimumEntropyFeature );
+  //--- Select type of Feature Calculation
+  int featureCalculationID;
+
+  std::cout << "Feature calculation type" << std::endl;
+  std::cout << "Point PCA: " << calculateFeature::PointPCA << ", ";
+  std::cout << "Minimum entropy PCA: " << calculateFeature::MinimumEntropyFeature << std::endl;
+
+  std::cout << "Select an ID >> ";
+  std::cin >> featureCalculationID;
+
+  std::cout << "Feature calculation type ==> " << featureCalculationID << std::endl;
+  std::cout << std::endl;
+
+  if ( featureCalculationID == calculateFeature::PointPCA )
+    ft->setFeatureType( calculateFeature::PointPCA );
+  else if ( featureCalculationID == calculateFeature::MinimumEntropyFeature )
+    ft->setFeatureType( calculateFeature::MinimumEntropyFeature );
+
   // ft->setFeatureType( calculateFeature::PlaneBasedFeature );
 
   // ft->addNoise( 0.1 );
@@ -45,6 +60,29 @@ int main( int argc, char** argv )
   // ft->setFeatureType( calculateFeature::NormalDispersion );
 
   //---- Calculation
+  int featureValueID;
+
+  std::cout << "Feature value type" << std::endl;
+  std::cout << "Change of curvature: " << calculateFeature::CHANGE_OF_CURVATURE_ID << ", ";
+  std::cout << "Aplanarity: " << calculateFeature::APLANARITY_ID << ", ";
+  std::cout << "Linearity: " << calculateFeature::LINEARITY_ID << std::endl;
+  std::cout << "Eigentropy: " << calculateFeature::EIGENTROPY_ID << std::endl;
+
+  std::cout << "Select an ID >> ";
+  std::cin >> featureValueID;
+
+  std::cout << "Feature value type ==> " << featureValueID << std::endl;
+  std::cout << std::endl;
+
+  if ( featureValueID == calculateFeature::CHANGE_OF_CURVATURE_ID )
+    ft->setFeatureValueID( calculateFeature::CHANGE_OF_CURVATURE_ID );
+  else if ( featureValueID == calculateFeature::APLANARITY_ID )
+    ft->setFeatureValueID( calculateFeature::APLANARITY_ID );
+  else if ( featureValueID == calculateFeature::LINEARITY_ID )
+    ft->setFeatureValueID( calculateFeature::LINEARITY_ID );
+  else if ( featureValueID == calculateFeature::EIGENTROPY_ID )
+    ft->setFeatureValueID( calculateFeature::EIGENTROPY_ID );
+
   ft->calc( ply );
 
   //--- Getting Feature value

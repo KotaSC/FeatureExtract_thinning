@@ -198,8 +198,8 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   std::cout << "\nInput Type(b) function parameters" << std::endl;
   std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
 
-  std::cout << "\nInput Type(c) function parameters" << std::endl;
-  std::vector<double> alphaVecTypeC = calcOpacity( num, smallFth, alphaMin, ft, ind );
+  std::cout << "Input Type(c) function parameters" << std::endl;
+  std::vector<doube> alphaVecTypeC = calcOpacity( num, smallFth, alphaMin, ft, ind );
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for ( size_t i = 0; i < num; i++ )

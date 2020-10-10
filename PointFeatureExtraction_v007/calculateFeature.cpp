@@ -27,11 +27,13 @@ calculateFeature::calculateFeature( void ) : m_type( PointPCA ),
 }
 
 calculateFeature::calculateFeature( const FeatureType type,
+                                    const FeatureValueID id,
                                     const double distance,
-                                    kvs::PolygonObject *ply ) : m_type( type ),
-                                                                m_isNoise( false ),
-                                                                m_noise( 0.0 ),
-                                                                m_searchRadius( distance )
+                                    kvs::PolygonObject *ply ) : m_type(type),
+                                                                m_feature_id(id),
+                                                                m_isNoise(false),
+                                                                m_noise(0.0),
+                                                                m_searchRadius(distance)
 {
   calc( ply );
 }
@@ -39,6 +41,11 @@ calculateFeature::calculateFeature( const FeatureType type,
 void calculateFeature::setFeatureType( FeatureType type )
 {
   m_type = type;
+}
+
+void calculateFeature::setFeatureValueID( FeatureValueID id )
+{
+  m_feature_id = id;
 }
 
 void calculateFeature::addNoise( double noise )
@@ -89,7 +96,7 @@ void calculateFeature::calc( kvs::PolygonObject *ply )
   {
     double div;
 
-    std::cout << "Input Division : ";
+    std::cout << "Input Division >> ";
     std::cin >> div;
 
     setSearchRadius( div, ply->minObjectCoord() , ply->maxObjectCoord() );
@@ -374,11 +381,11 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
   double maxDiv;
   int numItr;
 
-  std::cout << "Input Minimum Division : ";
+  std::cout << "Input Minimum Division >> ";
   std::cin  >> minDiv;
-  std::cout << "Input Maximum Division : ";
+  std::cout << "Input Maximum Division >> ";
   std::cin  >> maxDiv;
-  std::cout << "Input Number of Iteration : ";
+  std::cout << "Input Number of Iteration >> ";
   std::cin  >> numItr;
 
   double minSearchRadius = setMinMaxSearchRadius( maxDiv, ply->minObjectCoord(), ply->maxObjectCoord() );
@@ -392,7 +399,6 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
 
   for ( int j = 0; j < numItr; j++ )
   {
-
     double itrSearchRadius = minSearchRadius + ( j * ( maxSearchRadius - minSearchRadius ) / (double)( numItr-1.0 ) );
 
     std::cout << "Start iteration number " << j+1 << std::endl;
@@ -403,17 +409,15 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
 
     for ( size_t i = 0; i < numVert; i++ )
     {
-
       double sum = eigenValues[i*3] + eigenValues[i*3 + 1] + eigenValues[i*3 + 2];
+      double ft;
 
-      // Change of curvature
-      double ft = eigenValues[i*3 + 2] / sum;
-
-      // Linearity
-      // double ft = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
-
-      // Aplanarity
-      // double ft = 1 - ( ( eigenValues[i*3 + 1] - eigenValues[i*3 + 2] ) / eigenValues[i*3] );
+      if ( m_feature_id == CHANGE_OF_CURVATURE_ID )
+        ft = eigenValues[i*3 + 2] / sum;
+      else if ( m_feature_id == APLANARITY_ID )
+        ft = 1 - ((eigenValues[i * 3 + 1] - eigenValues[i * 3 + 2]) / eigenValues[i * 3]);
+      else if ( m_feature_id == LINEARITY_ID )
+        ft = ( eigenValues[i*3] - eigenValues[i*3 + 1] ) / eigenValues[i*3];
 
       // Eigentropy
       double lambda1 = eigenValues[i*3] / sum;
@@ -428,9 +432,7 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
       }
 
       if ( isnan(et) )
-      {
         et = 0.0;
-      }
 
       featureValues[j][i] = ft;
       eigentropy[j][i]    = et;
@@ -439,7 +441,6 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
         std::cout << i + 1 << ", " << "Feature Value: "  << ft  << ", " << "Eigentropy: " << et << std::endl;
 
     }
-
     eigenValues.clear();
   }
 
@@ -776,27 +777,27 @@ std::vector<float> calculateFeature::calcFeatureValues( kvs::PolygonObject* ply,
     // W[2]: 第1固有値, W[1]: 第2固有値, W[0]: 第3固有値
     // Sum of eigenvalues
     double sum = W[2] + W[1] + W[0];
+    double var;
 
-    // Change of curvature
-    double var = W[0] / sum;
+    if ( m_feature_id == CHANGE_OF_CURVATURE_ID )
+      var = W[0] / sum;
+    else if ( m_feature_id == APLANARITY_ID )
+      var = 1 - ( (W[1] - W[0]) / W[2] );
+    else if ( m_feature_id == LINEARITY_ID )
+      var = ( W[2] - W[1] ) / W[2];
+    else if ( m_feature_id == EIGENTROPY_ID )
+    {
+      double lambda1 = W[2] / sum;
+      double lambda2 = W[1] / sum;
+      double lambda3 = W[0] / sum;
+      var = -( lambda1 * log(lambda1) + lambda2 * log(lambda2) + lambda3 * log(lambda3) );
 
-    // Linearity
-    // double var = ( W[2] - W[1] ) / W[2];
+      if (isnan(var))
+        var = 0.0;
+    }
 
     // Planarity
     // double var = ( W[1] - W[0]) / W[2];
-
-    // Aplanarity
-    // double var = 1 - ( ( W[1] - W[0]) / W[2] );
-
-    // Eigentropy
-    // double lambda1 = W[2] / sum;
-    // double lambda2 = W[1] / sum;
-    // double lambda3 = W[0] / sum;
-    // double var = -( lambda1*log(lambda1) + lambda2*log(lambda2) + lambda3*log(lambda3) );
-
-    // if ( isnan(var) )
-    //   var = 0.0;
 
     // double var = W[0];
     // double var = coords[3 * i];
