@@ -31,6 +31,7 @@ int main( int argc, char** argv )
   std::cout << "PLY Mim, Max Coords:" << std::endl;
   std::cout << "Min : " << ply->minObjectCoord() << std::endl;
   std::cout << "Max : " << ply->maxObjectCoord() << std::endl;
+  std::cout << std::endl;
 
   //--- Set up for calculating feature
   calculateFeature *ft = new calculateFeature();
@@ -65,7 +66,7 @@ int main( int argc, char** argv )
   std::cout << "Feature value type" << std::endl;
   std::cout << "Change of curvature: " << calculateFeature::CHANGE_OF_CURVATURE_ID << ", ";
   std::cout << "Aplanarity: " << calculateFeature::APLANARITY_ID << ", ";
-  std::cout << "Linearity: " << calculateFeature::LINEARITY_ID << std::endl;
+  std::cout << "Linearity: " << calculateFeature::LINEARITY_ID << ", ";
   std::cout << "Eigentropy: " << calculateFeature::EIGENTROPY_ID << std::endl;
 
   std::cout << "Select an ID >> ";

@@ -142,26 +142,15 @@ void calculateFeature::calc( kvs::PolygonObject *ply )
   }
 
   if ( m_type == PointPCA )
-  {
     calcPointPCA( ply );
-  }
   else if ( m_type == NormalPCA )
-  {
     calcNormalPCA( ply, normal );
-  }
   else if ( m_type == NormalDispersion )
-  {
     calcNormalDispersion( ply, normal );
-  }
   else if ( m_type == MinimumEntropyFeature )
-  {
     calcMinimumEntropyFeature( ply );
-  }
   else if ( m_type == PlaneBasedFeature )
-  {
     calcPlaneBasedFeature( ply );
-  }
-
 }
 
 
