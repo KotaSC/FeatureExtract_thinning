@@ -26,9 +26,9 @@ const double DEFAULT_CAMERA_DISTANCE = 12.0;
 
 int main(int argc, char **argv)
 {
-  if (argc < 2)
+  if (argc < 3)
   {
-    std::cout << "USAGE: " << argv[0] << " lst-file or data-file." << std::endl;
+    std::cout << "USAGE: " << argv[0] << " [lst-file or data-file] [output directory name]" << std::endl;
     exit(1);
   }
 
@@ -102,30 +102,8 @@ int main(int argc, char **argv)
         {
           numFiles++;
 
-          std::string tmp;
-          std::stringstream ssLR;
-          std::stringstream sssmallFth;
-          std::stringstream ssAlphaMin;
-
           dirName += "../SPBR_DATA/";
-
-          dirName += "LR";
-          ssLR << repeatLevel;
-          ssLR >> tmp;
-          dirName += tmp;
-
-          dirName += "_fth";
-          sssmallFth << smallFth;
-          sssmallFth >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dirName += tmp;
-
-          dirName += "_AlphaMin";
-          ssAlphaMin << alphaMin;
-          ssAlphaMin >> tmp;
-          tmp.erase(std::remove(tmp.begin(), tmp.end(), '.'), tmp.end());
-          dirName += tmp;
-
+          dirName += argv[2];
           dirName += "/";
 
           outputTmp += getFileName(argv[i]);
