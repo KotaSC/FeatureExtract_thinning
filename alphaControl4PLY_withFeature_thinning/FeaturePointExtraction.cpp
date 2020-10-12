@@ -3,6 +3,9 @@
 
 const int INTERVAL = 1000000;
 const int MIN_NODE = 15;
+const std::string parameterList4PFE( "ParameterList.txt" );
+const std::string parameterList4AdaptivePFE_TypeB( "ParameterList_Type(b).txt" );
+const std::string parameterList4AdaptivePFE_TypeC( "ParameterList_Type(c).txt" );
 
 FeaturePointExtraction::FeaturePointExtraction( void ) {
 }
@@ -12,9 +15,11 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject *ply,
                                                 double smallFth,
                                                 double alphaMin,
                                                 int repeatLevel,
+                                                int imageResolution,
                                                 kvs::Vector3f BBMin,
                                                 kvs::Vector3f BBMax,
-                                                AlphaControlforPLY *fpoint )
+                                                AlphaControlforPLY *fpoint,
+                                                std::string dirName )
 {
   int colorID;
   int pfeID;
@@ -43,9 +48,33 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject *ply,
   std::cout << std::endl;
 
   if ( pfeID == NORMAL_PFE_ID )
-    alpbaControl4Feature( ply, ft, smallFth, alphaMin, colorID, repeatLevel, BBMin, BBMax, fpoint );
+  {
+    alpbaControl4Feature( ply,
+                          ft,
+                          smallFth,
+                          alphaMin,
+                          colorID,
+                          repeatLevel,
+                          imageResolution,
+                          BBMin,
+                          BBMax,
+                          fpoint,
+                          dirName );
+  }
   else if ( pfeID == ADAPTIVE_PFE_ID )
-    adaptiveAlphaControl4Feature( ply, ft, smallFth, alphaMin, colorID, repeatLevel, BBMin, BBMax, fpoint );
+  {
+    adaptiveAlphaControl4Feature( ply,
+                                  ft,
+                                  smallFth,
+                                  alphaMin,
+                                  colorID,
+                                  repeatLevel,
+                                  imageResolution,
+                                  BBMin,
+                                  BBMax,
+                                  fpoint,
+                                  dirName );
+  }
 }
 
 void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
@@ -54,9 +83,11 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
                                                    double alphaMin,
                                                    int colorID,
                                                    int repeatLevel,
+                                                   int imageResolution,
                                                    kvs::Vector3f BBMin,
                                                    kvs::Vector3f BBMax,
-                                                   AlphaControlforPLY *fpoint )
+                                                   AlphaControlforPLY *fpoint,
+                                                   std::string dirName )
 {
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
@@ -78,7 +109,15 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
   std::vector<kvs::UInt8>  SetColors;
 
   std::cout << "\nInput opacity function parameters" << std::endl;
-  std::vector<double> alphaVec = calcOpacity( num, smallFth, alphaMin, ft, ind );
+  std::vector<double> alphaVec = calcOpacity( num,
+                                              smallFth,
+                                              alphaMin,
+                                              repeatLevel,
+                                              imageResolution,
+                                              ft,
+                                              ind,
+                                              parameterList4PFE,
+                                              dirName );
 
   for ( int i = 0; i < num; i++ ) {
 
@@ -140,9 +179,11 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
                                                            double alphaMin,
                                                            int colorID,
                                                            int repeatLevel,
+                                                           int imageResolution,
                                                            kvs::Vector3f BBMin,
                                                            kvs::Vector3f BBMax,
-                                                           AlphaControlforPLY *fpoint )
+                                                           AlphaControlforPLY *fpoint,
+                                                           std::string dirName )
 {
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
@@ -196,10 +237,26 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   double radius    = b_leng / div;
 
   std::cout << "\nInput Type(b) function parameters" << std::endl;
-  std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
+  std::vector<double> alphaVecTypeB = calcOpacity( num,
+                                                   smallFth,
+                                                   alphaMin,
+                                                   repeatLevel,
+                                                   imageResolution,
+                                                   ft,
+                                                   ind,
+                                                   parameterList4AdaptivePFE_TypeB,
+                                                   dirName );
 
   std::cout << "Input Type(c) function parameters" << std::endl;
-  std::vector<doube> alphaVecTypeC = calcOpacity( num, smallFth, alphaMin, ft, ind );
+  std::vector<double> alphaVecTypeC = calcOpacity( num,
+                                                   smallFth,
+                                                   alphaMin,
+                                                   repeatLevel,
+                                                   imageResolution,
+                                                   ft,
+                                                   ind,
+                                                   parameterList4AdaptivePFE_TypeC,
+                                                   dirName );
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for ( size_t i = 0; i < num; i++ )
@@ -287,8 +344,12 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
                                                          double smallFth,
                                                          double alphaMin,
+                                                         int repeatLevel,
+                                                         int imageResolution,
                                                          std::vector<float> &featureValue,
-                                                         std::vector<int> &featurePointIndex )
+                                                         std::vector<int> &featurePointIndex,
+                                                         std::string parameterList,
+                                                         std::string dirName )
 {
   double alphaMax;
   double largeFth;
@@ -325,5 +386,41 @@ std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
     alphaVec.push_back( alpha );
   }
 
+  writeParameterList( smallFth,
+                      largeFth,
+                      alphaMin,
+                      alphaMax,
+                      dim,
+                      repeatLevel,
+                      imageResolution,
+                      parameterList,
+                      dirName );
+
   return alphaVec;
+}
+
+void FeaturePointExtraction::writeParameterList( double smallFth,
+                                                 double largeFth,
+                                                 double alphaMin,
+                                                 double alphaMax,
+                                                 double d,
+                                                 int repeatLevel,
+                                                 int imageResolution,
+                                                 std::string parameterList,
+                                                 std::string dirName )
+{
+  std::cout << "Write a parameter list " << parameterList << std::endl;
+  std::cout << std::endl;
+
+  std::string outFileName = dirName + parameterList;
+
+  std::ofstream outParameterList( outFileName );
+  outParameterList << "f_th: "             << smallFth        << "\n"
+                   << "F_th: "             << largeFth        << "\n"
+                   << "α_min: "            << alphaMin        << "\n"
+                   << "α_max: "            << alphaMax        << "\n"
+                   << "d: "                << d               << "\n"
+                   << "LR: "               << repeatLevel     << "\n"
+                   << "Image Resolution: " << imageResolution << std::endl;
+  outParameterList.close();
 }

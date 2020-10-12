@@ -59,6 +59,9 @@ int main(int argc, char **argv)
   std::vector<float> opacities = files->alphas();
   std::vector<float> thresholds = files->thresholds();
 
+  std::string outputTmp(OUT_PBR_FILE);
+  std::string dirName(DIR_NAME);
+
   if (numFiles == 0)
   {
     std::vector<std::string> allowedFiles(allowedFileType, std::end(allowedFileType));
@@ -98,9 +101,6 @@ int main(int argc, char **argv)
         if (getExtension(argv[i]) == allowedFiles[j])
         {
           numFiles++;
-
-          std::string outputTmp(OUT_PBR_FILE);
-          std::string dirName(DIR_NAME);
 
           std::string tmp;
           std::stringstream ssLR;
@@ -214,15 +214,15 @@ int main(int argc, char **argv)
 
     // kvs::PointObject *point =
     AlphaControlforPLY* point =
-        new AlphaControlforPLY(ply,
-                               screen.scene()->camera(),
-                               BBMin,
-                               BBMax,
-                               repeatLevel,
-                               opacities[i],
-                               ft,
-                               thresholds[i],
-                               ply->isFase());
+        new AlphaControlforPLY( ply,
+                                screen.scene()->camera(),
+                                BBMin,
+                                BBMax,
+                                repeatLevel,
+                                opacities[i],
+                                ft,
+                                thresholds[i],
+                                ply->isFase() );
 
     std::cout << "Number of Particles: " << point->numberOfVertices() << std::endl;
 
@@ -233,14 +233,16 @@ int main(int argc, char **argv)
 
     //--- Feature Visualization
     FeaturePointExtraction *f_point =
-        new FeaturePointExtraction(ply,
-                                   ft,
-                                   thresholds[i],
-                                   opacities[i],
-                                   repeatLevel,
-                                   BBMin,
-                                   BBMax,
-                                   point);
+        new FeaturePointExtraction( ply,
+                                    ft,
+                                    thresholds[i],
+                                    opacities[i],
+                                    repeatLevel,
+                                    imageResolution,
+                                    BBMin,
+                                    BBMax,
+                                    point,
+                                    dirName );
 
     std::string ofname(outptFiles[i]);
     ofname += "_f.spbr";
