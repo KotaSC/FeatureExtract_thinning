@@ -355,13 +355,13 @@ std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
   double largeFth;
   double dim;
 
-  std::cout << "Maximum opacity in range [0, 1] >> ";
+  std::cout << "Maximum opacity α_max in range [0, 1] >> ";
   std::cin >> alphaMax;
 
-  std::cout << "Large feature value threshold in range [0, 1] >> ";
+  std::cout << "Large feature value threshold F_th in range [0, 1] >> ";
   std::cin >> largeFth;
 
-  std::cout << "Point proliferation exponent >> ";
+  std::cout << "Point proliferation exponent d >> ";
   std::cin >> dim;
   std::cout << std::endl;
 
@@ -422,5 +422,6 @@ void FeaturePointExtraction::writeParameterList( double smallFth,
                    << "d: "                << d               << "\n"
                    << "LR: "               << repeatLevel     << "\n"
                    << "Image Resolution: " << imageResolution << std::endl;
+
   outParameterList.close();
 }
