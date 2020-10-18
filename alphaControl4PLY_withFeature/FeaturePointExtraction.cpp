@@ -258,6 +258,12 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
                                                    parameterList4AdaptivePFE_TypeC,
                                                    dirName );
 
+  double functionSwitchingThreshold;
+
+  std::cout << "Input function switching threshold >> ";
+  std::cin >> functionSwitchingThreshold;
+  std::cout << std::endl;
+
   std::cout << "Start OCtree Search..... " << std::endl;
   for ( size_t i = 0; i < num; i++ )
   {
@@ -286,10 +292,10 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
     double alpha;
 
-    if ( aveNearestFt < 0.5 )
-      alpha = alphaVecTypeC[i];
-    else
+    if ( aveNearestFt > functionSwitchingThreshold )
       alpha = alphaVecTypeB[i];
+    else
+      alpha = alphaVecTypeC[i];
 
     // Caluculate Point Number and Increase Ratio according to Feature Value
     double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
