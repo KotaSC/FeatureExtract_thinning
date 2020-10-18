@@ -1,8 +1,18 @@
 #include "FeaturePointExtraction.h"
 #include "octree.h"
 
+// Feature extraction type
+const int NORMAL_PFE_ID   = 0;
+const int ADAPTIVE_PFE_ID = 1;
+
+// Feature point color
+const int ORIGINAL_COLOR_ID = 0;
+const int RED_COLOR_ID      = 1;
+const int BLACK_COLOR_ID    = 2;
+
 const int INTERVAL = 1000000;
 const int MIN_NODE = 15;
+
 const std::string parameterList4PFE( "ParameterList.txt" );
 const std::string parameterList4AdaptivePFE_TypeB( "ParameterList_Type(b).txt" );
 const std::string parameterList4AdaptivePFE_TypeC( "ParameterList_Type(c).txt" );

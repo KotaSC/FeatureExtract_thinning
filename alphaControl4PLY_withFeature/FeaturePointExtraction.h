@@ -8,17 +8,6 @@
 #include <fstream>
 
 #include "AlphaControlforPLY.h"
-
-
-// Feature extraction type
-const int NORMAL_PFE_ID   = 0;
-const int ADAPTIVE_PFE_ID = 1;
-
-// Feature point color
-const int ORIGINAL_COLOR_ID = 0;
-const int RED_COLOR_ID      = 1;
-const int BLACK_COLOR_ID    = 2;
-
 class FeaturePointExtraction: public kvs::PointObject {
   kvsModuleSuperClass( kvs::PointObject );
 
