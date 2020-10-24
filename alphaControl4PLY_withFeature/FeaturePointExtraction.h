@@ -52,12 +52,8 @@ class FeaturePointExtraction: public kvs::PointObject {
 		std::vector<double> calcOpacity( int featurePointNum,
 																		 double threshold,
 																		 double alphaMin,
-																		 int repeatLevel,
-																		 int imageResolution,
 																		 std::vector<float> &featureValue,
-																		 std::vector<int> &featurePointIndex,
-																		 std::string parameterList,
-																		 std::string dirName );
+																		 std::vector<int> &featurePointIndex );
 
 		void writeParameterList( double smallFth,
 														 double largeFth,
@@ -68,6 +64,25 @@ class FeaturePointExtraction: public kvs::PointObject {
 														 int imageResolution,
 														 std::string parameterList,
 														 std::string dirName );
+
+		void writeParameterList4AdaptivePFE( double smallFth,
+																				 double largeFth,
+																				 double alphaMin,
+																				 double alphaMax,
+																				 double d,
+																				 int repeatLevel,
+																				 int imageResolution,
+																				 double div,
+																				 double functionSwitchingThreshold,
+																				 std::string parameterList,
+																				 std::string dirName );
+
+	private:
+		double alphaMax;
+		double largeFth;
+		double dim;
+		double div;
+		double functionSwitchingThreshold;
 };
 
 #endif

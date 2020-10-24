@@ -119,15 +119,17 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
   std::vector<kvs::UInt8>  SetColors;
 
   std::cout << "\nInput opacity function parameters" << std::endl;
-  std::vector<double> alphaVec = calcOpacity( num,
-                                              smallFth,
-                                              alphaMin,
-                                              repeatLevel,
-                                              imageResolution,
-                                              ft,
-                                              ind,
-                                              parameterList4PFE,
-                                              dirName );
+  std::vector<double> alphaVec = calcOpacity( num, smallFth, alphaMin, ft, ind );
+
+  writeParameterList( smallFth,
+                      largeFth,
+                      alphaMin,
+                      alphaMax,
+                      dim,
+                      repeatLevel,
+                      imageResolution,
+                      parameterList4PFE,
+                      dirName );
 
   for ( int i = 0; i < num; i++ ) {
 
@@ -236,8 +238,6 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
             << maxBB << std::endl;
   octree *myTree = new octree( pdata, numVert, mrange, MIN_NODE );
 
-  double div;
-
   std::cout << "\nInput Division >> ";
   std::cin >> div;
   std::cout << std::endl;
@@ -246,33 +246,37 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   double b_leng    = bb.length();
   double radius    = b_leng / div;
 
-  std::cout << "\nInput Type(b) function parameters" << std::endl;
-  std::vector<double> alphaVecTypeB = calcOpacity( num,
-                                                   smallFth,
-                                                   alphaMin,
-                                                   repeatLevel,
-                                                   imageResolution,
-                                                   ft,
-                                                   ind,
-                                                   parameterList4AdaptivePFE_TypeB,
-                                                   dirName );
-
-  std::cout << "Input Type(c) function parameters" << std::endl;
-  std::vector<double> alphaVecTypeC = calcOpacity( num,
-                                                   smallFth,
-                                                   alphaMin,
-                                                   repeatLevel,
-                                                   imageResolution,
-                                                   ft,
-                                                   ind,
-                                                   parameterList4AdaptivePFE_TypeC,
-                                                   dirName );
-
-  double functionSwitchingThreshold;
-
   std::cout << "Input function switching threshold >> ";
   std::cin >> functionSwitchingThreshold;
   std::cout << std::endl;
+
+  std::cout << "\nInput Type(b) function parameters" << std::endl;
+  std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
+  writeParameterList4AdaptivePFE( smallFth,
+                                  largeFth,
+                                  alphaMin,
+                                  alphaMax,
+                                  dim,
+                                  repeatLevel,
+                                  imageResolution,
+                                  div,
+                                  functionSwitchingThreshold,
+                                  parameterList4AdaptivePFE_TypeB,
+                                  dirName );
+
+  std::cout << "Input Type(c) function parameters" << std::endl;
+  std::vector<double> alphaVecTypeC = calcOpacity( num, smallFth, alphaMin, ft, ind );
+  writeParameterList4AdaptivePFE( smallFth,
+                                  largeFth,
+                                  alphaMin,
+                                  alphaMax,
+                                  dim,
+                                  repeatLevel,
+                                  imageResolution,
+                                  div,
+                                  functionSwitchingThreshold,
+                                  parameterList4AdaptivePFE_TypeC,
+                                  dirName );
 
   std::cout << "Start OCtree Search..... " << std::endl;
   for ( size_t i = 0; i < num; i++ )
@@ -360,17 +364,9 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
                                                          double smallFth,
                                                          double alphaMin,
-                                                         int repeatLevel,
-                                                         int imageResolution,
                                                          std::vector<float> &featureValue,
-                                                         std::vector<int> &featurePointIndex,
-                                                         std::string parameterList,
-                                                         std::string dirName )
+                                                         std::vector<int> &featurePointIndex )
 {
-  double alphaMax;
-  double largeFth;
-  double dim;
-
   std::cout << "Maximum opacity α_max in range [" << alphaMin << ", 1] >> ";
   std::cin >> alphaMax;
 
@@ -402,16 +398,6 @@ std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
     alphaVec.push_back( alpha );
   }
 
-  writeParameterList( smallFth,
-                      largeFth,
-                      alphaMin,
-                      alphaMax,
-                      dim,
-                      repeatLevel,
-                      imageResolution,
-                      parameterList,
-                      dirName );
-
   return alphaVec;
 }
 
@@ -438,6 +424,37 @@ void FeaturePointExtraction::writeParameterList( double smallFth,
                    << "d: "                << d               << "\n"
                    << "LR: "               << repeatLevel     << "\n"
                    << "Image Resolution: " << imageResolution << std::endl;
+
+  outParameterList.close();
+}
+
+void FeaturePointExtraction::writeParameterList4AdaptivePFE( double smallFth,
+                                                             double largeFth,
+                                                             double alphaMin,
+                                                             double alphaMax,
+                                                             double d,
+                                                             int repeatLevel,
+                                                             int imageResolution,
+                                                             double div,
+                                                             double functionSwitchingThreshold,
+                                                             std::string parameterList,
+                                                             std::string dirName )
+{
+  std::cout << "Write a parameter list " << parameterList << std::endl;
+  std::cout << std::endl;
+
+  std::string outFileName = dirName + parameterList;
+
+  std::ofstream outParameterList(outFileName);
+  outParameterList << "f_th: "                         << smallFth << "\n"
+                   << "F_th: "                         << largeFth << "\n"
+                   << "α_min: "                        << alphaMin << "\n"
+                   << "α_max: "                        << alphaMax << "\n"
+                   << "d: "                            << d << "\n"
+                   << "LR: "                           << repeatLevel << "\n"
+                   << "Image Resolution: "             << imageResolution << "\n"
+                   << "Div: "                          << div << "\n"
+                   << "Function switching threshold: " << functionSwitchingThreshold << std::endl;
 
   outParameterList.close();
 }
