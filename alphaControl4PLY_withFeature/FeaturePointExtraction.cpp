@@ -9,6 +9,7 @@ const int ADAPTIVE_PFE_ID = 1;
 const int ORIGINAL_COLOR_ID = 0;
 const int RED_COLOR_ID      = 1;
 const int BLACK_COLOR_ID    = 2;
+const int CYAN_COLOR_ID     = 3;
 
 const int INTERVAL = 1000000;
 const int MIN_NODE = 15;
@@ -37,8 +38,9 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject *ply,
   // Select feature point color
   std::cout << "\nHighlight color" << std::endl;
   std::cout << "ORIGINAL: " << ORIGINAL_COLOR_ID << ", ";
-  std::cout << "RED: " << RED_COLOR_ID << ", ";
-  std::cout << "BLACK: " << BLACK_COLOR_ID << std::endl;
+  std::cout << "RED: "      << RED_COLOR_ID      << ", ";
+  std::cout << "BLACK: "    << BLACK_COLOR_ID    << ", ";
+  std::cout << "CYAN: "     << CYAN_COLOR_ID     << std::endl;
 
   std::cout << "Select an ID >> ";
   std::cin >> colorID;
@@ -173,9 +175,14 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
         SetColors.push_back( 0 );
       }
       else if ( colorID == BLACK_COLOR_ID ) {
-        SetColors.push_back(0);
-        SetColors.push_back(0);
-        SetColors.push_back(0);
+        SetColors.push_back( 0 );
+        SetColors.push_back( 0 );
+        SetColors.push_back( 0 );
+      }
+      else if ( colorID == CYAN_COLOR_ID ) {
+        SetColors.push_back( 0 );
+        SetColors.push_back( 174 );
+        SetColors.push_back( 239 );
       }
     }
   }
@@ -338,21 +345,27 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
       if ( colorID == ORIGINAL_COLOR_ID )
       {
-        SetColors.push_back(colors[3 * index]);
-        SetColors.push_back(colors[3 * index + 1]);
-        SetColors.push_back(colors[3 * index + 2]);
+        SetColors.push_back( colors[3 * index] );
+        SetColors.push_back( colors[3 * index + 1] );
+        SetColors.push_back( colors[3 * index + 2] );
       }
       else if ( colorID == RED_COLOR_ID )
       {
-        SetColors.push_back(255);
-        SetColors.push_back(0);
-        SetColors.push_back(0);
+        SetColors.push_back( 255 );
+        SetColors.push_back( 0 );
+        SetColors.push_back( 0 );
       }
       else if ( colorID == BLACK_COLOR_ID )
       {
-        SetColors.push_back(0);
-        SetColors.push_back(0);
-        SetColors.push_back(0);
+        SetColors.push_back( 0 );
+        SetColors.push_back( 0 );
+        SetColors.push_back( 0 );
+      }
+      else if (colorID == CYAN_COLOR_ID)
+      {
+        SetColors.push_back( 0 );
+        SetColors.push_back( 174 );
+        SetColors.push_back( 239 );
       }
     }
   }
