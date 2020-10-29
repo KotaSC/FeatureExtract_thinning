@@ -182,7 +182,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
                                                            std::string dirName )
 {
   // Select feature coloring type
-  std::cout << "\nColoring type" << std::endl;
+  std::cout << "Coloring type" << std::endl;
   std::cout << "Normal: "   << NORMAL_COLORING_ID   << ", ";
   std::cout << "Adaptive: " << ADAPTIVE_COLORING_ID << std::endl;
 
@@ -212,12 +212,10 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
     std::cout << "Select an ID for Type(c) function >> ";
     std::cin >> colorID_TypeC;
+    std::cout << std::endl;
 
     std::cout << "Highlight color for Type(b) function ==> " << colorID_TypeB << std::endl;
-    std::cout << std::endl;
-
-    std::cout << "Highlight color Type(c) function ==> " << colorID_TypeC << std::endl;
-    std::cout << std::endl;
+    std::cout << "Highlight color for Type(c) function ==> " << colorID_TypeC << std::endl;
   }
 
   size_t numVert = ply->numberOfVertices();
@@ -271,7 +269,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   std::cin >> functionSwitchingThreshold;
   std::cout << std::endl;
 
-  std::cout << "\nInput Type(b) function parameters" << std::endl;
+  std::cout << "Input Type(b) function parameters" << std::endl;
   std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
   writeParameterList4AdaptivePFE( smallFth,
                                   largeFth,
