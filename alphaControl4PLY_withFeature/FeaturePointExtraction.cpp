@@ -5,6 +5,10 @@
 const int NORMAL_PFE_ID   = 0;
 const int ADAPTIVE_PFE_ID = 1;
 
+// Feature coloring type
+const int NORMAL_COLORING_ID   = 0;
+const int ADAPTIVE_COLORING_ID = 1;
+
 // Feature point color
 const int ORIGINAL_COLOR_ID = 0;
 const int RED_COLOR_ID      = 1;
@@ -32,22 +36,6 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject *ply,
                                                 AlphaControlforPLY *fpoint,
                                                 std::string dirName )
 {
-  int colorID;
-  int pfeID;
-
-  // Select feature point color
-  std::cout << "\nHighlight color" << std::endl;
-  std::cout << "ORIGINAL: " << ORIGINAL_COLOR_ID << ", ";
-  std::cout << "RED: "      << RED_COLOR_ID      << ", ";
-  std::cout << "BLACK: "    << BLACK_COLOR_ID    << ", ";
-  std::cout << "CYAN: "     << CYAN_COLOR_ID     << std::endl;
-
-  std::cout << "Select an ID >> ";
-  std::cin >> colorID;
-
-  std::cout << "Highlight color ==> " << colorID << std::endl;
-  std::cout << std::endl;
-
   // Select point feature extraction type
   std::cout << "Feature extraction type" << std::endl;
   std::cout << "Normal point feature extraction: " << NORMAL_PFE_ID << ", ";
@@ -65,7 +53,6 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject *ply,
                           ft,
                           smallFth,
                           alphaMin,
-                          colorID,
                           repeatLevel,
                           imageResolution,
                           BBMin,
@@ -79,7 +66,6 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject *ply,
                                   ft,
                                   smallFth,
                                   alphaMin,
-                                  colorID,
                                   repeatLevel,
                                   imageResolution,
                                   BBMin,
@@ -93,7 +79,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
                                                    std::vector<float> &ft,
                                                    double smallFth,
                                                    double alphaMin,
-                                                   int colorID,
                                                    int repeatLevel,
                                                    int imageResolution,
                                                    kvs::Vector3f BBMin,
@@ -101,6 +86,19 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
                                                    AlphaControlforPLY *fpoint,
                                                    std::string dirName )
 {
+  // Select feature point color
+  std::cout << "\nHighlight color" << std::endl;
+  std::cout << "ORIGINAL: " << ORIGINAL_COLOR_ID << ", ";
+  std::cout << "RED: "      << RED_COLOR_ID      << ", ";
+  std::cout << "BLACK: "    << BLACK_COLOR_ID    << ", ";
+  std::cout << "CYAN: "     << CYAN_COLOR_ID     << std::endl;
+
+  std::cout << "Select an ID >> ";
+  std::cin >> colorID;
+
+  std::cout << "Highlight color ==> " << colorID << std::endl;
+  std::cout << std::endl;
+
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
 
@@ -114,11 +112,9 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
 
   kvs::ValueArray<kvs::Real32> coords  = ply->coords();
   kvs::ValueArray<kvs::Real32> normals = ply->normals();
-  kvs::ValueArray<kvs::UInt8>  colors  = ply->colors();
 
   std::vector<kvs::Real32> SetCoords;
   std::vector<kvs::Real32> SetNormals;
-  std::vector<kvs::UInt8>  SetColors;
 
   std::cout << "\nInput opacity function parameters" << std::endl;
   std::vector<double> alphaVec = calcOpacity( num, smallFth, alphaMin, ft, ind );
@@ -133,7 +129,8 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
                       parameterList4PFE,
                       dirName );
 
-  for ( int i = 0; i < num; i++ ) {
+  for ( int i = 0; i < num; i++ )
+  {
 
     size_t index = ind[ i ];
 
@@ -154,8 +151,8 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
       std::cout << "Create Point Num:     " << createNum << std::endl;
     }
 
-    for( int j = 0; j < createNum; j++ ) {
-
+    for( int j = 0; j < createNum; j++ )
+    {
       SetCoords.push_back( coords[3*index] );
       SetCoords.push_back( coords[3*index+1] );
       SetCoords.push_back( coords[3*index+2] );
@@ -164,39 +161,19 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
       SetNormals.push_back( normals[3*index+1] );
       SetNormals.push_back( normals[3*index+2] );
 
-      if ( colorID == ORIGINAL_COLOR_ID ) {
-        SetColors.push_back( colors[3*index] );
-        SetColors.push_back( colors[3*index+1] );
-        SetColors.push_back( colors[3*index+2] );
-      }
-      else if ( colorID == RED_COLOR_ID ) {
-        SetColors.push_back( 255 );
-        SetColors.push_back( 0 );
-        SetColors.push_back( 0 );
-      }
-      else if ( colorID == BLACK_COLOR_ID ) {
-        SetColors.push_back( 0 );
-        SetColors.push_back( 0 );
-        SetColors.push_back( 0 );
-      }
-      else if ( colorID == CYAN_COLOR_ID ) {
-        SetColors.push_back( 0 );
-        SetColors.push_back( 174 );
-        SetColors.push_back( 239 );
-      }
+      setFeaturePointColor( ply, colorID, index );
     }
   }
 
   SuperClass::setCoords ( kvs::ValueArray<kvs::Real32>( SetCoords  ) );
   SuperClass::setNormals( kvs::ValueArray<kvs::Real32>( SetNormals ) );
-  SuperClass::setColors ( kvs::ValueArray<kvs::UInt8> ( SetColors  ) );
+  SuperClass::setColors( kvs::ValueArray<kvs::UInt8>( SetColors ) );
 }
 
 void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *ply,
                                                            std::vector<float> &ft,
                                                            double smallFth,
                                                            double alphaMin,
-                                                           int colorID,
                                                            int repeatLevel,
                                                            int imageResolution,
                                                            kvs::Vector3f BBMin,
@@ -204,6 +181,45 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
                                                            AlphaControlforPLY *fpoint,
                                                            std::string dirName )
 {
+  // Select feature coloring type
+  std::cout << "\nColoring type" << std::endl;
+  std::cout << "Normal: "   << NORMAL_COLORING_ID   << ", ";
+  std::cout << "Adaptive: " << ADAPTIVE_COLORING_ID << std::endl;
+
+  std::cout << "Select an ID >> ";
+  std::cin >> coloringID;
+  std::cout << std::endl;
+
+  // Select feature point color
+  std::cout << "Highlight color" << std::endl;
+  std::cout << "ORIGINAL: " << ORIGINAL_COLOR_ID << ", ";
+  std::cout << "RED: "      << RED_COLOR_ID      << ", ";
+  std::cout << "BLACK: "    << BLACK_COLOR_ID    << ", ";
+  std::cout << "CYAN: "     << CYAN_COLOR_ID     << std::endl;
+
+  if ( coloringID == NORMAL_COLORING_ID )
+  {
+    std::cout << "Select an ID >> ";
+    std::cin >> colorID;
+
+    std::cout << "Highlight color ==> " << colorID << std::endl;
+    std::cout << std::endl;
+  }
+  else if ( coloringID == ADAPTIVE_COLORING_ID )
+  {
+    std::cout << "Select an ID for Type(b) function >> ";
+    std::cin >> colorID_TypeB;
+
+    std::cout << "Select an ID for Type(c) function >> ";
+    std::cin >> colorID_TypeC;
+
+    std::cout << "Highlight color for Type(b) function ==> " << colorID_TypeB << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "Highlight color Type(c) function ==> " << colorID_TypeC << std::endl;
+    std::cout << std::endl;
+  }
+
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
 
@@ -221,11 +237,9 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
   kvs::ValueArray<kvs::Real32> coords  = ply->coords();
   kvs::ValueArray<kvs::Real32> normals = ply->normals();
-  kvs::ValueArray<kvs::UInt8> colors   = ply->colors();
 
   std::vector<kvs::Real32> SetCoords;
   std::vector<kvs::Real32> SetNormals;
-  std::vector<kvs::UInt8>  SetColors;
 
   float *pdata = coords.data();
   kvs::Vector3f minBB = ply->minObjectCoord();
@@ -312,11 +326,19 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
     aveNearestFt = sumNearestFt / n0;
 
     double alpha;
+    bool coloringTypeB = false;
+    bool coloringTypeC = false;
 
     if ( aveNearestFt > functionSwitchingThreshold )
+    {
       alpha = alphaVecTypeB[i];
+      coloringTypeB = true;
+    }
     else
+    {
       alpha = alphaVecTypeC[i];
+      coloringTypeC = true;
+    }
 
     // Caluculate Point Number and Increase Ratio according to Feature Value
     double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
@@ -343,35 +365,22 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
       SetNormals.push_back( normals[3 * index + 1] );
       SetNormals.push_back( normals[3 * index + 2] );
 
-      if ( colorID == ORIGINAL_COLOR_ID )
+      if ( coloringID == NORMAL_COLORING_ID )
       {
-        SetColors.push_back( colors[3 * index] );
-        SetColors.push_back( colors[3 * index + 1] );
-        SetColors.push_back( colors[3 * index + 2] );
+        setFeaturePointColor( ply, colorID, index );
       }
-      else if ( colorID == RED_COLOR_ID )
+      else if ( coloringID == ADAPTIVE_COLORING_ID )
       {
-        SetColors.push_back( 255 );
-        SetColors.push_back( 0 );
-        SetColors.push_back( 0 );
-      }
-      else if ( colorID == BLACK_COLOR_ID )
-      {
-        SetColors.push_back( 0 );
-        SetColors.push_back( 0 );
-        SetColors.push_back( 0 );
-      }
-      else if (colorID == CYAN_COLOR_ID)
-      {
-        SetColors.push_back( 0 );
-        SetColors.push_back( 174 );
-        SetColors.push_back( 239 );
+        if ( coloringTypeB )
+          setFeaturePointColor( ply, colorID_TypeB, index );
+        else if (coloringTypeC)
+          setFeaturePointColor( ply, colorID_TypeC, index );
       }
     }
   }
   SuperClass::setCoords( kvs::ValueArray<kvs::Real32>(SetCoords) );
   SuperClass::setNormals( kvs::ValueArray<kvs::Real32>(SetNormals) );
-  SuperClass::setColors( kvs::ValueArray<kvs::UInt8>(SetColors) );
+  SuperClass::setColors( kvs::ValueArray<kvs::UInt8>( SetColors ) );
 }
 
 std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
@@ -412,6 +421,36 @@ std::vector<double> FeaturePointExtraction::calcOpacity( int featurePointNum,
   }
 
   return alphaVec;
+}
+
+void FeaturePointExtraction::setFeaturePointColor( kvs::PolygonObject *ply, int colorID, size_t index )
+{
+  kvs::ValueArray<kvs::UInt8> colors = ply->colors();
+
+  if ( colorID == ORIGINAL_COLOR_ID )
+  {
+    SetColors.push_back( colors[3 * index] );
+    SetColors.push_back( colors[3 * index + 1] );
+    SetColors.push_back( colors[3 * index + 2] );
+  }
+  else if ( colorID == RED_COLOR_ID )
+  {
+    SetColors.push_back( 255 );
+    SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
+  }
+  else if ( colorID == BLACK_COLOR_ID )
+  {
+    SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
+    SetColors.push_back( 0 );
+  }
+  else if ( colorID == CYAN_COLOR_ID )
+  {
+    SetColors.push_back( 0 );
+    SetColors.push_back( 174 );
+    SetColors.push_back( 239 );
+  }
 }
 
 void FeaturePointExtraction::writeParameterList( double smallFth,

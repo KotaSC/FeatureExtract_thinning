@@ -29,7 +29,6 @@ class FeaturePointExtraction: public kvs::PointObject {
 															 std::vector<float> &ft,
 															 double threshold,
 															 double alphaMin,
-															 int colorID,
 															 int repeatLevel,
 															 int imageResolution,
 															 kvs::Vector3f BBMin,
@@ -41,7 +40,6 @@ class FeaturePointExtraction: public kvs::PointObject {
 																		   std::vector<float> &ft,
 																		   double threshold,
 																			 double alphaMin,
-																			 int colorID,
 																		   int repeatLevel,
 																			 int imageResolution,
 																		   kvs::Vector3f BBMin,
@@ -54,6 +52,8 @@ class FeaturePointExtraction: public kvs::PointObject {
 																		 double alphaMin,
 																		 std::vector<float> &featureValue,
 																		 std::vector<int> &featurePointIndex );
+
+		void setFeaturePointColor( kvs::PolygonObject *ply, int colorID, size_t index );
 
 		void writeParameterList( double smallFth,
 														 double largeFth,
@@ -78,11 +78,20 @@ class FeaturePointExtraction: public kvs::PointObject {
 																				 std::string dirName );
 
 	private:
+
+		int colorID;
+		int pfeID;
+		int coloringID;
+		int colorID_TypeB;
+		int colorID_TypeC;
+
 		double alphaMax;
 		double largeFth;
 		double dim;
 		double div;
 		double functionSwitchingThreshold;
+
+		std::vector<kvs::UInt8> SetColors;
 };
 
 #endif
