@@ -15,7 +15,6 @@ const int RED_COLOR_ID      = 1;
 const int BLACK_COLOR_ID    = 2;
 const int CYAN_COLOR_ID     = 3;
 
-const int INTERVAL = 1000000;
 const int MIN_NODE = 15;
 
 const std::string parameterList4PFE( "ParameterList.txt" );
@@ -139,17 +138,6 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
     double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
     double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0*ratio;
-
-
-    if ( !((i + 1) % INTERVAL) )
-    {
-      std::cout << i + 1 << std::endl;
-      std::cout << "Feature Value:        " << ft[index] << std::endl;
-      std::cout << "Alpha:                " << alpha     << std::endl;
-      std::cout << "Analytical Point Num: " << a_num     << std::endl;
-      std::cout << "Point Ratio:          " << ratio     << std::endl;
-      std::cout << "Create Point Num:     " << createNum << std::endl;
-    }
 
     for( int j = 0; j < createNum; j++ )
     {
@@ -342,16 +330,6 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
     double a_num     = fpoint->calculateRequiredPartcleNumber( alpha, repeatLevel, BBMin, BBMax );
     double ratio     = fpoint->pointRatio( a_num );
     double createNum = 1.0 * ratio;
-
-    if ( !((i + 1) % INTERVAL) )
-    {
-      std::cout << i + 1 << std::endl;
-      std::cout << "Feature Value:        " << ft[index] << std::endl;
-      std::cout << "Alpha:                " << alpha     << std::endl;
-      std::cout << "Analytical Point Num: " << a_num     << std::endl;
-      std::cout << "Point Ratio:          " << ratio     << std::endl;
-      std::cout << "Create Point Num:     " << createNum << std::endl;
-    }
 
     for (int j = 0; j < createNum; j++)
     {
