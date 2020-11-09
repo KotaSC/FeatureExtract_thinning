@@ -36,7 +36,7 @@ FeaturePointExtraction::FeaturePointExtraction( kvs::PolygonObject *ply,
                                                 std::string dirName )
 {
   // Select point feature extraction type
-  std::cout << "Feature extraction type" << std::endl;
+  std::cout << "\nFeature extraction type" << std::endl;
   std::cout << "Normal point feature extraction: " << NORMAL_PFE_ID << ", ";
   std::cout << "Adaptive point feature extraction: " << ADAPTIVE_PFE_ID << std::endl;
 
@@ -349,7 +349,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
       {
         if ( coloringTypeB )
           setFeaturePointColor( ply, colorID_TypeB, index );
-        else if (coloringTypeC)
+        else if ( coloringTypeC )
           setFeaturePointColor( ply, colorID_TypeC, index );
       }
     }
