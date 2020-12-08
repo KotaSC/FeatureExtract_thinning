@@ -208,16 +208,22 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
+  float sumAllFt = 0.0;
+  float aveAllFt;
 
   int num = 0;
   for ( size_t i = 0; i < numVert; i++ )
   {
-    if ( ft[i] >= smallFth )
+    sumAllFt += ft[i];
+
+    if (ft[i] >= smallFth)
     {
       ind.push_back(i);
       num++;
     }
   }
+
+  aveAllFt = sumAllFt / num;
 
   ply->updateMinMaxCoords();
 
@@ -253,9 +259,12 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   double b_leng    = bb.length();
   double radius    = b_leng / div;
 
-  std::cout << "Input function switching threshold >> ";
-  std::cin >> functionSwitchingThreshold;
-  std::cout << std::endl;
+  functionSwitchingThreshold = aveAllFt;
+  std::cout << "Function switching threshold = " << aveAllFt << std::endl;
+
+  // std::cout << "Input function switching threshold >> ";
+  // std::cin >> functionSwitchingThreshold;
+  // std::cout << std::endl;
 
   std::cout << "Input Type(b) function parameters" << std::endl;
   std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
@@ -302,8 +311,8 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
     search_points( point, radius, pdata, myTree->octreeRoot, &nearInd, &dist );
     int n0 = (int)nearInd.size();
 
-    double sumNearestFt = 0.0;
-    double aveNearestFt = 0.0;
+    float sumNearestFt = 0.0;
+    float aveNearestFt = 0.0;
 
     for ( size_t j = 0; j < n0; j++ ) {
       sumNearestFt += ft[ nearInd[j] ];
