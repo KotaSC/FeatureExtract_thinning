@@ -261,6 +261,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
   functionSwitchingThreshold = aveAllFt;
   std::cout << "Function switching threshold = " << aveAllFt << std::endl;
+  std::cout << std::endl;
 
   // std::cout << "Input function switching threshold >> ";
   // std::cin >> functionSwitchingThreshold;
