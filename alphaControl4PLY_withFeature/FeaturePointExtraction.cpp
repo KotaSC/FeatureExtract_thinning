@@ -253,9 +253,14 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   double b_leng    = bb.length();
   double radius    = b_leng / div;
 
-  std::cout << "Input function switching threshold >> ";
-  std::cin >> functionSwitchingThreshold;
-  std::cout << std::endl;
+  std::vector<float> tmpVector;
+  std::copy( ft.begin(), ft.end(), tmpVector.begin() );
+  std::nth_element( tmpVector.begin(), tmpVector.begin() + tmpVector.size() / 2, tmpVector.end() );
+  functionSwitchingThreshold = tmpVector[ tmpVector.size() / 2 ];
+
+  // std::cout << "Input function switching threshold >> ";
+  // std::cin >> functionSwitchingThreshold;
+  // std::cout << std::endl;
 
   std::cout << "Input Type(b) function parameters" << std::endl;
   std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
