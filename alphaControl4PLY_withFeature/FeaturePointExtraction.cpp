@@ -208,22 +208,16 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
-  float sumAllFt = 0.0;
-  float aveAllFt;
 
   int num = 0;
   for ( size_t i = 0; i < numVert; i++ )
   {
-    sumAllFt += ft[i];
-
     if (ft[i] >= smallFth)
     {
       ind.push_back(i);
       num++;
     }
   }
-
-  aveAllFt = sumAllFt / num;
 
   ply->updateMinMaxCoords();
 
@@ -259,13 +253,9 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   double b_leng    = bb.length();
   double radius    = b_leng / div;
 
-  functionSwitchingThreshold = aveAllFt;
-  std::cout << "Function switching threshold = " << aveAllFt << std::endl;
+  std::cout << "Input function switching threshold >> ";
+  std::cin >> functionSwitchingThreshold;
   std::cout << std::endl;
-
-  // std::cout << "Input function switching threshold >> ";
-  // std::cin >> functionSwitchingThreshold;
-  // std::cout << std::endl;
 
   std::cout << "Input Type(b) function parameters" << std::endl;
   std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
