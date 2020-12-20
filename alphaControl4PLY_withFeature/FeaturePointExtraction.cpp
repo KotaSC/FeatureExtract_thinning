@@ -259,7 +259,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   // std::copy( featuretVector.begin(), featuretVector.end(), tmpVector.begin() );
   // std::nth_element( tmpVector.begin(), tmpVector.begin() + tmpVector.size() / 2, tmpVector.end() );
   // functionSwitchingThreshold = tmpVector[ tmpVector.size() / 2 ];
-  // functionSwitchingThreshold = std::accumulate( ft.begin(), ft.end(), 0.0 ) / ft.size();
+  // functionSwitchingThreshold = std::accumulate( featuretVector.begin(), featuretVector.end(), 0.0 ) / featuretVector.size();
 
   std::cout << "Input function switching threshold >> ";
   std::cin >> functionSwitchingThreshold;
