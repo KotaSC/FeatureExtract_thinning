@@ -208,13 +208,15 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
 
   size_t numVert = ply->numberOfVertices();
   std::vector<int> ind;
+  std::vector<float> featuretVector;
 
   int num = 0;
   for ( size_t i = 0; i < numVert; i++ )
   {
     if (ft[i] >= smallFth)
     {
-      ind.push_back(i);
+      featuretVector.push_back( ft[i] );
+      ind.push_back( i );
       num++;
     }
   }
@@ -253,14 +255,15 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   double b_leng    = bb.length();
   double radius    = b_leng / div;
 
-  std::vector<float> tmpVector;
-  std::copy( ft.begin(), ft.end(), tmpVector.begin() );
-  std::nth_element( tmpVector.begin(), tmpVector.begin() + tmpVector.size() / 2, tmpVector.end() );
-  functionSwitchingThreshold = tmpVector[ tmpVector.size() / 2 ];
+  // std::vector<float> tmpVector( featuretVector.size() );
+  // std::copy( featuretVector.begin(), featuretVector.end(), tmpVector.begin() );
+  // std::nth_element( tmpVector.begin(), tmpVector.begin() + tmpVector.size() / 2, tmpVector.end() );
+  // functionSwitchingThreshold = tmpVector[ tmpVector.size() / 2 ];
+  // functionSwitchingThreshold = std::accumulate( ft.begin(), ft.end(), 0.0 ) / ft.size();
 
-  // std::cout << "Input function switching threshold >> ";
-  // std::cin >> functionSwitchingThreshold;
-  // std::cout << std::endl;
+  std::cout << "Input function switching threshold >> ";
+  std::cin >> functionSwitchingThreshold;
+  std::cout << std::endl;
 
   std::cout << "Input Type(b) function parameters" << std::endl;
   std::vector<double> alphaVecTypeB = calcOpacity( num, smallFth, alphaMin, ft, ind );
