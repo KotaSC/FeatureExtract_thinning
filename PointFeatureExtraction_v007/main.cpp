@@ -20,7 +20,8 @@ int main( int argc, char** argv )
   char outXYZfile[512];
   strcpy( outXYZfile, OUT_FILE );
   if( argc < 2 ) {
-    std::cout << "USAGE: " << argv[0] << " data_file output_File(option)" << std::endl;
+    std::cout << "USAGE   : " << argv[0] << " [input_point_cloud_data] [output_point_cloud_data]" << std::endl;
+    std::cout << "EXAMPLE : " << argv[0] << " [input_point_cloud.ply] [output_point_cloud.xyz]" << std::endl;
     exit( 1 );
   } else if( argc == 3 ) {
     strcpy( outXYZfile, argv[2] );
