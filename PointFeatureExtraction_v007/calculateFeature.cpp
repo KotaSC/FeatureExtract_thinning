@@ -94,14 +94,16 @@ void calculateFeature::calc( kvs::PolygonObject *ply )
 
   if ( m_type != MinimumEntropyFeature )
   {
-    double div;
+    double highlight_precision_inv;
 
-    std::cout << "Input Division >> ";
-    std::cin >> div;
+    std::cout << "Highlighting precision" << std::endl;
+    std::cout << "Input 1/local-area_radius (recommend range [100-600]) >> ";
+    std::cin >> highlight_precision_inv;
 
-    setSearchRadius( div, ply->minObjectCoord() , ply->maxObjectCoord() );
+    setSearchRadius( highlight_precision_inv, ply->minObjectCoord() , ply->maxObjectCoord() );
 
-    std::cout << "Search Radius = " << m_searchRadius << std::endl;
+    std::cout << "Local-area radius = " << m_searchRadius << std::endl;
+    std::cout << std::endl;
   }
 
   if ( num == ply->numberOfNormals() )
