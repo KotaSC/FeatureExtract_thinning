@@ -368,35 +368,36 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
 
   float sigMax = 0.0;
 
-  double minDiv;
-  double maxDiv;
-  int numItr;
+  double min_highlight_precision_inv;
+  double max_highlight_precision_inv;
+  int number_of_calculations;
 
-  std::cout << "Input Minimum Division >> ";
-  std::cin  >> minDiv;
-  std::cout << "Input Maximum Division >> ";
-  std::cin  >> maxDiv;
-  std::cout << "Input Number of Iteration >> ";
-  std::cin  >> numItr;
+  std::cout << "Highlighting precision" << std::endl;
+  std::cout << "Input minimum 1/local-area_radius (recommend range [100-600]) >> ";
+  std::cin  >> min_highlight_precision_inv;
+  std::cout << "Input maximum 1/local-area_radius (recommend range [100-600]) >> ";
+  std::cin  >> max_highlight_precision_inv;
+  std::cout << "Input Number of calculations >> ";
+  std::cin  >> number_of_calculations;
 
-  double minSearchRadius = setMinMaxSearchRadius( maxDiv, ply->minObjectCoord(), ply->maxObjectCoord() );
-  double maxSearchRadius = setMinMaxSearchRadius( minDiv, ply->minObjectCoord(), ply->maxObjectCoord() );
+  double min_local_area_radius = setMinMaxSearchRadius( max_highlight_precision_inv, ply->minObjectCoord(), ply->maxObjectCoord() );
+  double max_local_area_radius = setMinMaxSearchRadius( min_highlight_precision_inv, ply->minObjectCoord(), ply->maxObjectCoord() );
 
-  std::cout << "Minimum Search Radius = " << minSearchRadius << std::endl;
-  std::cout << "Maximum Search Radius = " << maxSearchRadius << std::endl;
+  std::cout << "Minimum local-area radius = " << min_local_area_radius << std::endl;
+  std::cout << "Maximum local-area radius = " << max_local_area_radius << std::endl;
+  std::cout << std::endl;
 
-  std::vector<vector<float>> eigentropy( numItr, vector<float>(numVert) );
-  std::vector<vector<float>> featureValues( numItr, vector<float>(numVert) );
+  std::vector<vector<float>> eigentropy( number_of_calculations, vector<float>(numVert) );
+  std::vector<vector<float>> featureValues( number_of_calculations, vector<float>(numVert) );
 
-  for ( int j = 0; j < numItr; j++ )
+  for ( int j = 0; j < number_of_calculations; j++ )
   {
-    double itrSearchRadius = minSearchRadius + ( j * ( maxSearchRadius - minSearchRadius ) / (double)( numItr-1.0 ) );
+    double itr_local_area_radius = min_local_area_radius + ( j * ( max_local_area_radius - min_local_area_radius ) / (double)( number_of_calculations-1.0 ) );
 
-    std::cout << "Start iteration number " << j+1 << std::endl;
-    std::cout << "Search Radius = " << itrSearchRadius << std::endl;
-    std::cout << std::endl;
+    std::cout << "Start calculation " << j+1 << std::endl;
+    std::cout << "Local-area radius = " << itr_local_area_radius << std::endl;
 
-    eigenValues = calcEigenValues( ply, itrSearchRadius );
+    eigenValues = calcEigenValues( ply, itr_local_area_radius );
 
     for ( size_t i = 0; i < numVert; i++ )
     {
@@ -437,7 +438,7 @@ void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
 
   for ( size_t i = 0; i < numVert; i++ )
   {
-    for ( int j = 0; j < numItr; j++ )
+    for ( int j = 0; j < number_of_calculations; j++ )
     {
       tmpEigentropy.push_back( eigentropy[j][i] );
     }
