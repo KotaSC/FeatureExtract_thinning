@@ -247,22 +247,22 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
             << maxBB << std::endl;
   octree *myTree = new octree( pdata, numVert, mrange, MIN_NODE );
 
-  std::cout << "\nInput Division >> ";
-  std::cin >> div;
-  std::cout << std::endl;
+  std::cout << "Highlighting precision" << std::endl;
+  std::cout << "Input 1/local-area_radius (recommend range [100-600]) >> ";
+  std::cin >> highlight_precision_inv;
 
   kvs::Vector3f bb = maxBB - minBB;
   double b_leng    = bb.length();
-  double radius    = b_leng / div;
+  double radius    = b_leng / highlight_precision_inv;
 
   // std::vector<float> tmpVector( featuretVector.size() );
   // std::copy( featuretVector.begin(), featuretVector.end(), tmpVector.begin() );
   // std::nth_element( tmpVector.begin(), tmpVector.begin() + tmpVector.size() / 2, tmpVector.end() );
-  // functionSwitchingThreshold = tmpVector[ tmpVector.size() / 2 ];
-  // functionSwitchingThreshold = std::accumulate( featuretVector.begin(), featuretVector.end(), 0.0 ) / featuretVector.size();
+  // s_th = tmpVector[ tmpVector.size() / 2 ];
+  // s_th = std::accumulate( featuretVector.begin(), featuretVector.end(), 0.0 ) / featuretVector.size();
 
-  std::cout << "Input function switching threshold >> ";
-  std::cin >> functionSwitchingThreshold;
+  std::cout << "Input function switching threshold s_th>> ";
+  std::cin >> s_th;
   std::cout << std::endl;
 
   std::cout << "Input Type(b) function parameters" << std::endl;
@@ -274,8 +274,8 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
                                   dim,
                                   repeatLevel,
                                   imageResolution,
-                                  div,
-                                  functionSwitchingThreshold,
+                                  highlight_precision_inv,
+                                  s_th,
                                   parameterList4AdaptivePFE_TypeB,
                                   dirName );
 
@@ -288,8 +288,8 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
                                   dim,
                                   repeatLevel,
                                   imageResolution,
-                                  div,
-                                  functionSwitchingThreshold,
+                                  highlight_precision_inv,
+                                  s_th,
                                   parameterList4AdaptivePFE_TypeC,
                                   dirName );
 
@@ -323,7 +323,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
     bool coloringTypeB = false;
     bool coloringTypeC = false;
 
-    if ( aveNearestFt > functionSwitchingThreshold )
+    if ( aveNearestFt > s_th )
     {
       alpha = alphaVecTypeB[i];
       coloringTypeB = true;
@@ -453,13 +453,13 @@ void FeaturePointExtraction::writeParameterList( double smallFth,
   std::string outFileName = dirName + parameterList;
 
   std::ofstream outParameterList( outFileName );
-  outParameterList << "f_th: "             << smallFth        << "\n"
-                   << "F_th: "             << largeFth        << "\n"
-                   << "α_min: "            << alphaMin        << "\n"
-                   << "α_max: "            << alphaMax        << "\n"
-                   << "d: "                << d               << "\n"
-                   << "LR: "               << repeatLevel     << "\n"
-                   << "Image Resolution: " << imageResolution << std::endl;
+  outParameterList << "f_th             : " << smallFth        << "\n"
+                   << "F_th             : " << largeFth        << "\n"
+                   << "α_min            : " << alphaMin        << "\n"
+                   << "α_max            : " << alphaMax        << "\n"
+                   << "d                : " << d               << "\n"
+                   << "LR               : " << repeatLevel     << "\n"
+                   << "Image Resolution : " << imageResolution << std::endl;
 
   outParameterList.close();
 }
@@ -471,8 +471,8 @@ void FeaturePointExtraction::writeParameterList4AdaptivePFE( double smallFth,
                                                              double d,
                                                              int repeatLevel,
                                                              int imageResolution,
-                                                             double div,
-                                                             double functionSwitchingThreshold,
+                                                             double highlight_precision_inv,
+                                                             double s_th,
                                                              std::string parameterList,
                                                              std::string dirName )
 {
@@ -482,15 +482,15 @@ void FeaturePointExtraction::writeParameterList4AdaptivePFE( double smallFth,
   std::string outFileName = dirName + parameterList;
 
   std::ofstream outParameterList(outFileName);
-  outParameterList << "f_th: "                         << smallFth << "\n"
-                   << "F_th: "                         << largeFth << "\n"
-                   << "α_min: "                        << alphaMin << "\n"
-                   << "α_max: "                        << alphaMax << "\n"
-                   << "d: "                            << d << "\n"
-                   << "LR: "                           << repeatLevel << "\n"
-                   << "Image Resolution: "             << imageResolution << "\n"
-                   << "Div: "                          << div << "\n"
-                   << "Function switching threshold: " << functionSwitchingThreshold << std::endl;
+  outParameterList << "f_th                    : " << smallFth << "\n"
+                   << "F_th                    : " << largeFth << "\n"
+                   << "α_min                   : " << alphaMin << "\n"
+                   << "α_max                   : " << alphaMax << "\n"
+                   << "d                       : " << d << "\n"
+                   << "LR                      : " << repeatLevel << "\n"
+                   << "Image Resolution        : " << imageResolution << "\n"
+                   << "highlight_precision_inv : " << highlight_precision_inv << "\n"
+                   << "s_th                    : " << s_th << std::endl;
 
   outParameterList.close();
 }

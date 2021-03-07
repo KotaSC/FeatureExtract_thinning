@@ -28,7 +28,8 @@ int main(int argc, char **argv)
 {
   if (argc < 3)
   {
-    std::cout << "USAGE: " << argv[0] << " [lst-file or data-file] [output directory name]" << std::endl;
+    std::cout << "USAGE   : " << argv[0] << " [input_point_cloud_data_with_feature_value] [output_directory_name]" << std::endl;
+    std::cout << "EXAMPLE : " << argv[0] << " [input_point_cloud.xyz] [output_directory]" << std::endl;
     exit(1);
   }
 

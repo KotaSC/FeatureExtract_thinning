@@ -72,8 +72,8 @@ class FeaturePointExtraction: public kvs::PointObject {
 																				 double d,
 																				 int repeatLevel,
 																				 int imageResolution,
-																				 double div,
-																				 double functionSwitchingThreshold,
+																				 double highlight_precision_inv,
+																				 double s_th,
 																				 std::string parameterList,
 																				 std::string dirName );
 
@@ -88,8 +88,8 @@ class FeaturePointExtraction: public kvs::PointObject {
 		double alphaMax;
 		double largeFth;
 		double dim;
-		double div;
-		double functionSwitchingThreshold;
+		double highlight_precision_inv;
+		double s_th;
 
 		std::vector<kvs::UInt8> SetColors;
 };
