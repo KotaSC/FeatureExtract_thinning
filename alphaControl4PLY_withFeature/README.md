@@ -1,5 +1,7 @@
 # alphaControl4PLY_withFeature
 
+## 概要
+入力点群のエッジを強調して可視化する．
 ## 使い方
 ```
 USAGE   : ./alphaControl4ply [input_point_cloud_data_with_feature_value] [output_directory_name]
