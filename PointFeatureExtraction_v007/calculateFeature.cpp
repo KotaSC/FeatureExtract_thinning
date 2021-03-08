@@ -356,6 +356,7 @@ void calculateFeature::calcNormalDispersion( kvs::PolygonObject *ply,
 }
 
 
+// --- Calculate feature values at the minimum entropy.
 void calculateFeature::calcMinimumEntropyFeature( kvs::PolygonObject *ply )
 {
 

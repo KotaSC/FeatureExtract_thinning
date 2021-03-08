@@ -158,6 +158,7 @@ void FeaturePointExtraction::alpbaControl4Feature( kvs::PolygonObject *ply,
   SuperClass::setColors( kvs::ValueArray<kvs::UInt8>( SetColors ) );
 }
 
+// --- Visualization by adaptively switching between Type (b) and Type (c) functions.
 void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *ply,
                                                            std::vector<float> &ft,
                                                            double smallFth,
