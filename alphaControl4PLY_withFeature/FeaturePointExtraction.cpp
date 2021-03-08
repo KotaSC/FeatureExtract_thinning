@@ -245,6 +245,7 @@ void FeaturePointExtraction::adaptiveAlphaControl4Feature( kvs::PolygonObject *p
   std::cout << "Creating Octree... (Number of Vertex : " << numVert << std::endl;
   std::cout << minBB << " \n"
             << maxBB << std::endl;
+  std::cout << std::endl;
   octree *myTree = new octree( pdata, numVert, mrange, MIN_NODE );
 
   std::cout << "Highlighting precision" << std::endl;
