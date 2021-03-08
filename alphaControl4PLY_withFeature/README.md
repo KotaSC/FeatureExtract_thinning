@@ -8,7 +8,7 @@ USAGE   : ./alphaControl4ply [input_point_cloud_data_with_feature_value] [output
 EXAMPLE : ./alphaControl4ply [input_point_cloud.xyz] [output_directory]
 ```
 
-## 使用例
+## 使用例1
 ```
 $ ./alphaControl4ply ../XYZ_DATA/box/box.xyz ../SPBR_DATA/box
 
