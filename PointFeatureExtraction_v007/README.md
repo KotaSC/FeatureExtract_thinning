@@ -61,6 +61,7 @@ Start OCtree Search.....
 Maximun of Sigma : 0.151453
 ```
 ## 使用例2
+```
 $ ./pfe ../PLY_DATA/box/box.spbr ../XYZ_DATA/box/box.xyz
 ~~~~~ #/SPBR_ASCII_Data
 SPBR (Ascii) file reading.....
@@ -227,3 +228,4 @@ Start OCtree Search.....
 9000000, Feature Value: 0, Eigentropy: 0
 10000000, Feature Value: 0, Eigentropy: 0
 Maximun of Sigma : 0.141797
+```

@@ -85,19 +85,7 @@ Keyboard menu:
 
 ## 使用例2
 ```
-kawakamikota@KotaMBP alphaControl4PLY_withFeature % ./alphaControl4ply ../XYZ_DATA/box/box.xyz ../SPBR_DATA/box
-
-Input parameters
-Repeat Level LR >> 100
-Image resolution >> 1024
-Feature value threshold f_th in range [0, 1] >> ^C
-kawakamikota@KotaMBP alphaControl4PLY_withFeature % ./alphaControl4ply ../XYZ_DATA/mixed_edge_box/mixed_edge_box.xyz ../SPBR_DATA/mixed_edge_box/
-
-Input parameters
-Repeat Level LR >> 100
-Image resolution >> 1024
-Feature value threshold f_th in range [0, 1] >> 0.^C
-kawakamikota@KotaMBP alphaControl4PLY_withFeature % ./alphaControl4ply ../XYZ_DATA/borobudur/relief_ship/relief_ship.xyz ../SPBR_DATA/borobudur/relief_ship/
+$ ./alphaControl4ply ../XYZ_DATA/borobudur/relief_ship/relief_ship.xyz ../SPBR_DATA/borobudur/relief_ship/
 
 Input parameters
 Repeat Level LR >> 100
